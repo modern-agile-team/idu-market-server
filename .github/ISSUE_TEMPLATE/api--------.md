@@ -15,15 +15,12 @@ assignees: ''
 ---
 * Request
 
-**URL :**  /api/경로
+**URL :**  /api/리소스
 **Method :** 메서드
 **Content-type :** application/json
 ```js
 {
-   user: {
-      id: 유저 아이디,
-      psword: 유저 비밀번호
-   }
+   
 }
 ```
 ---
