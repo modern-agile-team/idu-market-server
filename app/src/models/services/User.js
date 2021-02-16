@@ -24,6 +24,17 @@ class User {
       return { success: false, err };
     }
   }
+
+  async signup() {
+    const client = this.body;
+
+    try {
+      const response = await UserStorage.save(client);
+      return response;
+    } catch (err) {
+      return { success: false, err };
+    }
+  }
 }
 
 module.exports = User;
