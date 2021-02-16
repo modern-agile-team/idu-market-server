@@ -8,7 +8,11 @@ const process = {
     const response = await user.login();
     return res.json(response);
   },
-  signup: async () => {},
+  signup: async (req, res) => {
+    const user = new User(req.body);
+    const response = await user.signup();
+    return res.json(response);
+  },
   sendEmailForId: async () => {},
   sendEmailForPsword: async () => {},
   resetPsword: async () => {},
