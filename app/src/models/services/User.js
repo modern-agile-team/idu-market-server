@@ -1,5 +1,7 @@
 "use strict";
 
+const UserStorage = require("./UserStorage");
+
 class User {
   constructor(body) {
     this.body = body;
