@@ -3,26 +3,39 @@
 const db = require("../../config/db");
 
 class UserStorage {
-  static getUserInfo(id) {
+  static findOne(id) {
     return new Promise((resolve, reject) => {
-      const query = "SELECT * FROM students WHERE id = ?;";
-      db.query(query, [id], (err, data) => {
+      const query = "SELECT * FROM students WHERE id=?;";
+
+      db.query(query, [id], (err, users) => {
         if (err) reject(`${err}`);
-        else resolve(data[0]);
+        else resolve(users[0]);
       });
     });
   }
 
-  static async save(user) {
+  static findAllAsIdOrEmail(id, email) {
+    return new Promise((resolve, reject) => {
+      const query = "SELECT * FROM students WHERE id=? OR email=?;";
+
+      db.query(query, [id, email], (err, users) => {
+        if (err) reject(String(err));
+        else resolve(users);
+      });
+    });
+  }
+
+  static async save(client) {
     return new Promise((resolve, reject) => {
       const query =
         "INSERT INTO students(id, major_no, name, email, psword, salt, token) VALUES(?, ?, ?, ?, ?, ?, ?);";
+
       db.query(
         query,
-        [user.id, 16, user.name, user.email, user.psword, 0, 0],
+        [client.id, 16, client.name, client.email, client.psword, 0, 0],
         (err) => {
-          if (err) reject(`${err}`);
-          else resolve({ success: true });
+          if (err) reject(String(err));
+          else resolve(true);
         }
       );
     });
