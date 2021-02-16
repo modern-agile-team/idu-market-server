@@ -1,0 +1,20 @@
+{
+  "name": "idu-market-server",
+  "version": "0.0.0",
+  "description": "",
+  "main": "app.js",
+  "bin": {
+    "app": "www.js"
+  },
+  "scripts": {
+    "start": "node ./bin/www.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1"
+  }
+}
