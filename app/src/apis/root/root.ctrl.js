@@ -1,7 +1,11 @@
 "use strict";
 
 const process = {
-  login: () => {},
+  login: (req, res) => {
+    const user = new User(req);
+    const response = user.login();
+    return res.json(response);
+  },
   signup: () => {},
   sendEmailForId: () => {},
   sendEmailForPsword: () => {},
