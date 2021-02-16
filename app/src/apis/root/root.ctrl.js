@@ -6,12 +6,14 @@ const process = {
   login: async (req, res) => {
     const user = new User(req.body);
     const response = await user.login();
-    return res.json(response);
+    if (response.success) return res.status(201).json(response);
+    return res.status(409).json(response);
   },
   signup: async (req, res) => {
     const user = new User(req.body);
     const response = await user.signup();
-    return res.json(response);
+    if (response.success) return res.status(201).json(response);
+    return res.status(409).json(response);
   },
   sendEmailForId: async () => {},
   sendEmailForPsword: async () => {},
