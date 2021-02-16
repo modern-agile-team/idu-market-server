@@ -34,7 +34,8 @@ assignees: ''
 ```js
 // 정상
 {
-   success: true
+   success: true,
+   msg: 응답 메세지
 }
 
 // 실패
