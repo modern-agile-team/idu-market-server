@@ -79,6 +79,21 @@ class User {
     }
     return { isExist: false };
   }
+
+  async isExistIdAndEmail() {
+    const client = this.body;
+
+    const user = await UserStorage.findOneByIdAndEmail(client.id, client.email);
+
+    if (user) {
+      if (user.id !== client.id)
+        return { isExist: false, msg: "등록되지 않은 아이디 입니다." };
+      else if (user.email !== client.email)
+        return { isExist: false, msg: "등록되지 않은 이메일 입니다." };
+      else return { isExist: true };
+    }
+    return { isExist: false };
+  }
 }
 
 module.exports = User;
