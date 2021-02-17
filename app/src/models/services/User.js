@@ -1,6 +1,8 @@
 "use strict";
 
 const UserStorage = require("./UserStorage");
+const Auth = require("./Auth");
+const AuthStorage = require("./AuthStorage");
 
 class User {
   constructor(body) {
@@ -42,6 +44,25 @@ class User {
     }
   }
 
+  async resetPassword() {
+    const client = this.body;
+
+    try {
+      const authInfo = await Auth.useableId(client.id);
+      if (!authInfo.useable) return authInfo;
+
+      const isReset = await UserStorage.resetPassword(client);
+      if (isReset) {
+        const isDelete = await AuthStorage.delete(client.id);
+        if (isDelete)
+          return { success: true, msg: "비밀번호가 변경되었습니다." };
+      }
+    } catch (err) {
+      console.log(err);
+      return { success: false, err };
+    }
+  }
+
   async inspectIdAndEmail() {
     const client = this.body;
 
@@ -65,11 +86,8 @@ class User {
   async isExistNameAndEmail() {
     const client = this.body;
 
-    const user = await UserStorage.findOneByNameAndEmail(
-      client.name,
-      client.email
-    );
-
+    const user = await UserStorage.findOneByEmail(client.email);
+    console.log(user);
     if (user) {
       if (user.name !== client.name)
         return { isExist: false, msg: "등록되지 않은 이름 입니다." };

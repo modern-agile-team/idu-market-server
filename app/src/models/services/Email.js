@@ -7,7 +7,7 @@ const UserStorage = require("./UserStorage");
 const Auth = require("./Auth");
 const mailOption = require("../../config/mail");
 
-const CHANGE_PSWORD_URL = "http://localhost/5000/reset/password";
+const CHANGE_PSWORD_URL = "http://localhost:5000/reset/password";
 
 class Email {
   constructor(body) {
@@ -60,7 +60,7 @@ class Email {
           from: process.env.MAIL_EMAIL,
           to: client.email,
           subject: `[idu-market] ${client.id}님께 비밀번호 변경 링크가 도착했습니다.`,
-          html: `<p>안녕하십니까, <b>${client.id}</b>님. <br> 비밀번호를 변경하시려면 하단 링크를 클릭해주십시오. <br> <a href="${CHANGE_PSWORD_URL}">변경하기</a></p>`,
+          html: `<p>안녕하십니까, <b>${client.id}</b>님. <br> 비밀번호를 변경하시려면 하단 링크를 클릭해주십시오. <br> <a href="${CHANGE_PSWORD_URL}/${tokenInfo.token}">변경하기</a></p>`,
         };
 
         const transporter = nodemailer.createTransport(mailOption);

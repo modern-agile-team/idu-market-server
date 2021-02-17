@@ -28,7 +28,12 @@ const process = {
     if (response.success) return res.status(200).json(response);
     return res.status(400).json(response);
   },
-  resetPsword: async () => {},
+  resetPsword: async (req, res) => {
+    const user = new User(req.body);
+    const response = await user.resetPassword();
+    if (response.success) return res.status(200).json(response);
+    return res.status(400).json(response);
+  },
 };
 
 module.exports = {
