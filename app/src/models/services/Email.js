@@ -4,7 +4,10 @@ const nodemailer = require("nodemailer");
 
 const User = require("./User");
 const UserStorage = require("./UserStorage");
+const Auth = require("./Auth");
 const mailOption = require("../../config/mail");
+
+const CHANGE_PSWORD_URL = "http://localhost/5000/reset/password";
 
 class Email {
   constructor(body) {
@@ -38,20 +41,26 @@ class Email {
   }
 
   async sendLinkForPsword() {
-    const user = new User(this.body);
+    const client = this.body;
+
+    const user = new User(client);
     const existInfo = await user.isExistIdAndEmail();
     if (!existInfo.isExist) return existInfo;
 
-    const userInfo = await UserStorage.findOneById(this.body.id);
+    const userInfo = await UserStorage.findOneById(client.id);
     if (!userInfo)
       return { success: false, msg: "등록되지 않은 아이디 입니다." };
+
+    const tokenInfo = await Auth.createToken(client.id);
+    if (!tokenInfo.success) return tokenInfo;
+
     return new Promise(async (resolve, reject) => {
       try {
         const message = {
           from: process.env.MAIL_EMAIL,
-          to: this.body.email,
-          subject: `[idu-market] ${this.body.Id}님께 비밀번호 변경 링크가 도착했습니다.`,
-          html: `<p><b>${this.body.id}</b>님의 아이디는 <b>${userInfo.id}</b> 입니다.</p>`,
+          to: client.email,
+          subject: `[idu-market] ${client.id}님께 비밀번호 변경 링크가 도착했습니다.`,
+          html: `<p>안녕하십니까, <b>${client.id}</b>님. <br> 비밀번호를 변경하시려면 하단 링크를 클릭해주십시오. <br> <a href="${CHANGE_PSWORD_URL}">변경하기</a></p>`,
         };
 
         const transporter = nodemailer.createTransport(mailOption);
