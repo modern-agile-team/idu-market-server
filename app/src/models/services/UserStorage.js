@@ -3,7 +3,7 @@
 const db = require("../../config/db");
 
 class UserStorage {
-  static findOne(id) {
+  static findOneById(id) {
     return new Promise((resolve, reject) => {
       const query = "SELECT * FROM students WHERE id=?;";
 
@@ -14,7 +14,29 @@ class UserStorage {
     });
   }
 
-  static findAllAsIdOrEmail(id, email) {
+  static findOneByEmail(email) {
+    return new Promise((resolve, reject) => {
+      const query = "SELECT * FROM students WHERE email=?;";
+
+      db.query(query, [email], (err, users) => {
+        if (err) reject(`${err}`);
+        else resolve(users[0]);
+      });
+    });
+  }
+
+  static findOneByNameAndEmail(name, email) {
+    return new Promise((resolve, reject) => {
+      const query = "SELECT * FROM students WHERE name=? OR email=?;";
+
+      db.query(query, [name, email], (err, users) => {
+        if (err) reject(`${err}`);
+        else resolve(users[0]);
+      });
+    });
+  }
+
+  static findAllByIdAndEmail(id, email) {
     return new Promise((resolve, reject) => {
       const query = "SELECT * FROM students WHERE id=? OR email=?;";
 
