@@ -29,7 +29,7 @@ class Email {
         };
 
         const transporter = nodemailer.createTransport(mailOption);
-        const info = await transporter.sendMail(message);
+        await transporter.sendMail(message);
         resolve({ success: true, mag: "입력된 이메일로 ID가 발송되었습니다." });
       } catch (err) {
         reject({ success: true, err: String(err) });
