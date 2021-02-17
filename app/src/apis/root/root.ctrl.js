@@ -22,7 +22,12 @@ const process = {
     if (response.success) return res.status(200).json(response);
     return res.status(400).json(response);
   },
-  sendEmailForPsword: async () => {},
+  sendEmailForPsword: async (req, res) => {
+    const email = new Email(req.body);
+    const response = await email.sendLinkForPsword();
+    if (response.success) return res.status(200).json(response);
+    return res.status(400).json(response);
+  },
   resetPsword: async () => {},
 };
 
