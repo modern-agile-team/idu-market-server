@@ -7,26 +7,11 @@ class User {
     this.body = body;
   }
 
-  async #inspect(client) {
-    const users = await UserStorage.findAllAsIdOrEmail(client.id, client.email);
-
-    if (users.length === 0) {
-      return { saveable: true };
-    } else {
-      for (let user of users) {
-        if (user.id === client.id) {
-          return { saveable: false, msg: "이미 존재하는 아이디 입니다." };
-        } else if (user.email === client.email)
-          return { saveable: false, msg: "이미 가입된 이메일 입니다." };
-      }
-    }
-  }
-
   async login() {
     const client = this.body;
 
     try {
-      const user = await UserStorage.findOne(client.id);
+      const user = await UserStorage.findOneById(client.id);
 
       if (user) {
         if (user.id === client.id && user.psword === client.psword) {
@@ -44,7 +29,7 @@ class User {
     const client = this.body;
 
     try {
-      const inspector = await this.#inspect(client);
+      const inspector = await this.inspectIdAndEmail();
 
       if (inspector.saveable) {
         const isSave = await UserStorage.save(client);
@@ -55,6 +40,44 @@ class User {
     } catch (err) {
       return { success: false, err };
     }
+  }
+
+  async inspectIdAndEmail() {
+    const client = this.body;
+
+    const users = await UserStorage.findAllByIdAndEmail(
+      client.id,
+      client.email
+    );
+
+    if (users.length === 0) {
+      return { saveable: true };
+    } else {
+      for (let user of users) {
+        if (user.id === client.id) {
+          return { saveable: false, msg: "이미 존재하는 아이디 입니다." };
+        } else if (user.email === client.email)
+          return { saveable: false, msg: "이미 가입된 이메일 입니다." };
+      }
+    }
+  }
+
+  async isExistNameAndEmail() {
+    const client = this.body;
+
+    const user = await UserStorage.findOneByNameAndEmail(
+      client.name,
+      client.email
+    );
+
+    if (user) {
+      if (user.name !== client.name)
+        return { isExist: false, msg: "등록되지 않은 이름 입니다." };
+      else if (user.email !== client.email)
+        return { isExist: false, msg: "등록되지 않은 이메일 입니다." };
+      else return { isExist: true };
+    }
+    return { isExist: false };
   }
 }
 
