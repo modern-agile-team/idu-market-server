@@ -77,7 +77,7 @@ class User {
         return { isExist: false, msg: "등록되지 않은 이메일 입니다." };
       else return { isExist: true };
     }
-    return { isExist: false };
+    return { isExist: false, msg: "등록되지 않은 이름 입니다." };
   }
 
   async isExistIdAndEmail() {
@@ -92,7 +92,7 @@ class User {
         return { isExist: false, msg: "등록되지 않은 이메일 입니다." };
       else return { isExist: true };
     }
-    return { isExist: false };
+    return { isExist: false, msg: "등록되지 않은 아이디 입니다." };
   }
 }
 

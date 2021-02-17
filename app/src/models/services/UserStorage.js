@@ -36,6 +36,17 @@ class UserStorage {
     });
   }
 
+  static findOneByIdAndEmail(id, email) {
+    return new Promise((resolve, reject) => {
+      const query = "SELECT * FROM students WHERE id=? OR email=?;";
+
+      db.query(query, [id, email], (err, users) => {
+        if (err) reject(`${err}`);
+        else resolve(users[0]);
+      });
+    });
+  }
+
   static findAllByIdAndEmail(id, email) {
     return new Promise((resolve, reject) => {
       const query = "SELECT * FROM students WHERE id=? OR email=?;";

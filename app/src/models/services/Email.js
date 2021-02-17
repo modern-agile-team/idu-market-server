@@ -36,6 +36,35 @@ class Email {
       }
     });
   }
+
+  async sendLinkForPsword() {
+    const user = new User(this.body);
+    const existInfo = await user.isExistIdAndEmail();
+    if (!existInfo.isExist) return existInfo;
+
+    const userInfo = await UserStorage.findOneById(this.body.id);
+    if (!userInfo)
+      return { success: false, msg: "등록되지 않은 아이디 입니다." };
+    return new Promise(async (resolve, reject) => {
+      try {
+        const message = {
+          from: process.env.MAIL_EMAIL,
+          to: this.body.email,
+          subject: `[idu-market] ${this.body.Id}님께 비밀번호 변경 링크가 도착했습니다.`,
+          html: `<p><b>${this.body.id}</b>님의 아이디는 <b>${userInfo.id}</b> 입니다.</p>`,
+        };
+
+        const transporter = nodemailer.createTransport(mailOption);
+        await transporter.sendMail(message);
+        resolve({
+          success: true,
+          mag: "이메일로 발송된 URL을 통해 비밀번호를 재설정 할 수 있습니다.",
+        });
+      } catch (err) {
+        reject({ success: true, err: String(err) });
+      }
+    });
+  }
 }
 
 module.exports = Email;
