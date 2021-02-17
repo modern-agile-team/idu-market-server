@@ -8,7 +8,7 @@ const process = {
     const user = new User(req.body);
     const response = await user.login();
     if (response.success) return res.status(201).json(response);
-    return res.status(409).json(response);
+    return res.status(400).json(response);
   },
   signup: async (req, res) => {
     const user = new User(req.body);
@@ -20,7 +20,7 @@ const process = {
     const email = new Email(req.body);
     const response = await email.sendId();
     if (response.success) return res.status(200).json(response);
-    return res.status(409).json(response);
+    return res.status(400).json(response);
   },
   sendEmailForPsword: async () => {},
   resetPsword: async () => {},
