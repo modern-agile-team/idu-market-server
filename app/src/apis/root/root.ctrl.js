@@ -7,7 +7,8 @@ const process = {
   login: async (req, res) => {
     const user = new User(req.body);
     const response = await user.login();
-    if (response.success) return res.status(201).json(response);
+    if (response.success)
+      return res.cookie("x_auth", response.jwt).status(201).json(response);
     return res.status(400).json(response);
   },
 

@@ -1,11 +1,49 @@
 "use strict";
 
 const crypto = require("crypto");
+const jwt = require("jsonwebtoken");
 
 const AuthStorage = require("./AuthStorage");
 const WooahanDate = require("../utils/WooahanDate");
 
 class Auth {
+  TOKEN_INVALID = -2;
+  TOKEN_EXPIRED = -3;
+  jwtOption = {
+    algorithm: "HS256",
+    expiresIn: "30m",
+    issuer: "wooahan agile",
+  };
+
+  static async createJWT(user) {
+    const payload = {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    };
+
+    return jwt.sign(payload, process.env.JWT_SECRET, this.jwtOption);
+  }
+
+  static async verifyJWT(token) {
+    try {
+      // verify를 통해 값 decode!
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      return decoded;
+    } catch (err) {
+      if (err.message === "jwt expired") {
+        console.log("JWT 유효 시간이 만료되었습니다.");
+        return this.TOKEN_EXPIRED;
+      } else if (err.message === "invalid token") {
+        console.log("유효하지 않은 JWT 입니다.");
+        return this.TOKEN_INVALID;
+      } else {
+        console.log("유효하지 않은 JWT 입니다.");
+        return this.TOKEN_INVALID;
+      }
+    }
+  }
+
   static async createToken(id) {
     try {
       const token = crypto.randomBytes(20).toString("hex"); // token 생성
