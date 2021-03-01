@@ -65,7 +65,15 @@ class UserStorage {
 
       db.query(
         query,
-        [client.id, 16, client.name, client.email, client.psword, 0, 0],
+        [
+          client.id,
+          16,
+          client.name,
+          client.email,
+          client.psword,
+          client.salt,
+          0,
+        ],
         (err) => {
           if (err) reject(String(err));
           else resolve(true);
