@@ -3,7 +3,8 @@
 const UserStorage = require("./UserStorage");
 const Auth = require("./Auth");
 const AuthStorage = require("./AuthStorage");
-
+const Cryptor = require("../../models/utils/Cryptor");
+const bcrypt = require("bcrypt");
 class User {
   constructor(body) {
     this.body = body;
@@ -16,6 +17,8 @@ class User {
       const user = await UserStorage.findOneById(client.id);
 
       if (user) {
+        client.psword = await Cryptor.encryptBySalt(client.psword, user.salt);
+
         if (user.id === client.id && user.psword === client.psword) {
           return { success: true, msg: "로그인에 성공하셨습니다." };
         }
@@ -34,12 +37,17 @@ class User {
       const inspector = await this.inspectIdAndEmail();
 
       if (inspector.saveable) {
+        const { hash, salt } = await Cryptor.encrypt(client.psword);
+        client.psword = hash;
+        client.salt = salt;
+
         const isSave = await UserStorage.save(client);
         if (isSave)
           return { success: true, msg: "회원가입이 정상 처리 되었습니다." };
       }
       return inspector;
     } catch (err) {
+      throw err;
       return { success: false, err };
     }
   }
