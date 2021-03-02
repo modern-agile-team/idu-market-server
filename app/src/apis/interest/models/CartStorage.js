@@ -44,7 +44,7 @@ class CartStorage {
       console.log(data);
       db.query(sql, params, (err, rows) => {
         if (err) reject({ success: false });
-        resolve({ success: true, msg: "장바구니에 저장" });
+        resolve({ success: true, msg: "장바구니에 저장되었습니다" });
       });
     });
   }
