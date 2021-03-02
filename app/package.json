@@ -1,6 +1,6 @@
 {
   "name": "idu-market-server",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "app.js",
   "bin": {
@@ -8,6 +8,7 @@
   },
   "scripts": {
     "start": "nodemon ./bin/www.js",
+    "build": "babel src -w -d dist/src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -22,5 +23,13 @@
     "jsonwebtoken": "^8.5.1",
     "mysql2": "^2.2.5",
     "nodemailer": "^6.4.18"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.13.0",
+    "@babel/core": "^7.13.8",
+    "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/preset-env": "^7.13.9",
+    "babel-loader": "^8.2.2",
+    "babel-polyfill": "^6.26.0"
   }
 }
