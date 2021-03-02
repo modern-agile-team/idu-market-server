@@ -11,7 +11,7 @@ class Cart {
       const response = await CartStorage.existCart(product);
       return response;
     } catch (err) {
-      return { success: false, msg: "값이 확실하지 않음" };
+      return { success: false, msg: "값을 받아오지 못함" };
     }
   }
 
