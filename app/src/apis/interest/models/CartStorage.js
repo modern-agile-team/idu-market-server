@@ -56,7 +56,7 @@ class CartStorage {
       const params = [data.board_no, data.student];
       db.query(sql, params, (err, rows) => {
         if (err) reject({ success: false, msg: "database에 존재하지 않는다." });
-        resolve({ success: true, msg: "정상적으로 삭제" });
+        resolve({ success: true, msg: "정상적으로 삭제되었다" });
       });
     });
   }
