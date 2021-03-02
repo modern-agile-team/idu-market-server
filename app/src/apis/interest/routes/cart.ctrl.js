@@ -9,7 +9,6 @@ const output = {
     if (!response.success) return res.status(409).json(response);
     return res.status(200).json(response);
   },
-  insertProduct: (req, res) => res.render("./insertProduct.ejs"),
 };
 
 const process = {

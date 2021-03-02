@@ -19,7 +19,7 @@ class CartStorage {
         for (let i = 0; i < rows.length; i++) {
           category.push(this.boardCode(rows[i].board_code_no));
         }
-        resolve({ success: true, rows: rows, category: category });
+        resolve({ success: true, rows: rows, category: category, msg: "정상 검색" });
       });
     });
   }
