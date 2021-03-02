@@ -3,6 +3,9 @@
 const User = require("../../models/services/User");
 const Email = require("../../models/services/Email");
 
+/* Node.js 기본 내장 모듈 불러오기 */
+const fs = require("fs");
+
 const process = {
   login: async (req, res) => {
     const user = new User(req.body);
@@ -39,6 +42,20 @@ const process = {
     if (response.success) return res.status(200).json(response);
     return res.status(400).json(response);
   },
+
+  server: (request, response) => {
+    fs.readFile("public/index.html", function (err, data) {
+      if (err) {
+        response.send("에러");
+        throw err;
+      } else {
+        response.writeHead(200, { "Content-Type": "text/html" });
+        response.write(data);
+        response.end();
+      }
+    });
+  },
+
 };
 
 module.exports = {
