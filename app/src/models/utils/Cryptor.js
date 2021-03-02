@@ -3,7 +3,7 @@
 const bcrypt = require("bcrypt");
 
 class Cryptor {
-  saltRounds = 10;
+  static saltRounds = 10;
 
   static encrypt(psword) {
     return new Promise((resolve, reject) => {
