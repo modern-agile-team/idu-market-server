@@ -1,5 +1,8 @@
 "use strict";
 
+// es6+ 문법의 async-await 등 최신 문법을 변환해준다.
+require("babel-polyfill");
+
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -16,8 +19,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const view = require("./src/apis/view");
-const root = require("./src/apis/root");
+const view = require("./dist/src/apis/view");
+const root = require("./dist/src/apis/root");
 
 app.use("/", view);
 app.use("/api/", root);
