@@ -1,8 +1,8 @@
 const db = require("../../../config/db");
 
-class InterestProductStorage {
+class WatchListStorage {
   //장바구니 화면
-  static showProduct(id) {
+  static showWatchList(id) {
     return new Promise((resolve, reject) => {
       const sql = ` SELECT bc.name, bo.title, sb.student_id 
       FROM shopping_basket sb 
@@ -13,16 +13,16 @@ class InterestProductStorage {
       WHERE sb.student_id = ?`;
       db.query(sql, [id], (err, rows) => {
         if (err) reject(err);
-        resolve({ success: true, rows: rows, msg: "정상 검색" });
+        resolve({ success: true, rows: rows });
       });
     });
   }
   //장바구니 담는 코드
-  static existCart(data) {
+  static existWatchList(data) {
     return new Promise((resolve, reject) => {
-      const existCart = `SELECT board_no, student_id FROM shopping_basket WHERE board_no=? AND student_id=?`;
+      const isexist = `SELECT board_no, student_id FROM shopping_basket WHERE board_no=? AND student_id=?`;
       const testParams = [data.board_no, data.student_id];
-      db.query(existCart, testParams, (err, rows) => {
+      db.query(isexist, testParams, (err, rows) => {
         if (err) throw err;
         if (!rows.length) {
           resolve(this.save(data));
@@ -55,4 +55,4 @@ class InterestProductStorage {
   }
 }
 
-module.exports = InterestProductStorage;
+module.exports = WatchListStorage;

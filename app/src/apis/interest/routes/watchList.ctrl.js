@@ -1,11 +1,11 @@
 `use strict`;
 
-const Cart = require("../models/Cart");
+const WatchList = require("../models/WatchList");
 
 const output = {
-  showCart: async (req, res, next) => {
-    const student = new Cart(req.params.studentId);
-    const response = await student.shoppingBasket();
+  showWatchList: async (req, res, next) => {
+    const student = new WatchList(req.params.studentId);
+    const response = await student.show();
     if (!response.success) return res.status(409).json(response);
     return res.status(200).json(response);
   },
@@ -13,14 +13,14 @@ const output = {
 
 const process = {
   insertProduct: async (req, res, next) => {
-    const addcart = new Cart(req.body);
+    const addcart = new WatchList(req.body);
     const response = await addcart.product();
-    if (!response.success) return res.status(400).json(response);
+    if (!response.success) return res.status(409).json(response);
     return res.status(200).json(response);
   },
 
   deleteProduct: async (req, res, next) => {
-    const remove = new Cart(req.body);
+    const remove = new WatchList(req.body);
     const response = await remove.productList();
     if (!response.success) return res.status(409).json(response);
     return res.status(200).json(response);

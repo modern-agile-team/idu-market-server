@@ -1,6 +1,6 @@
-const InterestProductStorage = require("./InterestProductStorage");
+const WatchListStorage = require("./WatchListStorage");
 
-class Cart {
+class WatchList {
   constructor(body) {
     this.body = body;
   }
@@ -8,7 +8,7 @@ class Cart {
   async product() {
     const product = this.body;
     try {
-      const response = await InterestProductStorage.existCart(product);
+      const response = await WatchListStorage.existWatchList(product);
       if (response) return { success: true, msg: "장바구니에 저장" };
       return { success: false, msg: "이미 장바구니에 저장" };
     } catch (err) {
@@ -16,10 +16,10 @@ class Cart {
     }
   }
 
-  async shoppingBasket() {
+  async show() {
     const studentId = this.body;
     try {
-      const response = await InterestProductStorage.showProduct(studentId);
+      const response = await WatchListStorage.showWatchList(studentId);
       return response;
     } catch (err) {
       return { success: false, msg: "select 실패" };
@@ -29,7 +29,7 @@ class Cart {
   async productList() {
     const product = this.body;
     try {
-      const response = await InterestProductStorage.remove(product);
+      const response = await WatchListStorage.remove(product);
       if (response) return { success: true, msg: "정상적으로 삭제" };
       return { success: false, msg: "database에 존재하지 않는다." };
     } catch (err) {
@@ -38,4 +38,4 @@ class Cart {
   }
 }
 
-module.exports = Cart;
+module.exports = WatchList;
