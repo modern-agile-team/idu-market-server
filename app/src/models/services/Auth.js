@@ -73,8 +73,7 @@ class Auth {
       if (tokenCreatedDate + 300 < currentDate) {
         return {
           useable: false,
-          msg:
-            "비밀번호 변경 유효 시간(5분)이 지났습니다. 다시 시도해 주십시오.",
+          msg: "비밀번호 변경 유효 시간(5분)이 지났습니다. 다시 시도해 주십시오.",
         };
       }
       return { useable: true };
