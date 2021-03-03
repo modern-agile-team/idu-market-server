@@ -4,7 +4,7 @@ class WatchListStorage {
   //장바구니 화면
   static showWatchList(id) {
     return new Promise((resolve, reject) => {
-      const sql = ` SELECT bc.name, bo.title, sb.student_id 
+      const sql = ` SELECT bc.name, bo.title, sb.student_id
       FROM shopping_basket sb 
       JOIN boards bo 
       ON bo.no = sb.board_no 
@@ -21,7 +21,7 @@ class WatchListStorage {
   static findAll(cilent) {
     return new Promise((resolve, reject) => {
       const isexist = `SELECT board_no, student_id FROM shopping_basket WHERE board_no=? AND student_id=?`;
-      const testParams = [cilent.board_no, cilent.student_id];
+      const testParams = [cilent.boardNum, cilent.studentId];
       db.query(isexist, testParams, (err, rows) => {
         if (err) throw err;
         if (!rows.length) {
@@ -46,7 +46,7 @@ class WatchListStorage {
   static remove(cilent) {
     return new Promise((resolve, reject) => {
       const sql = `DELETE FROM shopping_basket WHERE board_no = ? AND student_id = ?`;
-      const params = [cilent.board_no, cilent.student];
+      const params = [cilent.boardNum, cilent.studentId];
       db.query(sql, params, (err, rows) => {
         if (err) reject(false);
         resolve(true);
