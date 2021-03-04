@@ -4,7 +4,7 @@ class WatchListStorage {
   //장바구니 화면
   static showWatchList(id) {
     return new Promise((resolve, reject) => {
-      const sql = ` SELECT bc.name, bo.title, sb.student_id
+      const sql = ` SELECT bc.name AS codename, bo.title, sb.student_id, bo.student_id AS seller
       FROM shopping_basket sb 
       JOIN boards bo 
       ON bo.no = sb.board_no 
