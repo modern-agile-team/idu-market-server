@@ -7,10 +7,8 @@ class WatchList {
 
   async create() {
     const cilent = this.body;
-    console.log(cilent);
     try {
       const isexist = await WatchListStorage.findAll(cilent);
-      console.log(isexist);
       if (isexist) {
         const response = await WatchListStorage.save(cilent);
         if (response) return { success: true, msg: "장바구니에 저장" };
