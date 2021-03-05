@@ -25,11 +25,22 @@ class UserStorage {
     });
   }
 
-  static findOneByNameAndEmail(name, email) {
+  static findOneByEmail(email) {
     return new Promise((resolve, reject) => {
-      const query = "SELECT * FROM students WHERE name=? OR email=?;";
+      const query = "SELECT * FROM students WHERE email=?;";
 
-      db.query(query, [name, email], (err, users) => {
+      db.query(query, [email], (err, users) => {
+        if (err) reject(`${err}`);
+        else resolve(users[0]);
+      });
+    });
+  }
+
+  static findOneByIdAndEmail(id, email) {
+    return new Promise((resolve, reject) => {
+      const query = "SELECT * FROM students WHERE id=? OR email=?;";
+
+      db.query(query, [id, email], (err, users) => {
         if (err) reject(`${err}`);
         else resolve(users[0]);
       });
@@ -54,12 +65,31 @@ class UserStorage {
 
       db.query(
         query,
-        [client.id, 16, client.name, client.email, client.psword, 0, 0],
+        [
+          client.id,
+          16,
+          client.name,
+          client.email,
+          client.psword,
+          client.salt,
+          0,
+        ],
         (err) => {
           if (err) reject(String(err));
           else resolve(true);
         }
       );
+    });
+  }
+
+  static async resetPassword(client) {
+    return new Promise((resolve, reject) => {
+      const query = "UPDATE students SET psword=? WHERE id=?;";
+
+      db.query(query, [client.newPsword, client.id], (err) => {
+        if (err) reject(String(err));
+        else resolve(true);
+      });
     });
   }
 }
