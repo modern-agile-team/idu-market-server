@@ -8,10 +8,10 @@ class Cryptor {
   static encrypt(psword) {
     return new Promise((resolve, reject) => {
       bcrypt.genSalt(this.saltRounds, (err, salt) => {
-        if (err) reject(String(err));
+        if (err) reject(err);
         else {
           bcrypt.hash(psword, salt, (err, hash) => {
-            if (err) reject(String(err));
+            if (err) reject(err);
             else resolve({ hash, salt });
           });
         }
@@ -22,7 +22,7 @@ class Cryptor {
   static encryptBySalt(psword, salt) {
     return new Promise((resolve, reject) => {
       bcrypt.hash(psword, salt, (err, hash) => {
-        if (err) reject(String(err));
+        if (err) reject(err);
         else resolve(hash);
       });
     });
