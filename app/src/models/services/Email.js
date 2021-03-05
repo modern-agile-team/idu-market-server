@@ -7,7 +7,7 @@ const UserStorage = require("./UserStorage");
 const Auth = require("./Auth");
 const mailOption = require("../../config/mail");
 
-const CHANGE_PSWORD_URL = "http://13.125.55.135:8080/reset/password";
+const CHANGE_PSWORD_URL = process.env.CHANGE_PSWORD_URL;
 
 class Email {
   constructor(body) {
