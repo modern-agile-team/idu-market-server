@@ -22,7 +22,10 @@ app.use(cookieParser());
 const view = require("./src/apis/view");
 const root = require("./src/apis/root");
 
+const profile = require("./src/apis/profile/routes");
+
 app.use("/", view);
 app.use("/api/", root);
+app.use("/api/students", profile);
 
 module.exports = app;
