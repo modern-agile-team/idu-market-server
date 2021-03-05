@@ -49,7 +49,6 @@ class User {
       return inspector;
     } catch (err) {
       throw err;
-      return { success: false, err };
     }
   }
 
@@ -67,8 +66,7 @@ class User {
           return { success: true, msg: "비밀번호가 변경되었습니다." };
       }
     } catch (err) {
-      console.log(err);
-      return { success: false, err };
+      throw err;
     }
   }
 

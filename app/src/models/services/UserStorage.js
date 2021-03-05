@@ -8,7 +8,7 @@ class UserStorage {
       const query = "SELECT * FROM students WHERE id=?;";
 
       db.query(query, [id], (err, users) => {
-        if (err) reject(String(err));
+        if (err) reject(err);
         else resolve(users[0]);
       });
     });
@@ -19,7 +19,7 @@ class UserStorage {
       const query = "SELECT * FROM students WHERE name=?;";
 
       db.query(query, [name], (err, users) => {
-        if (err) reject(String(err));
+        if (err) reject(err);
         else resolve(users);
       });
     });
@@ -30,7 +30,7 @@ class UserStorage {
       const query = "SELECT * FROM students WHERE email=?;";
 
       db.query(query, [email], (err, users) => {
-        if (err) reject(String(err));
+        if (err) reject(err);
         else resolve(users[0]);
       });
     });
@@ -41,7 +41,7 @@ class UserStorage {
       const query = "SELECT * FROM students WHERE id=? OR email=?;";
 
       db.query(query, [id, email], (err, users) => {
-        if (err) reject(String(err));
+        if (err) reject(err);
         else resolve(users[0]);
       });
     });
@@ -52,7 +52,7 @@ class UserStorage {
       const query = "SELECT * FROM students WHERE id=? OR email=?;";
 
       db.query(query, [id, email], (err, users) => {
-        if (err) reject(String(err));
+        if (err) reject(err);
         else resolve(users);
       });
     });
@@ -67,7 +67,7 @@ class UserStorage {
         query,
         [client.id, 16, client.name, client.email, client.psword, client.salt],
         (err) => {
-          if (err) reject(String(err));
+          if (err) reject(err);
           else resolve(true);
         }
       );
@@ -79,7 +79,7 @@ class UserStorage {
       const query = "UPDATE students SET psword=? WHERE id=?;";
 
       db.query(query, [client.newPsword, client.id], (err) => {
-        if (err) reject(String(err));
+        if (err) reject(err);
         else resolve(true);
       });
     });

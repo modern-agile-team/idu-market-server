@@ -83,7 +83,7 @@ class Email {
         }
       });
     } catch (err) {
-      reject({ success: false, err: String(err) });
+      throw err;
     }
   }
 }

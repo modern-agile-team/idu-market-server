@@ -9,7 +9,7 @@ class AuthStorage {
         "SELECT student_id, token DATE_FORMAT(token_created_date, '%Y%m%d%H%i%s') AS token_created_date FROM auth WHERE student_id=?;";
 
       db.query(query, [id], (err, auth) => {
-        if (err) reject(String(err));
+        if (err) reject(err);
         else resolve(auth[0]);
       });
     });
@@ -20,7 +20,7 @@ class AuthStorage {
       const query = "UPDATE auth SET token=? WHERE student_id=?;";
 
       db.query(query, [user.token, user.id], (err) => {
-        if (err) reject(String(err));
+        if (err) reject(err);
         else resolve(true);
       });
     });
@@ -31,7 +31,7 @@ class AuthStorage {
       const query = "INSERT INTO auth(student_id, token) VALUES(?, ?);";
 
       db.query(query, [user.id, user.token], (err) => {
-        if (err) reject(String(err));
+        if (err) reject(err);
         else resolve(true);
       });
     });
@@ -42,7 +42,7 @@ class AuthStorage {
       const query = "DELETE FROM auth WHERE student_id=?;";
 
       db.query(query, [id], (err) => {
-        if (err) reject(String(err));
+        if (err) reject(err);
         else resolve(true);
       });
     });
