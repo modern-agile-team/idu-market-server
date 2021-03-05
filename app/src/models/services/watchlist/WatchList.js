@@ -5,36 +5,36 @@ class WatchList {
     this.body = body;
   }
 
-  async create() {
+  async update() {
     const cilent = this.body;
     try {
-      const isexist = await WatchListStorage.findAll(cilent);
+      const isexist = await WatchListStorage.isexist(cilent);
       if (isexist) {
-        const response = await WatchListStorage.save(cilent);
-        if (response) return { success: true, msg: "장바구니에 저장" };
+        const response = await WatchListStorage.update(cilent);
+        if (response) return { success: true, msg: "관심목록에 저장" };
       }
-      return { success: false, msg: "이미 장바구니에 저장" };
+      return { success: false, msg: "이미 관심목록에 저장" };
     } catch (err) {
-      return { success: false, msg: "boards 데이터베이스에 존재하지 않음" };
+      return { success: false, msg: "상품이 존재하지 않습니다." };
     }
   }
 
-  async show() {
+  async findAllById() {
     const studentId = this.body;
     try {
-      const response = await WatchListStorage.showWatchList(studentId);
+      const response = await WatchListStorage.findAllById(studentId);
       return response;
     } catch (err) {
-      return { success: false, msg: "select 실패" };
+      throw err;
     }
   }
 
-  async productList() {
+  async delete() {
     const product = this.body;
     try {
-      const response = await WatchListStorage.remove(product);
+      const response = await WatchListStorage.delete(product);
       if (response) return { success: true, msg: "정상적으로 삭제" };
-      return { success: false, msg: "database에 존재하지 않는다." };
+      return { success: false, msg: "이미 삭제되었습니다." };
     } catch (err) {
       return { success: false, msg: "삭제 실패" };
     }
