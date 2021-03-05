@@ -23,8 +23,10 @@ let dist = "";
 if (process.env.NODE_ENV === "production") dist = "/dist";
 const view = require(`.${dist}/src/apis/view`);
 const root = require(`.${dist}/src/apis/root`);
+const watchList = require("./src/apis/watchlist/routes");
 
 app.use("/", view);
 app.use("/api/", root);
+app.use("/api/watchlist", watchList);
 
 module.exports = app;
