@@ -46,7 +46,7 @@ class Auth {
 
   static async createToken(id) {
     try {
-      const token = crypto.randomBytes(20).toString("hex"); // token 생성
+      const token = crypto.randomBytes(30).toString("hex").slice(0, 30); // token 생성
       const user = {
         token,
         id,

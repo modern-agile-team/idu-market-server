@@ -1,7 +1,9 @@
 "use strict";
 
 const express = require("express");
-const router = express.Router();
+const asyncify = require("express-asyncify");
+
+const router = asyncify(express.Router());
 
 const { logined, notLogined } = require("../../middlewares/auth");
 const ctrl = require("./root.ctrl");
