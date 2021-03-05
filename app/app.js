@@ -19,10 +19,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-const view = require("./dist/src/apis/view");
-const root = require("./dist/src/apis/root");
+const view = require("./src/apis/view");
+const root = require("./src/apis/root");
 
+const boards = require("./src/apis/boards/index");
 app.use("/", view);
 app.use("/api/", root);
+
+app.use("/api/boards", boards);
 
 module.exports = app;
