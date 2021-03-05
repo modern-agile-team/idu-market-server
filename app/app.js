@@ -22,4 +22,7 @@ const root = require("./src/apis/root");
 app.use("/", view);
 app.use("/api/", root);
 
+const purchase = require("./src/apis/purchase/routes/routes");
+app.use("/", purchase);
+
 module.exports = app;
