@@ -4,16 +4,16 @@ const db = require("../../../config/db");
 
 class PurchaseListStorage {
     //구매목록 화면
-    static showPurchaseList(id) {
+    static find(id) {
         return new Promise((resolve, reject) => {
           const sql = ` SELECT pu.student_id, bo.title, bo.student_id AS seller
-          FROM purchases pu 
+          FROM purchaselists pu 
           JOIN boards bo 
           ON bo.no = pu.board_no 
           WHERE pu.student_id = ?`;
-          db.query(sql, [id], (err, rows) => {
+          db.query(sql, [id], (err, purchaseList) => {
             if (err) reject(err);
-            resolve({ success: true, rows: rows });
+            resolve({ success: true, purchaseList: purchaseList });
             });
         });
     }

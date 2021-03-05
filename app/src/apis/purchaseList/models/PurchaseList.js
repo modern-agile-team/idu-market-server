@@ -5,17 +5,15 @@ class PurchaseList {
       this.body = body;
     }
 
-    async show() {
+    async find() {
         const studentId = this.body;
         try {
-          const response = await PurchaseListStorage.showPurchaseList(studentId);
-          console.log(response);
+          const response = await PurchaseListStorage.find(studentId);
           return response;
         } catch (err) {
-          return { success: false, msg: "select 실패" };
+          throw err;
         }
       }
-
 }
 
 module.exports = PurchaseList;

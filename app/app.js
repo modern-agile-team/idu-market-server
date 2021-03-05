@@ -18,11 +18,10 @@ app.use(cookieParser());
 
 const view = require("./src/apis/view");
 const root = require("./src/apis/root");
+const purchase = require("./src/apis/purchaseList/routes/routes");
 
 app.use("/", view);
 app.use("/api/", root);
-
-const purchase = require("./src/apis/purchase/routes/routes");
-app.use("/", purchase);
+app.use("/api/purchase-list", purchase);
 
 module.exports = app;
