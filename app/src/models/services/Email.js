@@ -18,8 +18,7 @@ class Email {
     try {
       const client = this.body;
       const users = await UserStorage.findAllByName(client.name);
-      if (users.length === 0)
-        return { success: false, msg: "등록되지 않은 이름 입니다." };
+      if (users.length === 0) return { success: false, msg: "등록되지 않은 이름 입니다." };
 
       const user = await UserStorage.findOneByEmail(client.email);
       if (!user) return { success: false, msg: "등록되지 않은 이메일 입니다." };
@@ -57,8 +56,7 @@ class Email {
       if (!existInfo.isExist) return existInfo;
 
       const userInfo = await UserStorage.findOneById(client.id);
-      if (!userInfo)
-        return { success: false, msg: "등록되지 않은 아이디 입니다." };
+      if (!userInfo) return { success: false, msg: "등록되지 않은 아이디 입니다." };
 
       const tokenInfo = await Auth.createToken(client.id);
       if (!tokenInfo.success) return tokenInfo;
