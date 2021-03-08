@@ -3,8 +3,7 @@
 const UserStorage = require("./UserStorage");
 const Auth = require("./Auth");
 const AuthStorage = require("./AuthStorage");
-const Cryptor = require("../utils/Cryptor");
-const bcrypt = require("bcrypt");
+const Cryptor = require("../../models/utils/Cryptor");
 
 class User {
   constructor(body) {
@@ -29,7 +28,6 @@ class User {
       return { success: false, msg: "존재하지 않는 아이디입니다." };
     } catch (err) {
       throw err;
-      return { success: false, err };
     }
   }
 
@@ -50,7 +48,6 @@ class User {
       return inspector;
     } catch (err) {
       throw err;
-      return { success: false, err };
     }
   }
 
@@ -67,8 +64,7 @@ class User {
         if (isDelete) return { success: true, msg: "비밀번호가 변경되었습니다." };
       }
     } catch (err) {
-      console.log(err);
-      return { success: false, err };
+      throw err;
     }
   }
 
