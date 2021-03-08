@@ -1,5 +1,3 @@
-
-
 const WatchList = require("../../models/services/watchlist/WatchList");
 
 const output = {

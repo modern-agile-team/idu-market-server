@@ -1,5 +1,3 @@
-
-
 const WatchListStorage = require("./WatchListStorage");
 
 class WatchList {

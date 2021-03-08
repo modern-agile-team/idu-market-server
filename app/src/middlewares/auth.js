@@ -1,5 +1,3 @@
-
-
 const Auth = require("../models/services/Auth");
 
 // 로그인 된 유저들만 서비스 이용을 허가하는 미들웨어
