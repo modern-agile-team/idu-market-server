@@ -1,5 +1,3 @@
-"use strict";
-
 const nodemailer = require("nodemailer");
 
 const User = require("./User");
@@ -18,12 +16,13 @@ class Email {
     try {
       const client = this.body;
       const users = await UserStorage.findAllByName(client.name);
-      if (users.length === 0) return { success: false, msg: "등록되지 않은 이름 입니다." };
+      if (users.length === 0)
+        return { success: false, msg: "등록되지 않은 이름 입니다." };
 
       const user = await UserStorage.findOneByEmail(client.email);
       if (!user) return { success: false, msg: "등록되지 않은 이메일 입니다." };
 
-      return new Promise(async (resolve, reject) => {
+      const promise = new Promise((resolve, reject) => {
         try {
           const message = {
             from: process.env.MAIL_EMAIL,
@@ -34,15 +33,17 @@ class Email {
 
           const transporter = nodemailer.createTransport(mailOption);
 
-          await transporter.sendMail(message);
+          transporter.sendMail(message);
           resolve({
             success: true,
             mag: "입력된 이메일로 ID가 발송되었습니다.",
           });
         } catch (err) {
-          throw err;
+          reject(err);
         }
       });
+
+      return promise.then((res) => res);
     } catch (err) {
       throw err;
     }
@@ -56,12 +57,13 @@ class Email {
       if (!existInfo.isExist) return existInfo;
 
       const userInfo = await UserStorage.findOneById(client.id);
-      if (!userInfo) return { success: false, msg: "등록되지 않은 아이디 입니다." };
+      if (!userInfo)
+        return { success: false, msg: "등록되지 않은 아이디 입니다." };
 
       const tokenInfo = await Auth.createToken(client.id);
       if (!tokenInfo.success) return tokenInfo;
 
-      return new Promise(async (resolve, reject) => {
+      const promise = new Promise((resolve, reject) => {
         try {
           const message = {
             from: process.env.MAIL_EMAIL,
@@ -71,7 +73,7 @@ class Email {
           };
 
           const transporter = nodemailer.createTransport(mailOption);
-          await transporter.sendMail(message);
+          transporter.sendMail(message);
           resolve({
             success: true,
             mag: "이메일로 발송된 URL을 통해 비밀번호를 재설정 할 수 있습니다.",
@@ -80,6 +82,8 @@ class Email {
           reject({ success: false, err: String(err) });
         }
       });
+
+      return promise.then((res) => res);
     } catch (err) {
       throw err;
     }

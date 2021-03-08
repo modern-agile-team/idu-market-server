@@ -1,4 +1,4 @@
-"use strict";
+
 
 const id = document.querySelector("#id"),
   newPsword = document.querySelector("#new-psword"),

@@ -1,4 +1,4 @@
-"use strict";
+
 
 const Auth = require("../models/services/Auth");
 

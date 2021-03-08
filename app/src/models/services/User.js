@@ -1,4 +1,4 @@
-"use strict";
+
 
 const UserStorage = require("./UserStorage");
 const Auth = require("./Auth");
