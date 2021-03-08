@@ -2,7 +2,7 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
 const AuthStorage = require("./AuthStorage");
-const WooahanDate = require("../utils/WooahanDate");
+const WooahanDate = require("../../utils/WooahanDate");
 
 class Auth {
   static TOKEN_INVALID = -2;

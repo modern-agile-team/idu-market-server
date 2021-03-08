@@ -1,5 +1,5 @@
-const User = require("../../models/services/User");
-const Email = require("../../models/services/Email");
+const User = require("../../models/services/User/User");
+const Email = require("../../models/services/Email/Email");
 
 const process = {
   login: async (req, res) => {

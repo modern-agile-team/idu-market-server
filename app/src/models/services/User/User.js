@@ -1,7 +1,7 @@
 const UserStorage = require("./UserStorage");
-const Auth = require("./Auth");
-const AuthStorage = require("./AuthStorage");
-const Cryptor = require("../../models/utils/Cryptor");
+const Auth = require("../Auth/Auth");
+const AuthStorage = require("../Auth/AuthStorage");
+const Cryptor = require("../../utils/Cryptor");
 
 class User {
   constructor(body) {

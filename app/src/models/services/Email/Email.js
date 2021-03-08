@@ -1,9 +1,9 @@
 const nodemailer = require("nodemailer");
 
-const User = require("./User");
-const UserStorage = require("./UserStorage");
-const Auth = require("./Auth");
-const mailOption = require("../../config/mail");
+const User = require("../User/User");
+const UserStorage = require("../User/UserStorage");
+const Auth = require("../Auth/Auth");
+const mailOption = require("../../../config/mail");
 
 const CHANGE_PSWORD_URL = process.env.CHANGE_PSWORD_URL;
 
@@ -36,7 +36,7 @@ class Email {
           transporter.sendMail(message);
           resolve({
             success: true,
-            mag: "입력된 이메일로 ID가 발송되었습니다.",
+            msg: "입력된 이메일로 ID가 발송되었습니다.",
           });
         } catch (err) {
           reject(err);

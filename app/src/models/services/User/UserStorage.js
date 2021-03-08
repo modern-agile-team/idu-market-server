@@ -1,4 +1,4 @@
-const db = require("../../config/db");
+const db = require("../../..//config/db");
 
 class UserStorage {
   static findOneById(id) {
