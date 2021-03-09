@@ -3,13 +3,16 @@ const router = express.Router();
 
 const ctrl = require("./board.ctrl");
 
-router.post("/:codeName", ctrl.process.createByCodeName);
+router.post("/:categoryName", ctrl.process.createByCategoryName);
 
-router.get("/:codeName", ctrl.process.findAllByCodeName);
-router.get("/:codeName/:num", ctrl.process.detailFindOneByCodeName);
+router.get("/:categoryName", ctrl.process.findAllByCategoryName);
+router.get(
+  "/:categoryName/:boardNum",
+  ctrl.process.detailFindOneByCategoryName
+);
 
-router.put("/:codeName/:num", ctrl.process.updateByNo);
+router.put("/:categoryName/:boardNum", ctrl.process.updateByNo);
 
-router.delete("/:codeName/:num", ctrl.process.deleteByNo);
+router.delete("/:categoryName/:boardNum", ctrl.process.deleteByNo);
 
 module.exports = router;
