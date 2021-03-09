@@ -12,7 +12,7 @@ class WatchListStorage {
       ON bc.no = wl.board_code_no 
       WHERE wl.student_id = ?`;
       db.query(sql, [id], (err, watchLists) => {
-        if (err) throw err;
+        if (err) reject(err);
         resolve(watchLists);
       });
     });
@@ -23,7 +23,7 @@ class WatchListStorage {
       const isexist = `SELECT board_no, student_id FROM watch_list WHERE board_no=? AND student_id=?`;
       const testParams = [cilent.boardNum, cilent.studentId];
       db.query(isexist, testParams, (err, rows) => {
-        if (err) throw err;
+        if (err) reject(err);
         if (!rows.length) {
           resolve(true);
         } else resolve(false);
@@ -35,7 +35,7 @@ class WatchListStorage {
     return new Promise((resolve, reject) => {
       const sql = `INSERT INTO watch_list(board_no, board_code_no, student_id) VALUES(?, ?, ?)`;
       const params = [cilent.boardNum, cilent.boardCodeNum, cilent.studentId];
-      db.query(sql, params, (err, rows) => {
+      db.query(sql, params, (err) => {
         if (err) reject(false);
         resolve(true);
       });
@@ -47,7 +47,7 @@ class WatchListStorage {
     return new Promise((resolve, reject) => {
       const sql = `DELETE FROM watch_list WHERE board_no = ? AND student_id = ?`;
       const params = [cilent.boardNum, cilent.studentId];
-      db.query(sql, params, (err, rows) => {
+      db.query(sql, params, (err) => {
         if (err) reject(false);
         resolve(true);
       });
