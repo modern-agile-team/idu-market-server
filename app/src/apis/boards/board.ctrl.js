@@ -1,6 +1,6 @@
 "use strict";
 
-const Board = require("../../models/services/boards/Board");
+const Board = require("../../models/services/Board/Board");
 
 const process = {
   createByCategoryName: async (req, res) => {
