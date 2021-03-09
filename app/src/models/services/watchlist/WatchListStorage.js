@@ -18,7 +18,7 @@ class WatchListStorage {
     });
   }
   //장바구니 담는 코드
-  static isexist(cilent) {
+  static isExist(cilent) {
     return new Promise((resolve, reject) => {
       const isexist = `SELECT board_no, student_id FROM watch_lists WHERE board_no=? AND student_id=?`;
       const testParams = [cilent.boardNum, cilent.studentId];
