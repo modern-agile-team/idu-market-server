@@ -1,4 +1,4 @@
-const WatchList = require("../../models/services/Watchlist/WatchList");
+const WatchList = require("../../models/services/watchlist/WatchList");
 
 const output = {
   findAllById: async (req, res) => {
