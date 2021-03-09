@@ -18,7 +18,7 @@ app.use(cookieParser());
 
 const view = require("./src/apis/view");
 const root = require("./src/apis/root");
-const purchase = require("./src/apis/purchaseList/routes/routes");
+const purchase = require("./src/apis/purchaseList/routes");
 
 app.use("/", view);
 app.use("/api/", root);
