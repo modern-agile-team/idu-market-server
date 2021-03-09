@@ -1,11 +1,10 @@
-"use strict";
-
-const db = require("../../config/db");
+const db = require("../../../config/db");
 
 class AuthStorage {
   static findOneById(id) {
     return new Promise((resolve, reject) => {
-      const query = "SELECT student_id, token DATE_FORMAT(token_created_date, '%Y%m%d%H%i%s') AS token_created_date FROM auth WHERE student_id=?;";
+      const query =
+        "SELECT student_id, token, DATE_FORMAT(token_created_date, '%Y%m%d%H%i%s') AS token_created_date FROM auth WHERE student_id=?;";
 
       db.query(query, [id], (err, auth) => {
         if (err) reject(err);
