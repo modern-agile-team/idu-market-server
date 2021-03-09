@@ -1,7 +1,9 @@
+"use strict";
+
 const UserStorage = require("./UserStorage");
-const Auth = require("../Auth/Auth");
-const AuthStorage = require("../Auth/AuthStorage");
-const Cryptor = require("../../utils/Cryptor");
+const Auth = require("./Auth");
+const AuthStorage = require("./AuthStorage");
+const Cryptor = require("../../models/utils/Cryptor");
 
 class User {
   constructor(body) {
@@ -12,15 +14,14 @@ class User {
     const client = this.body;
 
     try {
-      let user = await UserStorage.findOneById(client.id);
+      const user = await UserStorage.findOneById(client.id);
 
       if (user) {
         client.psword = await Cryptor.encryptBySalt(client.psword, user.salt);
 
         if (user.id === client.id && user.psword === client.psword) {
           const jwt = await Auth.createJWT(user);
-          user = { id: user.id };
-          return { success: true, msg: "로그인에 성공하셨습니다.", user, jwt };
+          return { success: true, msg: "로그인에 성공하셨습니다.", jwt };
         }
         return { success: false, msg: "잘못된 비밀번호입니다." };
       }

@@ -6,13 +6,10 @@ const ctrl = require("./board.ctrl");
 router.post("/:categoryName", ctrl.process.createByCategoryName);
 
 router.get("/:categoryName", ctrl.process.findAllByCategoryName);
-router.get(
-  "/:categoryName/:boardNum",
-  ctrl.process.detailFindOneByCategoryName
-);
+router.get("/:categoryName/:num", ctrl.process.detailFindOneByCategoryName);
 
-router.put("/:categoryName/:boardNum", ctrl.process.updateByNo);
+router.put("/:categoryName/:num", ctrl.process.updateByNo);
 
-router.delete("/:categoryName/:boardNum", ctrl.process.deleteByNo);
+router.delete("/:categoryName/:num", ctrl.process.deleteByNo);
 
 module.exports = router;

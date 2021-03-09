@@ -1,13 +1,13 @@
 "use strict";
 
 const BoardStroage = require("./BoardStorage");
-const BoardCode = require("../categories/Category");
+const BoardCode = require("../Category/Category");
 
 class Board {
   constructor(req) {
     this.body = req.body;
     this.categoryName = req.params.categoryName;
-    this.num = req.params.boardNum;
+    this.num = req.params.num;
   }
 
   async createBycategoryName() {
