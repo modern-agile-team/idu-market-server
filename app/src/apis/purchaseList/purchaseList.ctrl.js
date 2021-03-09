@@ -12,7 +12,7 @@ const output = {
 };
 
 const process = {
-  update: async (req, res, next) => {
+  update: async (req, res) => {
     const purchaseList = new PurchaseList(req.body);
     const response = await purchaseList.update();
     if (response.success) return res.status(200).json(response);

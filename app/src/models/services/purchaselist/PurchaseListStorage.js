@@ -19,7 +19,7 @@ class PurchaseListStorage {
   }
 
   static isexist(client) {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const isexist = `SELECT board_no, student_id FROM purchase_lists WHERE board_no=? AND student_id=?`;
       const testParams = [client.boardNum, client.studentId];
       db.query(isexist, testParams, (err, rows) => {
@@ -35,7 +35,7 @@ class PurchaseListStorage {
     return new Promise((resolve, reject) => {
       const sql = `INSERT INTO purchase_lists(board_no, category_no, student_id) VALUES(?, ?, ?)`;
       const params = [client.boardNum, client.categoryNum, client.studentId];
-      db.query(sql, params, (err, rows) => {
+      db.query(sql, params, (err) => {
         if (err) reject(false);
         resolve(true);
       });

@@ -1,15 +1,13 @@
-"use strict";
-
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
 const AuthStorage = require("./AuthStorage");
-const WooahanDate = require("../utils/WooahanDate");
+const WooahanDate = require("../../utils/WooahanDate");
 
 class Auth {
-  TOKEN_INVALID = -2;
-  TOKEN_EXPIRED = -3;
-  jwtOption = {
+  static TOKEN_INVALID = -2;
+  static TOKEN_EXPIRED = -3;
+  static jwtOption = {
     algorithm: "HS256",
     expiresIn: "30m",
     issuer: "wooahan agile",
@@ -46,7 +44,7 @@ class Auth {
 
   static async createToken(id) {
     try {
-      const token = crypto.randomBytes(20).toString("hex"); // token 생성
+      const token = crypto.randomBytes(30).toString("hex").slice(0, 30); // token 생성
       const user = {
         token,
         id,

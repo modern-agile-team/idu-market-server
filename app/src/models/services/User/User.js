@@ -1,10 +1,7 @@
-"use strict";
-
 const UserStorage = require("./UserStorage");
-const Auth = require("./Auth");
-const AuthStorage = require("./AuthStorage");
-const Cryptor = require("../../models/utils/Cryptor");
-const bcrypt = require("bcrypt");
+const Auth = require("../Auth/Auth");
+const AuthStorage = require("../Auth/AuthStorage");
+const Cryptor = require("../../utils/Cryptor");
 
 class User {
   constructor(body) {
@@ -22,14 +19,14 @@ class User {
 
         if (user.id === client.id && user.psword === client.psword) {
           const jwt = await Auth.createJWT(user);
-          return { success: true, msg: "로그인에 성공하셨습니다.", jwt };
+          const user = { id: user.id };
+          return { success: true, msg: "로그인에 성공하셨습니다.", user, jwt };
         }
         return { success: false, msg: "잘못된 비밀번호입니다." };
       }
       return { success: false, msg: "존재하지 않는 아이디입니다." };
     } catch (err) {
       throw err;
-      return { success: false, err };
     }
   }
 
@@ -51,7 +48,6 @@ class User {
       return inspector;
     } catch (err) {
       throw err;
-      return { success: false, err };
     }
   }
 
@@ -69,8 +65,7 @@ class User {
           return { success: true, msg: "비밀번호가 변경되었습니다." };
       }
     } catch (err) {
-      console.log(err);
-      return { success: false, err };
+      throw err;
     }
   }
 
