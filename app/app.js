@@ -30,7 +30,7 @@ const boards = require("./src/apis/boards/index");
 app.use("/", view);
 app.use("/api/", root);
 app.use("/api/watchlist", watchList);
-app.use("/api/postimage", image);
+app.use("/api/image", image);
 
 app.use("/api/boards", boards);
 
