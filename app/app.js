@@ -25,13 +25,14 @@ const view = require(`.${dist}/src/apis/view`);
 const root = require(`.${dist}/src/apis/root`);
 const watchList = require("./src/apis/watchlist/routes");
 const image = require("./src/apis/image/routes");
-
 const boards = require("./src/apis/boards/index");
+const purchase = require("./src/apis/purchase-list/routes");
+
 app.use("/", view);
 app.use("/api/", root);
 app.use("/api/watchlist", watchList);
 app.use("/api/image", image);
-
 app.use("/api/boards", boards);
+app.use("/api/purchase-list", purchase);
 
 module.exports = app;
