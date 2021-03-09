@@ -7,7 +7,7 @@ class PurchaseListStorage {
   static find(id) {
     return new Promise((resolve, reject) => {
       const sql = ` SELECT pu.student_id, bo.title, bo.student_id AS seller
-          FROM purchaselists pu 
+          FROM purchase_lists pu 
           JOIN boards bo 
           ON bo.no = pu.board_no 
           WHERE pu.student_id = ?`;
@@ -20,7 +20,7 @@ class PurchaseListStorage {
 
   static isexist(client) {
     return new Promise((resolve, reject) => {
-      const isexist = `SELECT board_no, student_id FROM purchaselists WHERE board_no=? AND student_id=?`;
+      const isexist = `SELECT board_no, student_id FROM purchase_lists WHERE board_no=? AND student_id=?`;
       const testParams = [client.boardNum, client.studentId];
       db.query(isexist, testParams, (err, rows) => {
         if (err) throw err;
@@ -33,7 +33,7 @@ class PurchaseListStorage {
 
   static update(client) {
     return new Promise((resolve, reject) => {
-      const sql = `INSERT INTO purchaselists(board_no, board_code_no, student_id) VALUES(?, ?, ?)`;
+      const sql = `INSERT INTO purchase_lists(board_no, category_no, student_id) VALUES(?, ?, ?)`;
       const params = [client.boardNum, client.boardCodeNum, client.studentId];
       db.query(sql, params, (err, rows) => {
         if (err) reject(false);
