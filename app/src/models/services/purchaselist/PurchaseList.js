@@ -5,11 +5,11 @@ class PurchaseList {
     this.body = body;
   }
 
-  async find() {
+  async read() {
     const studentId = this.body;
     try {
-      const response = await PurchaseListStorage.find(studentId);
-      return response;
+      const purchaseList = await PurchaseListStorage.findAllById(studentId);
+      return { success: true, purchaseList };
     } catch (err) {
       throw err;
     }
@@ -18,7 +18,7 @@ class PurchaseList {
   async update() {
     const client = this.body;
     try {
-      const isexist = await PurchaseListStorage.isexist(client);
+      const isexist = await PurchaseListStorage.isExist(client);
       if (isexist) {
         const response = await PurchaseListStorage.update(client);
         if (response)

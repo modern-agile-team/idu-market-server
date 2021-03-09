@@ -4,7 +4,7 @@ const db = require("../../../config/db");
 
 class PurchaseListStorage {
   //구매목록 화면
-  static find(id) {
+  static findAllById(id) {
     return new Promise((resolve, reject) => {
       const sql = ` SELECT pu.student_id, bo.title, bo.student_id AS seller
           FROM purchase_lists pu 
@@ -13,12 +13,12 @@ class PurchaseListStorage {
           WHERE pu.student_id = ?`;
       db.query(sql, [id], (err, purchaseList) => {
         if (err) reject(err);
-        resolve({ success: true, purchaseList: purchaseList });
+        resolve(purchaseList);
       });
     });
   }
 
-  static isexist(client) {
+  static isExist(client) {
     return new Promise((resolve) => {
       const isexist = `SELECT board_no, student_id FROM purchase_lists WHERE board_no=? AND student_id=?`;
       const testParams = [client.boardNum, client.studentId];
