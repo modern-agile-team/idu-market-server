@@ -1,4 +1,4 @@
-const Image = require("../../models/services/image/Image");
+const Image = require("../../models/services/Image/Image");
 
 const output = {
   findOneByNum: async (req, res) => {

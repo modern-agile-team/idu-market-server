@@ -15,12 +15,12 @@ class Image {
     }
   }
 
-  async create() {
-    const client = this.body;
-    try {
-      const response = await ImageStorage.create(client);
-    } catch {}
-  }
+  // async create() {
+  //   const client = this.body;
+  //   try {
+  //     const response = await ImageStorage.create(client);
+  //   } catch {}
+  // }
 }
 
 module.exports = Image;

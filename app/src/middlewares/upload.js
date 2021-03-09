@@ -10,7 +10,7 @@ const upload = multer(
       s3: s3,
       bucket: "woowahan-agile",
       acl: "public-read",
-      key: function (req, file, cb) {
+      key: function (file, cb) {
         cb(null, Date.now() + "." + file.originalname.split(".").pop());
       },
     }),
@@ -19,13 +19,10 @@ const upload = multer(
 );
 
 const deleteImage = (path) => {
-  return s3.deleteObject(
-    {
-      bucket: "woowahan-agile",
-      Key: `${path}`,
-    },
-    (err, data) => {}
-  );
+  return s3.deleteObject({
+    bucket: "woowahan-agile",
+    Key: `${path}`,
+  });
 };
 
 module.exports = { upload, deleteImage };
