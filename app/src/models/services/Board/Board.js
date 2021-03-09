@@ -7,7 +7,7 @@ class Board {
   constructor(req) {
     this.body = req.body;
     this.categoryName = req.params.categoryName;
-    this.num = req.params.boardNum;
+    this.num = req.params.num;
   }
 
   async createBycategoryName() {
