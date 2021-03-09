@@ -11,17 +11,17 @@ class PurchaseListStorage {
           WHERE pu.student_id = ?`;
       db.query(sql, [id], (err, purchaseList) => {
         if (err) reject(err);
-        resolve(purchaseList);
+        else resolve(purchaseList);
       });
     });
   }
 
   static isExist(client) {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       const isexist = `SELECT board_no, student_id FROM purchase_lists WHERE board_no=? AND student_id=?`;
       const testParams = [client.boardNum, client.studentId];
       db.query(isexist, testParams, (err, rows) => {
-        if (err) throw err;
+        if (err) reject(err);
         if (!rows.length) {
           resolve(true);
         } else resolve(false);
@@ -34,8 +34,8 @@ class PurchaseListStorage {
       const sql = `INSERT INTO purchase_lists(board_no, category_no, student_id) VALUES(?, ?, ?)`;
       const params = [client.boardNum, client.categoryNum, client.studentId];
       db.query(sql, params, (err) => {
-        if (err) reject(false);
-        resolve(true);
+        if (err) reject(err);
+        else resolve(true);
       });
     });
   }
