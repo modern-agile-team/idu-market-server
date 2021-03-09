@@ -1,7 +1,7 @@
 "use strict";
 
 const BoardStroage = require("./BoardStorage");
-const BoardCode = require("../categories/Category");
+const BoardCode = require("../Category/Category");
 
 class Board {
   constructor(req) {
