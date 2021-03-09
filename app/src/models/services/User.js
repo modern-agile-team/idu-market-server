@@ -43,7 +43,8 @@ class User {
         client.salt = salt;
 
         const isSave = await UserStorage.save(client);
-        if (isSave) return { success: true, msg: "회원가입이 정상 처리 되었습니다." };
+        if (isSave)
+          return { success: true, msg: "회원가입이 정상 처리 되었습니다." };
       }
       return inspector;
     } catch (err) {
@@ -61,7 +62,8 @@ class User {
       const isReset = await UserStorage.resetPassword(client);
       if (isReset) {
         const isDelete = await AuthStorage.delete(client.id);
-        if (isDelete) return { success: true, msg: "비밀번호가 변경되었습니다." };
+        if (isDelete)
+          return { success: true, msg: "비밀번호가 변경되었습니다." };
       }
     } catch (err) {
       throw err;
@@ -71,7 +73,10 @@ class User {
   async inspectIdAndEmail() {
     const client = this.body;
 
-    const users = await UserStorage.findAllByIdAndEmail(client.id, client.email);
+    const users = await UserStorage.findAllByIdAndEmail(
+      client.id,
+      client.email
+    );
 
     if (users.length === 0) {
       return { saveable: true };
@@ -79,7 +84,8 @@ class User {
       for (let user of users) {
         if (user.id === client.id) {
           return { saveable: false, msg: "이미 존재하는 아이디 입니다." };
-        } else if (user.email === client.email) return { saveable: false, msg: "이미 가입된 이메일 입니다." };
+        } else if (user.email === client.email)
+          return { saveable: false, msg: "이미 가입된 이메일 입니다." };
       }
     }
   }
@@ -90,8 +96,10 @@ class User {
     const user = await UserStorage.findOneByEmail(client.email);
     console.log(user);
     if (user) {
-      if (user.name !== client.name) return { isExist: false, msg: "등록되지 않은 이름 입니다." };
-      else if (user.email !== client.email) return { isExist: false, msg: "등록되지 않은 이메일 입니다." };
+      if (user.name !== client.name)
+        return { isExist: false, msg: "등록되지 않은 이름 입니다." };
+      else if (user.email !== client.email)
+        return { isExist: false, msg: "등록되지 않은 이메일 입니다." };
       else return { isExist: true };
     }
     return { isExist: false, msg: "등록되지 않은 이름 입니다." };
@@ -103,8 +111,10 @@ class User {
     const user = await UserStorage.findOneByIdAndEmail(client.id, client.email);
 
     if (user) {
-      if (user.id !== client.id) return { isExist: false, msg: "등록되지 않은 아이디 입니다." };
-      else if (user.email !== client.email) return { isExist: false, msg: "등록되지 않은 이메일 입니다." };
+      if (user.id !== client.id)
+        return { isExist: false, msg: "등록되지 않은 아이디 입니다." };
+      else if (user.email !== client.email)
+        return { isExist: false, msg: "등록되지 않은 이메일 입니다." };
       else return { isExist: true };
     }
     return { isExist: false, msg: "등록되지 않은 아이디 입니다." };
