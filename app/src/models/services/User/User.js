@@ -19,7 +19,8 @@ class User {
 
         if (user.id === client.id && user.psword === client.psword) {
           const jwt = await Auth.createJWT(user);
-          return { success: true, msg: "로그인에 성공하셨습니다.", jwt };
+          const user = { id: user.id };
+          return { success: true, msg: "로그인에 성공하셨습니다.", user, jwt };
         }
         return { success: false, msg: "잘못된 비밀번호입니다." };
       }
