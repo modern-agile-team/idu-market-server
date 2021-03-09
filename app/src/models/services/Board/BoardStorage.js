@@ -5,10 +5,10 @@ const db = require("../../../config/db");
 class BoardStroage {
   static create(num, board) {
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO boards (student_id, code_no, title, content) VALUES (?, ?, ?, ?);`;
+      const query = `INSERT INTO boards (student_id, category_no, title, content, price) VALUES (?, ?, ?, ?, ?);`;
       db.query(
         query,
-        [board.studentId, num, board.title, board.content],
+        [board.studentId, num, board.title, board.content, board.price],
         (err) => {
           if (err) reject(err);
           else resolve(true);
@@ -19,7 +19,7 @@ class BoardStroage {
 
   static findAllByCategoryName(categoryName) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.category_no AS categoryNum, ca.name, bo.title, bo.content, bo.hit,
+      const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.category_no AS categoryNum, ca.name, bo.title, bo.content, bo.hit, bo.price,
             date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(bo.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
             FROM boards bo 
             join categories ca
@@ -42,7 +42,7 @@ class BoardStroage {
 
   static findByCategoryNameAndNum(categoryName, num) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.category_no AS categoryNum, ca.name, bo.title, bo.content, bo.hit,
+      const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.category_no AS categoryNum, ca.name, bo.title, bo.content, bo.hit, bo.price,
             date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(bo.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
             FROM boards bo 
             join categories ca

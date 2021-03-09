@@ -2,6 +2,7 @@
 
 const BoardStroage = require("./BoardStorage");
 const BoardCode = require("../Category/Category");
+const String = require("../../utils/String");
 
 class Board {
   constructor(req) {
@@ -10,10 +11,11 @@ class Board {
     this.num = req.params.num;
   }
 
-  async createBycategoryName() {
+  async createByCategoryName() {
     const body = this.body;
     const categoryName = this.categoryName;
     const categoryNum = BoardCode[categoryName];
+    body.price = String.makePrice(body.price);
     try {
       const board = await BoardStroage.create(categoryNum, body);
       if (board) {
