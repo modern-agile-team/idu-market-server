@@ -8,8 +8,8 @@ class WatchList {
   async update() {
     const cilent = this.body;
     try {
-      const isexist = await WatchListStorage.isexist(cilent);
-      if (isexist) {
+      const isExist = await WatchListStorage.isExist(cilent);
+      if (isExist) {
         const response = await WatchListStorage.update(cilent);
         if (response) return { success: true, msg: "관심목록에 저장" };
       }
