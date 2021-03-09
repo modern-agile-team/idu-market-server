@@ -1,9 +1,8 @@
-const upload = require("../../models/utils/image");
+const upload = require("../../middlewares/upload");
 const express = require("express");
 const router = express.Router();
 const ctrl = require("./image.ctrl");
 
-router.post("/muti", upload.array("image", 10), ctrl.process.uploadImages);
-router.post("/single", upload.single("image"), ctrl.process.upload);
-
+router.post("/post", upload.array("image", 10), ctrl.process.upload);
+router.get("/get", ctrl.output.findOneByNum);
 module.exports = router;
