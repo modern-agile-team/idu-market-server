@@ -14,13 +14,6 @@ class Image {
       return { success: false };
     }
   }
-
-  // async create() {
-  //   const client = this.body;
-  //   try {
-  //     const response = await ImageStorage.create(client);
-  //   } catch {}
-  // }
 }
 
 module.exports = Image;
