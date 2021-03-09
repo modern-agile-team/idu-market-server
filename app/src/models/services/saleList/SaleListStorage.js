@@ -17,6 +17,30 @@ class SaleListStorage {
       });
     });
   }
+
+  static isexist(client) {
+    return new Promise((resolve, reject) => {
+      const isexist = `SELECT board_no, student_id FROM salelists WHERE board_no=? AND student_id=?`;
+      const testParams = [client.boardNum, client.studentId];
+      db.query(isexist, testParams, (err, rows) => {
+        if (err) throw err;
+        if (!rows.length) {
+          resolve(true);
+        } else resolve(false);
+      });
+    });
+  }
+
+  static update(client) {
+    return new Promise((resolve, reject) => {
+      const sql = `INSERT INTO salelists(board_no, board_code_no, student_id) VALUES(?, ?, ?)`;
+      const params = [client.boardNum, client.boardCodeNum, client.studentId];
+      db.query(sql, params, (err, rows) => {
+        if (err) reject(false);
+        resolve(true);
+      });
+    });
+  }
 }
 
 module.exports = SaleListStorage;

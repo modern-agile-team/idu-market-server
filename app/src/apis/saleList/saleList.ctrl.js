@@ -11,4 +11,13 @@ const output = {
   },
 };
 
-module.exports = { output };
+const process = {
+  update: async (req, res, next) => {
+    const saleList = new SaleList(req.body);
+    const response = await saleList.update();
+    if (response.success) return res.status(200).json(response);
+    return res.status(409).json(response);
+  },
+};
+
+module.exports = { output, process };
