@@ -7,7 +7,7 @@ class SaleListStorage {
   static find(id) {
     return new Promise((resolve, reject) => {
       const sql = ` SELECT sa.student_id, bo.title
-          FROM salelists sa 
+          FROM sale_lists sa 
           JOIN boards bo 
           ON bo.no = sa.board_no 
           WHERE sa.student_id = ?`;
@@ -20,7 +20,7 @@ class SaleListStorage {
 
   static isexist(client) {
     return new Promise((resolve, reject) => {
-      const isexist = `SELECT board_no, student_id FROM salelists WHERE board_no=? AND student_id=?`;
+      const isexist = `SELECT board_no, student_id FROM sale_lists WHERE board_no=? AND student_id=?`;
       const testParams = [client.boardNum, client.studentId];
       db.query(isexist, testParams, (err, rows) => {
         if (err) throw err;
@@ -33,8 +33,8 @@ class SaleListStorage {
 
   static update(client) {
     return new Promise((resolve, reject) => {
-      const sql = `INSERT INTO salelists(board_no, board_code_no, student_id) VALUES(?, ?, ?)`;
-      const params = [client.boardNum, client.boardCodeNum, client.studentId];
+      const sql = `INSERT INTO sale_lists(board_no, category_no, student_id) VALUES(?, ?, ?)`;
+      const params = [client.boardNum, client.categoryNum, client.studentId];
       db.query(sql, params, (err, rows) => {
         if (err) reject(false);
         resolve(true);
