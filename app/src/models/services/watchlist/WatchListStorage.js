@@ -36,7 +36,7 @@ class WatchListStorage {
       const sql = `INSERT INTO watch_lists(board_no, category_no, student_id) VALUES(?, ?, ?)`;
       const params = [cilent.boardNum, cilent.categoryNum, cilent.studentId];
       db.query(sql, params, (err) => {
-        if (err) reject(false);
+        if (err) reject(err);
         resolve(true);
       });
     });
@@ -48,7 +48,7 @@ class WatchListStorage {
       const sql = `DELETE FROM watch_lists WHERE board_no = ? AND student_id = ?`;
       const params = [cilent.boardNum, cilent.studentId];
       db.query(sql, params, (err) => {
-        if (err) reject(false);
+        if (err) reject(err);
         resolve(true);
       });
     });
