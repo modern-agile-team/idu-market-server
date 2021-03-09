@@ -1,3 +1,5 @@
+const Board = require("../../models/services/Board/Board");
+
 const process = {
   search: (req, res) => {
     const board = new Board(req);
