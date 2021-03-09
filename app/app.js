@@ -29,6 +29,6 @@ const image = require("./src/apis/image/routes");
 app.use("/", view);
 app.use("/api/", root);
 app.use("/api/watchlist", watchList);
-app.use("/api/image", image);
+app.use("/api/postimage", image);
 
 module.exports = app;
