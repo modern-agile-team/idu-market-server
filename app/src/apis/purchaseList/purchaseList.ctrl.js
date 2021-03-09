@@ -1,6 +1,6 @@
 `use strict`;
 
-const PurchaseList = require("../../models/services/purchaselist/PurchaseList");
+const PurchaseList = require("../../models/services/PurchaseList/PurchaseList");
 
 const output = {
   findPurchaseList: async (req, res) => {
