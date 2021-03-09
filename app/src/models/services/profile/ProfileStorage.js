@@ -23,10 +23,14 @@ class ProfileStorage {
       SET st.id = ?, st.name = ?, st.email = ?, img.path = ?
       WHERE st.id = ?;`;
 
-      db.query(sql, [body.changeId, body.name, body.email, body.path, body.studentId], (err, profile) => {
-        if (err) reject(err);
-        resolve(true);
-      });
+      db.query(
+        sql,
+        [body.changeId, body.name, body.email, body.path, body.studentId],
+        (err) => {
+          if (err) reject(err);
+          resolve(true);
+        }
+      );
     });
   }
 }
