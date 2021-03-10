@@ -5,11 +5,11 @@ class SaleList {
     this.body = body;
   }
 
-  async find() {
+  async read() {
     const studentId = this.body;
     try {
-      const response = await SaleListStorage.find(studentId);
-      return response;
+      const saleList = await SaleListStorage.findAllById(studentId);
+      return { success: true, saleList };
     } catch (err) {
       throw err;
     }
@@ -18,8 +18,8 @@ class SaleList {
   async update() {
     const client = this.body;
     try {
-      const isexist = await SaleListStorage.isexist(client);
-      if (isexist) {
+      const isExist = await SaleListStorage.isExist(client);
+      if (isExist) {
         const response = await SaleListStorage.update(client);
         if (response)
           return { success: true, msg: "판매목록에 저장되었습니다" };

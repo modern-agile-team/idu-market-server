@@ -35,7 +35,7 @@ class SaleListStorage {
     return new Promise((resolve, reject) => {
       const sql = `INSERT INTO sale_lists(board_no, category_no, student_id) VALUES(?, ?, ?)`;
       const params = [client.boardNum, client.categoryNum, client.studentId];
-      db.query(sql, params, (err, rows) => {
+      db.query(sql, params, (err) => {
         if (err) reject(err);
         else resolve(true);
       });
