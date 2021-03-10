@@ -9,7 +9,7 @@ const s3 = new aws.S3({
 const upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: "woowahan-agile",
+    bucket: "woowahan-agile/board",
     acl: "public-read",
     region: "ap-northeast-2",
     key: function (req, file, cb) {
