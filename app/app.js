@@ -7,6 +7,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
+const cors = require("cors");
 
 const app = express();
 dotenv.config();
@@ -26,6 +27,7 @@ const root = require(`.${dist}/src/apis/root`);
 const watchList = require("./src/apis/watchlist/routes");
 const image = require("./src/apis/image/routes");
 
+app.use(cors());
 app.use("/", view);
 app.use("/api/", root);
 app.use("/api/watchlist", watchList);
