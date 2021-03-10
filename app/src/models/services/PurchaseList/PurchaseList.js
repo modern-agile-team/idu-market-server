@@ -18,8 +18,8 @@ class PurchaseList {
   async update() {
     const client = this.body;
     try {
-      const isexist = await PurchaseListStorage.isExist(client);
-      if (isexist) {
+      const isExist = await PurchaseListStorage.isExist(client);
+      if (isExist) {
         const response = await PurchaseListStorage.update(client);
         if (response)
           return { success: true, msg: "구매목록에 저장되었습니다" };

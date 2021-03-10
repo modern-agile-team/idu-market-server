@@ -18,9 +18,9 @@ class PurchaseListStorage {
 
   static isExist(client) {
     return new Promise((resolve, reject) => {
-      const isexist = `SELECT board_no, student_id FROM purchase_lists WHERE board_no=? AND student_id=?`;
+      const isExist = `SELECT board_no, student_id FROM purchase_lists WHERE board_no=? AND student_id=?`;
       const testParams = [client.boardNum, client.studentId];
-      db.query(isexist, testParams, (err, rows) => {
+      db.query(isExist, testParams, (err, rows) => {
         if (err) reject(err);
         if (!rows.length) {
           resolve(true);
