@@ -1,5 +1,3 @@
-"use strict";
-
 const mail = {
   service: process.env.MAIL_SERVICE,
   host: process.env.MAIL_HOST,
