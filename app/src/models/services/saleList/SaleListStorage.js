@@ -11,7 +11,7 @@ class SaleListStorage {
           JOIN boards bo 
           ON bo.no = sa.board_no 
           WHERE sa.student_id = ?`;
-      
+
       db.query(sql, [id], (err, saleLists) => {
         if (err) reject(err);
         else resolve(saleLists);
