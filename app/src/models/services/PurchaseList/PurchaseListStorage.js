@@ -11,7 +11,7 @@ class PurchaseListStorage {
           WHERE pu.student_id = ?`;
       db.query(sql, [id], (err, purchaseList) => {
         if (err) reject(err);
-        resolve(purchaseList);
+        else resolve(purchaseList);
       });
     });
   }
