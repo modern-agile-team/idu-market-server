@@ -7,21 +7,22 @@ const String = require("../../utils/String");
 class Board {
   constructor(req) {
     this.body = req.body;
-    this.categoryName = req.params.categoryName;
+    this.params = req.params;
+    this.query = req.query;
     this.num = req.params.num;
   }
 
   async createByCategoryName() {
     const body = this.body;
-    const categoryName = this.categoryName;
-    const categoryNum = BoardCode[categoryName];
+    const categoryNum = BoardCode[this.params.categoryName];
     body.price = String.makePrice(body.price);
+
     try {
-      const board = await BoardStroage.create(categoryNum, body);
-      if (board) {
-        return { success: true, msg: "게시판 생성 성공" };
+      const isCreate = await BoardStroage.create(categoryNum, body);
+      if (isCreate) {
+        return { success: true, msg: "게시판 등록에 성공하셨습니다." };
       }
-      return { success: false, msg: "게시판 생성 실패" };
+      return { success: false, msg: "게시판 등록에 실패하셨습니다." };
     } catch (err) {
       throw err;
     }
@@ -79,6 +80,28 @@ class Board {
         return { success: true, msg: "게시판 삭제 성공" };
       }
       return { success: false, msg: "게시판 삭제 실패" };
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async search() {
+    const categoryNum = BoardCode[this.query.categoryName];
+    const title = this.query.content;
+
+    try {
+      const boards = await BoardStroage.findAllByIncludedTitleAndCategory(
+        title,
+        categoryNum
+      );
+
+      const response = {
+        success: true,
+        msg: `${title}(으)로 검색된 결과입니다.`,
+        boards,
+      };
+
+      return response;
     } catch (err) {
       throw err;
     }
