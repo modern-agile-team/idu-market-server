@@ -40,9 +40,9 @@ const process = {
 
       const response = await s3.deleteImage(keys);
       if (response) return res.status(200).json({ success: true });
-      return res.status(400).json({ success: false, msg: "삭제 실패" });
+      return res.status(400).json({ success: false, msg: "s3 접근 오류" });
     }
-    return res.status(400).json({ success: false, msg: "사진이 없음" });
+    return res.status(400).json({ success: false, msg: "사진이 없다." });
   },
 };
 
