@@ -12,14 +12,14 @@ class User {
     const client = this.body;
 
     try {
-      const user = await UserStorage.findOneById(client.id);
+      let user = await UserStorage.findOneById(client.id);
 
       if (user) {
         client.psword = await Cryptor.encryptBySalt(client.psword, user.salt);
 
         if (user.id === client.id && user.psword === client.psword) {
           const jwt = await Auth.createJWT(user);
-          const user = { id: user.id };
+          user = { id: user.id };
           return { success: true, msg: "로그인에 성공하셨습니다.", user, jwt };
         }
         return { success: false, msg: "잘못된 비밀번호입니다." };

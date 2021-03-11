@@ -5,7 +5,7 @@ const UserStorage = require("../User/UserStorage");
 const Auth = require("../Auth/Auth");
 const mailOption = require("../../../config/mail");
 
-const CHANGE_PSWORD_URL = process.env.CHANGE_PSWORD_URL;
+const CHANGE_PSWORD_URL = process.env.CHANGE_PASSWORD_URL;
 
 class Email {
   constructor(body) {
