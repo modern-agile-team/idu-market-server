@@ -15,7 +15,7 @@ const process = {
     const images = req.files;
     if (images) {
       const path = images.map((img) => img.location);
-      return res.status(200).json({ url: path });
+      return res.status(200).json({ success: true, url: path });
     }
     return res.status(400).json({ success: false });
   },
