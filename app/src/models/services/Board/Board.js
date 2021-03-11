@@ -91,7 +91,7 @@ class Board {
     const title = this.query.content;
 
     try {
-      const boards = BoardStroage.findAllByIncludedTitleAndCategory(
+      const boards = await BoardStroage.findAllByIncludedTitleAndCategory(
         title,
         categoryNum
       );
