@@ -1,4 +1,5 @@
 const Image = require("../../models/services/Image/Image");
+const s3 = require("../../middlewares/s3");
 
 const output = {
   findOneByNum: async (req, res) => {
@@ -13,11 +14,23 @@ const output = {
 const process = {
   upload: async (req, res) => {
     const images = req.files;
-    if (images) {
+    try {
       const path = images.map((img) => img.location);
       return res.status(200).json({ success: true, url: path });
+    } catch {
+      return res.status(400).json({ success: false });
     }
-    return res.status(400).json({ success: false });
+  },
+
+  delete: async (req, res) => {
+    const url = req.body.url;
+    const image = url.split("/");
+    const delImage = `${image[image.length - 2]}/${image[image.length - 1]}`;
+    const del = s3.deleteImage(delImage);
+    if (del) {
+      return res.status(200).json({ success: true });
+    }
+    return res.status(400).json({ success: false, msg: "삭제 실패" });
   },
 };
 
