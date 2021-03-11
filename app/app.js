@@ -25,12 +25,12 @@ let dist = "";
 if (process.env.NODE_ENV === "production") dist = "/dist";
 const view = require(`.${dist}/src/apis/view`);
 const root = require(`.${dist}/src/apis/root`);
-const watchList = require("./src/apis/watchlist/routes");
-const image = require("./src/apis/image/routes");
+const watchList = require("./src/apis/watch-list");
+const image = require("./src/apis/image");
 const search = require("./src/apis/search");
-const boards = require("./src/apis/boards/index");
-const purchase = require("./src/apis/purchase-list/routes");
-const sale = require("./src/apis/sale-list/routes");
+const boards = require("./src/apis/boards");
+const purchase = require("./src/apis/purchase-list");
+const sale = require("./src/apis/sale-list");
 
 app.use("/", view);
 app.use("/api/", root);
