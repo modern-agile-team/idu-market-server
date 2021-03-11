@@ -56,7 +56,9 @@ class BoardStroage {
         LEFT JOIN comments AS cmt
         ON bo.no = cmt.board_no
         WHERE bo.title regexp ?  AND bo.category_no = ?
-        GROUP BY bo.no;`;
+        GROUP BY bo.no
+        ORDER BY bo.no DESC
+        LIMIT 200;`;
 
       db.query(query, [title, categoryNum], (err, boards) => {
         if (err) reject(err);
