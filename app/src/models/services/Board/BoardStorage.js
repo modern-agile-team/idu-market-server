@@ -40,6 +40,24 @@ class BoardStroage {
     });
   }
 
+  static findAllByIncludedTitleAndCategory(title, categoryNum) {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT bo.student_id AS studentId, st.name AS studentName, bo.title AS title, bo.hit AS hit, bo.thumbnail AS thumbnail, bo.price AS price,  COUNT(cmt.content) AS commentCount,date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(bo.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
+        FROM boards AS bo
+        JOIN students AS st
+        ON bo.student_id = st.id
+        LEFT JOIN comments AS cmt
+        ON bo.no = cmt.board_no
+        WHERE bo.title regexp ?  AND bo.category_no = ?
+        GROUP BY bo.no;`;
+
+      db.query(query, [title, categoryNum], (err, boards) => {
+        if (err) reject(err);
+        else resolve(boards);
+      });
+    });
+  }
+
   static findByCategoryNameAndNum(categoryName, num) {
     return new Promise((resolve, reject) => {
       const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.category_no AS categoryNum, ca.name, bo.title, bo.content, bo.hit, bo.price,
