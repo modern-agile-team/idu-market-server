@@ -7,6 +7,8 @@ const String = require("../../utils/String");
 class Board {
   constructor(req) {
     this.body = req.body;
+    this.params = req.params;
+    this.query = req.query;
     this.categoryName = req.params.categoryName;
     this.num = req.params.num;
   }
@@ -79,6 +81,28 @@ class Board {
         return { success: true, msg: "게시판 삭제 성공" };
       }
       return { success: false, msg: "게시판 삭제 실패" };
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async search() {
+    const categoryNum = BoardCode[this.query.categoryName];
+    const title = this.query.content;
+
+    try {
+      const boards = await BoardStroage.findAllByIncludedTitleAndCategory(
+        title,
+        categoryNum
+      );
+
+      const response = {
+        success: true,
+        msg: `${title}(으)로 검색된 결과입니다.`,
+        boards,
+      };
+
+      return response;
     } catch (err) {
       throw err;
     }
