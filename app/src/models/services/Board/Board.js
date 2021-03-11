@@ -9,21 +9,20 @@ class Board {
     this.body = req.body;
     this.params = req.params;
     this.query = req.query;
-    this.categoryName = req.params.categoryName;
     this.num = req.params.num;
   }
 
   async createByCategoryName() {
     const body = this.body;
-    const categoryName = this.categoryName;
-    const categoryNum = BoardCode[categoryName];
+    const categoryNum = BoardCode[this.params.categoryName];
     body.price = String.makePrice(body.price);
+
     try {
-      const board = await BoardStroage.create(categoryNum, body);
-      if (board) {
-        return { success: true, msg: "게시판 생성 성공" };
+      const isCreate = await BoardStroage.create(categoryNum, body);
+      if (isCreate) {
+        return { success: true, msg: "게시판 등록에 성공하셨습니다." };
       }
-      return { success: false, msg: "게시판 생성 실패" };
+      return { success: false, msg: "게시판 등록에 실패하셨습니다." };
     } catch (err) {
       throw err;
     }

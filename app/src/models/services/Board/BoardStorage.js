@@ -5,10 +5,17 @@ const db = require("../../../config/db");
 class BoardStroage {
   static create(num, board) {
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO boards (student_id, category_no, title, content, price) VALUES (?, ?, ?, ?, ?);`;
+      const query = `INSERT INTO boards (student_id, category_no, title, content, thumbnail, price) VALUES (?, ?, ?, ?, ?, ?);`;
       db.query(
         query,
-        [board.studentId, num, board.title, board.content, board.price],
+        [
+          board.studentId,
+          num,
+          board.title,
+          board.content,
+          board.thumbnail,
+          board.price,
+        ],
         (err) => {
           if (err) reject(err);
           else resolve(true);
