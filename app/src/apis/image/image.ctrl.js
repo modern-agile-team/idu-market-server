@@ -13,24 +13,36 @@ const output = {
 
 const process = {
   upload: async (req, res) => {
+    if (req.fileValidationError)
+      return res
+        .status(400)
+        .json({ success: false, msg: req.fileValidationError });
+
     const images = req.files;
     try {
       const path = images.map((img) => img.location);
       return res.status(200).json({ success: true, url: path });
-    } catch {
+    } catch (err) {
       return res.status(400).json({ success: false });
     }
   },
 
   delete: async (req, res) => {
-    const url = req.body.url;
-    const image = url.split("/");
-    const delImage = `${image[image.length - 2]}/${image[image.length - 1]}`;
-    const del = s3.deleteImage(delImage);
-    if (del) {
-      return res.status(200).json({ success: true });
+    const rest = req.body.url;
+    if (rest.length) {
+      const keys = [];
+      rest.forEach((img) => {
+        const cutUrl = img.split("/");
+        const length = cutUrl.length;
+        const key = `${cutUrl[length - 2]}/${cutUrl[length - 1]}`;
+        keys.push(key);
+      });
+
+      const response = await s3.deleteImage(keys);
+      if (response) return res.status(200).json({ success: true });
+      return res.status(400).json({ success: false, msg: "삭제 실패" });
     }
-    return res.status(400).json({ success: false, msg: "삭제 실패" });
+    return res.status(400).json({ success: false, msg: "사진이 없음" });
   },
 };
 
