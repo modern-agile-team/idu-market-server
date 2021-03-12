@@ -32,6 +32,18 @@ class BoardStroage {
     });
   }
 
+  static findOneByNum(num) {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM boards WHERE no = ?`;
+
+      db.query(query, [num], (err, boards) => {
+        console.log(boards);
+        if (err) reject(err);
+        else resolve(boards[0]);
+      });
+    });
+  }
+
   static findAllByCategoryName(categoryName) {
     return new Promise((resolve, reject) => {
       const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.category_no AS categoryNum, ca.name, bo.title, bo.content, bo.hit, bo.price,
@@ -96,6 +108,16 @@ class BoardStroage {
       const query = `UPDATE boards SET title = ?, content = ?, update_date = current_timestamp()
             where no = ?;`;
       db.query(query, [board.title, board.content, num], (err) => {
+        if (err) reject(err);
+        else resolve(true);
+      });
+    });
+  }
+
+  static updateOnlyHitByNum(num) {
+    return new Promise((resolve, reject) => {
+      const query = `UPDATE boards SET hit = hit + 1 WHERE no = ?;`;
+      db.query(query, [num], (err) => {
         if (err) reject(err);
         else resolve(true);
       });
