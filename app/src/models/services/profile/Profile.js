@@ -7,8 +7,13 @@ class Profile {
 
   async findAllById() {
     const userId = this.body.studentId;
-    const response = await ProfileStorage.findAllById(userId);
-    if (response.profile.length) return response;
+    const comments = await ProfileStorage.findOneById(userId);
+    const title = await ProfileStorage.findtitleById(userId);
+    const profile = await ProfileStorage.findAllById(userId);
+    if (profile.length) {
+      const response = { profile, title, comments };
+      return response;
+    }
     return { success: false, msg: "아이디가 존재하지 않습니다." };
   }
 

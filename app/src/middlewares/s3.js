@@ -19,9 +19,23 @@ const upload = multer({
     },
   }),
   limits: { fieldSize: 100 * 1024 * 1024 },
+
+  fileFilter: (req, file, cb) => {
+    const ext = file.mimetype.split("/");
+    const fileType = ext[1];
+    if (
+      fileType !== "jpg" ||
+      fileType !== "png" ||
+      fileType !== "jpeg" ||
+      fileType !== "gif"
+    ) {
+      req.fileValidationError = "이미지 파일만 올리기 가능";
+      return cb(null, false, req.fileValidationError);
+    }
+  },
 });
 
-const deleteImage = (keys) => {
+const deleteImage = async (keys) => {
   const objectKeys = [];
   for (let key of keys) {
     const rest = {
@@ -37,15 +51,16 @@ const deleteImage = (keys) => {
       Quiet: false,
     },
   };
-
-  s3.deleteObjects(params, function (err, data) {
-    if (err) {
-      console.log("Error data: ", err);
-    } else {
-      console.log(JSON.stringify(data));
-      return JSON.stringify(data);
-    }
-  });
+  try {
+    const result = await s3
+      .deleteObjects(params, (err) => {
+        if (err) throw err;
+      })
+      .promise();
+    return result;
+  } catch (err) {
+    return err;
+  }
 };
 
 module.exports = { upload, deleteImage };
