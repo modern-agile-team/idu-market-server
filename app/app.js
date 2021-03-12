@@ -31,6 +31,7 @@ const search = require(`.${dist}/src/apis/search`);
 const boards = require(`.${dist}/src/apis/boards`);
 const purchase = require(`.${dist}/src/apis/purchase-list`);
 const sale = require(`.${dist}/src/apis/sale-list`);
+const notification = require(`.${dist}/src/apis/notification`);
 
 app.use("/", view);
 app.use("/api/", root);
@@ -40,5 +41,6 @@ app.use("/api/search", search);
 app.use("/api/boards", boards);
 app.use("/api/purchase-list", purchase);
 app.use("/api/sale-list", sale);
+app.use("/api/notification", notification);
 
 module.exports = app;
