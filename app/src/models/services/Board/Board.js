@@ -1,7 +1,7 @@
 "use strict";
 
 const BoardStroage = require("./BoardStorage");
-const BoardCode = require("../Category/Category");
+const Category = require("../Category/Category");
 const String = require("../../utils/String");
 
 class Board {
@@ -14,7 +14,7 @@ class Board {
 
   async createByCategoryName() {
     const body = this.body;
-    const categoryNum = BoardCode[this.params.categoryName];
+    const categoryNum = Category[this.params.categoryName];
     body.price = String.makePrice(body.price);
 
     try {
@@ -59,7 +59,7 @@ class Board {
   }
 
   async updateByNo() {
-    const num = this.num;
+    const num = this.request;
     const body = this.body;
     try {
       const board = await BoardStroage.update(body, num);
@@ -67,6 +67,29 @@ class Board {
         return { success: true, msg: "게시판 수정 성공" };
       }
       return { success: false, msg: "게시판 수정 실패" };
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async updateOnlyHit() {
+    const categoryNum = Category[this.params.categoryName];
+    const num = this.params.num;
+
+    if (!categoryNum)
+      return { success: false, msg: "존재하지 않는 게시판입니다." };
+
+    try {
+      const board = await BoardStroage.findOneByNum(num);
+      if (!board) return { success: false, msg: "존재하지 않는 게시판입니다." };
+
+      const isUpdate = await BoardStroage.updateOnlyHitByNum(num);
+      if (isUpdate) return { success: true, msg: "조회수가 1 증가하였습니다." };
+
+      return {
+        success: false,
+        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주십시오.",
+      };
     } catch (err) {
       throw err;
     }
@@ -86,7 +109,7 @@ class Board {
   }
 
   async search() {
-    const categoryNum = BoardCode[this.query.categoryName];
+    const categoryNum = Category[this.query.categoryName];
     const title = this.query.content;
 
     try {
