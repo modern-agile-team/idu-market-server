@@ -9,6 +9,7 @@ const CHANGE_PSWORD_URL = process.env.CHANGE_PASSWORD_URL;
 
 class Email {
   constructor(req) {
+    this.req = req;
     this.body = req.body;
   }
 
@@ -50,9 +51,10 @@ class Email {
   }
 
   async sendLinkForPsword() {
+    const req = this.req;
+    const client = this.body;
     try {
-      const client = this.body;
-      const user = new User(client);
+      const user = new User(req);
       const existInfo = await user.isExistIdAndEmail();
       if (!existInfo.isExist) return existInfo;
 
