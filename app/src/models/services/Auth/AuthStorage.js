@@ -1,45 +1,40 @@
-const db = require("../../../config/db");
+const db = require("redis");
+const redis = db.createClient();
+
+redis.on("error", function (error) {
+  console.error(error);
+});
 
 class AuthStorage {
-  static findOneById(id) {
+  static expireTime = 60 * 60 * 24;
+
+  static findOneByStudentId(id) {
     return new Promise((resolve, reject) => {
-      const query =
-        "SELECT student_id, token, DATE_FORMAT(token_created_date, '%Y%m%d%H%i%s') AS token_created_date FROM auth WHERE student_id=?;";
-
-      db.query(query, [id], (err, auth) => {
+      redis.get(`${id}:token`, (err, token) => {
         if (err) reject(err);
-        else resolve(auth[0]);
-      });
-    });
-  }
-
-  static updateToken(user) {
-    return new Promise((resolve, reject) => {
-      const query = "UPDATE auth SET token=? WHERE student_id=?;";
-
-      db.query(query, [user.token, user.id], (err) => {
-        if (err) reject(err);
-        else resolve(true);
+        else resolve(token);
       });
     });
   }
 
   static saveToken(user) {
     return new Promise((resolve, reject) => {
-      const query = "INSERT INTO auth(student_id, token) VALUES(?, ?);";
-
-      db.query(query, [user.id, user.token], (err) => {
-        if (err) reject(err);
-        else resolve(true);
-      });
+      redis.set(
+        `${user.id}:token`,
+        `${user.token}`,
+        "EX",
+        this.expireTime,
+        (err) => {
+          if (err) reject(err);
+          else resolve(true);
+        }
+      );
     });
   }
 
-  static delete(id) {
+  static deleteTokenByStudentId(id) {
     return new Promise((resolve, reject) => {
-      const query = "DELETE FROM auth WHERE student_id=?;";
-
-      db.query(query, [id], (err) => {
+      redis.del(`${id}:token`, (err) => {
         if (err) reject(err);
         else resolve(true);
       });

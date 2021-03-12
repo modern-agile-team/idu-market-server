@@ -29,7 +29,8 @@
     "multer-s3": "^2.9.0",
     "mysql2": "^2.2.5",
     "nodemailer": "^6.4.18",
-    "nodemon": "^2.0.7"
+    "nodemon": "^2.0.7",
+    "redis": "^3.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.0",
