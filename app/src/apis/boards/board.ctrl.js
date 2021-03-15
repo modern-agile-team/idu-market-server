@@ -10,16 +10,16 @@ const process = {
     res.status(400).json(response);
   },
 
-  findAllByCategoryName: async (req, res) => {
+  findAllByCategoryNum: async (req, res) => {
     const board = new Board(req);
-    const response = await board.findAllByCategoryName();
+    const response = await board.findAllByCategoryNum();
     if (response.success) return res.status(200).json(response);
-    return res.status(400).json(response);
+    return res.status(404).json(response);
   },
 
-  detailFindOneByCategoryName: async (req, res) => {
+  findOneByNum: async (req, res) => {
     const board = new Board(req);
-    const response = await board.detailFindOneByCategoryName();
+    const response = await board.findOneByNum();
     if (response.success) return res.status(200).json(response);
     return res.status(400).json(response);
   },

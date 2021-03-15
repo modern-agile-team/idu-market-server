@@ -1,23 +1,24 @@
 "use strict";
 
-const BoardStroage = require("./BoardStorage");
+const BoardStorage = require("./BoardStorage");
 const BoardCode = require("../Category/Category");
 const String = require("../../utils/String");
+const CommentStorage = require("./Comment/CommentStorage");
 
 class Board {
   constructor(req) {
     this.body = req.body;
-    this.categoryName = req.params.categoryName;
-    this.num = req.params.num;
+    this.params = req.params;
+    this.query = req.query;
   }
 
   async createByCategoryName() {
     const body = this.body;
-    const categoryName = this.categoryName;
+    const categoryName = this.params.categoryName;
     const categoryNum = BoardCode[categoryName];
     body.price = String.makePrice(body.price);
     try {
-      const board = await BoardStroage.create(categoryNum, body);
+      const board = await BoardStorage.create(categoryNum, body);
       if (board) {
         return { success: true, msg: "게시판 생성 성공" };
       }
@@ -27,29 +28,26 @@ class Board {
     }
   }
 
-  async findAllByCategoryName() {
-    const categoryName = this.categoryName;
+  async findAllByCategoryNum() {
+    const categoryName = this.params.categoryName;
+    const categoryNum = BoardCode[categoryName];
     try {
-      const boards = await BoardStroage.findAllByCategoryName(categoryName);
+      const boards = await BoardStorage.findAllByCategoryNum(categoryNum);
       if (boards) {
         return { success: true, msg: "게시판 조회 성공", boards };
       }
-      return { success: false, msg: "게시판 조회 실패" };
     } catch (err) {
       throw err;
     }
   }
 
-  async detailFindOneByCategoryName() {
-    const categoryName = this.categoryName;
-    const num = this.num;
+  async findOneByNum() {
+    const num = this.params.num;
     try {
-      const board = await BoardStroage.findByCategoryNameAndNum(
-        categoryName,
-        num
-      );
+      const board = await BoardStorage.findOneByNum(num);
+      const comment = await CommentStorage.findOneByBoardNum(num);
       if (board) {
-        return { success: true, msg: "게시판 상세 조회 성공", board };
+        return { success: true, msg: "게시판 상세 조회 성공", board, comment };
       }
       return { success: false, msg: "게시판 상세 조회 실패" };
     } catch (err) {
@@ -58,10 +56,11 @@ class Board {
   }
 
   async updateByNo() {
-    const num = this.num;
+    const num = this.params.num;
     const body = this.body;
+    body.price = String.makePrice(body.price);
     try {
-      const board = await BoardStroage.update(body, num);
+      const board = await BoardStorage.update(body, num);
       if (board) {
         return { success: true, msg: "게시판 수정 성공" };
       }
@@ -72,9 +71,9 @@ class Board {
   }
 
   async deleteByNo() {
-    const num = this.num;
+    const num = this.params.num;
     try {
-      const board = await BoardStroage.delete(num);
+      const board = await BoardStorage.delete(num);
       if (board) {
         return { success: true, msg: "게시판 삭제 성공" };
       }
