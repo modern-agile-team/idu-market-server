@@ -1,26 +1,27 @@
 "use strict";
 
-const BoardStroage = require("./BoardStorage");
+const BoardStorage = require("./BoardStorage");
 const Category = require("../Category/Category");
 const String = require("../../utils/String");
+const CommentStorage = require("./Comment/CommentStorage");
 
 class Board {
   constructor(req) {
     this.body = req.body;
     this.params = req.params;
     this.query = req.query;
-    this.num = req.params.num;
   }
 
   async createByCategoryName() {
     const body = this.body;
-    const categoryNum = Category[this.params.categoryName];
+    const categoryName = this.params.categoryName;
+    const categoryNum = Category[categoryName];
     body.price = String.makePrice(body.price);
 
     try {
-      const isCreate = await BoardStroage.create(categoryNum, body);
-      if (isCreate) {
-        return { success: true, msg: "게시판 등록에 성공하셨습니다." };
+      const board = await BoardStorage.create(categoryNum, body);
+      if (board) {
+        return { success: true, msg: "게시판 생성 성공" };
       }
       return { success: false, msg: "게시판 등록에 실패하셨습니다." };
     } catch (err) {
@@ -28,29 +29,32 @@ class Board {
     }
   }
 
-  async findAllByCategoryName() {
-    const categoryName = this.categoryName;
+  async findAllByCategoryNum() {
+    const categoryName = this.params.categoryName;
+    const categoryNum = Category[categoryName];
+    const lastNum = this.query.lastNum;
+
     try {
-      const boards = await BoardStroage.findAllByCategoryName(categoryName);
+      const boards = await BoardStorage.findAllByCategoryNum(
+        categoryNum,
+        lastNum
+      );
       if (boards) {
         return { success: true, msg: "게시판 조회 성공", boards };
       }
-      return { success: false, msg: "게시판 조회 실패" };
     } catch (err) {
       throw err;
     }
   }
 
-  async detailFindOneByCategoryName() {
-    const categoryName = this.categoryName;
-    const num = this.num;
+  async findOneByNum() {
+    const num = this.params.num;
     try {
-      const board = await BoardStroage.findByCategoryNameAndNum(
-        categoryName,
-        num
-      );
+      const board = await BoardStorage.findOneByNum(num);
+      const comment = await CommentStorage.findOneByBoardNum(num);
+
       if (board) {
-        return { success: true, msg: "게시판 상세 조회 성공", board };
+        return { success: true, msg: "게시판 상세 조회 성공", board, comment };
       }
       return { success: false, msg: "게시판 상세 조회 실패" };
     } catch (err) {
@@ -59,11 +63,13 @@ class Board {
   }
 
   async updateByNo() {
-    const num = this.request;
+    const num = this.params.num;
     const body = this.body;
+    body.price = String.makePrice(body.price);
+
     try {
-      const board = await BoardStroage.update(body, num);
-      if (board) {
+      const isUpdate = await BoardStorage.update(body, num);
+      if (isUpdate) {
         return { success: true, msg: "게시판 수정 성공" };
       }
       return { success: false, msg: "게시판 수정 실패" };
@@ -80,10 +86,10 @@ class Board {
       return { success: false, msg: "존재하지 않는 게시판입니다." };
 
     try {
-      const board = await BoardStroage.findOneByNum(num);
+      const board = await BoardStorage.findOneByNum(num);
       if (!board) return { success: false, msg: "존재하지 않는 게시판입니다." };
 
-      const isUpdate = await BoardStroage.updateOnlyHitByNum(num);
+      const isUpdate = await BoardStorage.updateOnlyHitByNum(num);
       if (isUpdate) return { success: true, msg: "조회수가 1 증가하였습니다." };
 
       return {
@@ -96,10 +102,10 @@ class Board {
   }
 
   async deleteByNo() {
-    const num = this.num;
+    const num = this.params.num;
     try {
-      const board = await BoardStroage.delete(num);
-      if (board) {
+      const isDelete = await BoardStorage.delete(num);
+      if (isDelete) {
         return { success: true, msg: "게시판 삭제 성공" };
       }
       return { success: false, msg: "게시판 삭제 실패" };
@@ -113,7 +119,7 @@ class Board {
     const title = this.query.content;
 
     try {
-      const boards = await BoardStroage.findAllByIncludedTitleAndCategory(
+      const boards = await BoardStorage.findAllByIncludedTitleAndCategory(
         title,
         categoryNum
       );

@@ -13,11 +13,6 @@ const output = {
 
 const process = {
   upload: async (req, res) => {
-    if (req.fileValidationError)
-      return res
-        .status(400)
-        .json({ success: false, msg: req.fileValidationError });
-
     const images = req.files;
     try {
       const path = images.map((img) => img.location);
