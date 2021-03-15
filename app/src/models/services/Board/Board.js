@@ -52,6 +52,7 @@ class Board {
     try {
       const board = await BoardStorage.findOneByNum(num);
       const comment = await CommentStorage.findOneByBoardNum(num);
+
       if (board) {
         return { success: true, msg: "게시판 상세 조회 성공", board, comment };
       }
@@ -65,9 +66,10 @@ class Board {
     const num = this.params.num;
     const body = this.body;
     body.price = String.makePrice(body.price);
+
     try {
-      const board = await BoardStorage.update(body, num);
-      if (board) {
+      const isUpdate = await BoardStorage.update(body, num);
+      if (isUpdate) {
         return { success: true, msg: "게시판 수정 성공" };
       }
       return { success: false, msg: "게시판 수정 실패" };
@@ -102,8 +104,8 @@ class Board {
   async deleteByNo() {
     const num = this.params.num;
     try {
-      const board = await BoardStorage.delete(num);
-      if (board) {
+      const isDelete = await BoardStorage.delete(num);
+      if (isDelete) {
         return { success: true, msg: "게시판 삭제 성공" };
       }
       return { success: false, msg: "게시판 삭제 실패" };

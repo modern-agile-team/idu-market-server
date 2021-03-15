@@ -65,7 +65,7 @@ class BoardStroage {
 
       db.query(query, [num], (err, boards) => {
         if (err) reject(err);
-        else resolve(boards);
+        else resolve(boards[0]);
       });
     });
   }
