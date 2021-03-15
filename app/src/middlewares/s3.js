@@ -19,20 +19,6 @@ const upload = multer({
     },
   }),
   limits: { fieldSize: 100 * 1024 * 1024 },
-
-  fileFilter: (req, file, cb) => {
-    const ext = file.mimetype.split("/");
-    const fileType = ext[1];
-    if (
-      fileType !== "jpg" ||
-      fileType !== "png" ||
-      fileType !== "jpeg" ||
-      fileType !== "gif"
-    ) {
-      req.fileValidationError = "이미지 파일만 올리기 가능";
-      return cb(null, false, req.fileValidationError);
-    }
-  },
 });
 
 const deleteImage = async (keys) => {
