@@ -1,15 +1,15 @@
 const ProfileStorage = require("./ProfileStorage");
 
 class Profile {
-  constructor(body) {
-    this.body = body;
+  constructor(id) {
+    this.id = id;
   }
 
-  async findAllById() {
-    const userId = this.body.studentId;
-    const comments = await ProfileStorage.findOneById(userId);
-    const title = await ProfileStorage.findtitleById(userId);
-    const profile = await ProfileStorage.findAllById(userId);
+  async findOneById() {
+    const studentId = this.id;
+    const comments = await ProfileStorage.findOneByStudentId(studentId);
+    const title = await ProfileStorage.findtitleById(studentId);
+    const profile = await ProfileStorage.findOneById(studentId);
     if (profile.length) {
       const response = { profile, title, comments };
       return response;
