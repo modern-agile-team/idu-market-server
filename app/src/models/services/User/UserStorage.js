@@ -59,7 +59,7 @@ class UserStorage {
   static async save(client) {
     return new Promise((resolve, reject) => {
       const query =
-        "INSERT INTO students(id, major_no, name, email, psword, salt) VALUES(?, ?, ?, ?, ?, ?, ?);";
+        "INSERT INTO students(id, major_no, name, email, psword, salt) VALUES(?, ?, ?, ?, ?, ?);";
 
       db.query(
         query,

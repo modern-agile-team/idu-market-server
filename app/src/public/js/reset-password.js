@@ -5,7 +5,9 @@ const id = document.querySelector("#id"),
 
 changePswordBtn.addEventListener("click", changePsword);
 
-function changePsword() {
+function changePsword(e) {
+  e.preventDefault();
+
   if (!id.value) return alert("아이디를 입력해주십시오.");
   if (!newPsword.value) return alert("비밀번호를 입력해주십시오.");
   if (newPsword.value !== newPswordConfirm.value)
@@ -32,6 +34,7 @@ function changePsword() {
       }
     })
     .catch((err) => {
+      alert(err);
       console.error(err.response);
     });
 }

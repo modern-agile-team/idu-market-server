@@ -5,11 +5,12 @@ const UserStorage = require("../User/UserStorage");
 const Auth = require("../Auth/Auth");
 const mailOption = require("../../../config/mail");
 
-const CHANGE_PSWORD_URL = process.env.CHANGE_PSWORD_URL;
+const CHANGE_PSWORD_URL = process.env.CHANGE_PASSWORD_URL;
 
 class Email {
-  constructor(body) {
-    this.body = body;
+  constructor(req) {
+    this.req = req;
+    this.body = req.body;
   }
 
   async sendId() {
@@ -50,9 +51,10 @@ class Email {
   }
 
   async sendLinkForPsword() {
+    const req = this.req;
+    const client = this.body;
     try {
-      const client = this.body;
-      const user = new User(client);
+      const user = new User(req);
       const existInfo = await user.isExistIdAndEmail();
       if (!existInfo.isExist) return existInfo;
 
@@ -80,6 +82,46 @@ class Email {
           });
         } catch (err) {
           reject({ success: false, err: String(err) });
+        }
+      });
+
+      return promise.then((res) => res);
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async sendNotification() {
+    try {
+      const client = this.body;
+      const user = await UserStorage.findOneById(client.studentId);
+      if (!user) {
+        return {
+          success: false,
+          msg: "존재하지 않는 아이디입니다. 메일 전송에 실패하셨습니다.",
+        };
+      }
+
+      const promise = new Promise((resolve, reject) => {
+        try {
+          const message = {
+            from: process.env.MAIL_EMAIL,
+            to: user.email,
+            subject: `[idu-market] ${user.name}님에게 댓글이 달렸습니다.`,
+            html: `<p>[idu-market] <b>${user.name}</b>님에게 댓글이 달렸습니다.</p>
+              <p>댓글을 확인하시려면 아래 링크로 이동하십시오.</p>
+              <p><a href=${client.url}>${client.categoryName}</a></p>`,
+          };
+
+          const transporter = nodemailer.createTransport(mailOption);
+
+          transporter.sendMail(message);
+          resolve({
+            success: true,
+            msg: `${user.id}님께 메일 알림이 전송되었습니다.`,
+          });
+        } catch (err) {
+          reject(err);
         }
       });
 

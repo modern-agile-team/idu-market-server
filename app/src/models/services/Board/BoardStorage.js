@@ -4,11 +4,26 @@ const db = require("../../../config/db");
 
 class BoardStroage {
   static create(num, board) {
+    if (!board.thumbnail) {
+      board.thumbnail = process.env.DEFAULT_THUMBNAIL;
+    }
+
+    if (!board.price) {
+      board.price = "0";
+    }
+
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO boards (student_id, category_no, title, content, price) VALUES (?, ?, ?, ?, ?);`;
+      const query = `INSERT INTO boards (student_id, category_no, title, content, thumbnail, price) VALUES (?, ?, ?, ?, ?, ?);`;
       db.query(
         query,
-        [board.studentId, num, board.title, board.content, board.price],
+        [
+          board.studentId,
+          num,
+          board.title,
+          board.content,
+          board.thumbnail,
+          board.price,
+        ],
         (err) => {
           if (err) reject(err);
           else resolve(true);
@@ -58,6 +73,16 @@ class BoardStroage {
     return new Promise((resolve, reject) => {
       const query = `UPDATE boards SET title = ?, content = ?, price = ? where no = ?;`;
       db.query(query, [board.title, board.content, board.price, num], (err) => {
+        if (err) reject(err);
+        else resolve(true);
+      });
+    });
+  }
+
+  static updateOnlyHitByNum(num) {
+    return new Promise((resolve, reject) => {
+      const query = `UPDATE boards SET hit = hit + 1 WHERE no = ?;`;
+      db.query(query, [num], (err) => {
         if (err) reject(err);
         else resolve(true);
       });

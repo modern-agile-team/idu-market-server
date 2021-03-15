@@ -31,6 +31,13 @@ const process = {
     res.status(409).json(response);
   },
 
+  updateOnlyHit: async (req, res) => {
+    const board = new Board(req);
+    const response = await board.updateOnlyHit();
+    if (response.success) return res.status(201).json(response);
+    res.status(400).json(response);
+  },
+
   deleteByNo: async (req, res) => {
     const board = new Board(req);
     const response = await board.deleteByNo();
