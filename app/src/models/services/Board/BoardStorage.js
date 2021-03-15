@@ -32,7 +32,7 @@ class BoardStroage {
     });
   }
 
-  static findAllByCategoryNum(categoryNum) {
+  static findAllByCategoryNum(categoryNum, lastNum) {
     return new Promise((resolve, reject) => {
       const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, 
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
@@ -42,11 +42,12 @@ class BoardStroage {
       ON bo.student_id = st.id
       LEFT JOIN comments AS cmt
       ON bo.no = cmt.board_no
-      WHERE bo.category_no = ?
+      WHERE bo.category_no = ? AND bo.no < ?
       GROUP BY num
-      ORDER BY num desc;`;
+      ORDER BY num desc
+      LIMIT 10;`;
 
-      db.query(query, [categoryNum], (err, boards) => {
+      db.query(query, [categoryNum, lastNum], (err, boards) => {
         if (err) reject(err);
         else resolve(boards);
       });

@@ -32,8 +32,13 @@ class Board {
   async findAllByCategoryNum() {
     const categoryName = this.params.categoryName;
     const categoryNum = Category[categoryName];
+    const lastNum = this.query.lastNum;
+
     try {
-      const boards = await BoardStorage.findAllByCategoryNum(categoryNum);
+      const boards = await BoardStorage.findAllByCategoryNum(
+        categoryNum,
+        lastNum
+      );
       if (boards) {
         return { success: true, msg: "게시판 조회 성공", boards };
       }
