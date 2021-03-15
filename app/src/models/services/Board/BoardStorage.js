@@ -99,6 +99,27 @@ class BoardStroage {
       });
     });
   }
+
+  static findAllByIncludedTitleAndCategory(title, categoryNum) {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, 
+      date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
+      COUNT(cmt.content) AS commentCount
+      FROM boards AS bo
+      JOIN students AS st
+      ON bo.student_id = st.id
+      LEFT JOIN comments AS cmt
+      ON bo.no = cmt.board_no
+      WHERE bo.title regexp ? && bo.category_no = ?
+      GROUP BY num
+      ORDER BY num desc;`;
+
+      db.query(query, [title, categoryNum], (err, boards) => {
+        if (err) reject(err);
+        else resolve(boards);
+      });
+    });
+  }
 }
 
 module.exports = BoardStroage;
