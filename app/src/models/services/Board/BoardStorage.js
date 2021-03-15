@@ -33,8 +33,16 @@ class BoardStroage {
   }
 
   static findAllByCategoryNum(categoryNum, lastNum) {
-    let subQuery = "";
-    if (lastNum) subQuery = "AND bo.no < ?";
+    let where = "";
+    let limit = "";
+    if (lastNum >= 0) {
+      // req.query.lastNum (게시판 마지막 번호)가 0이면 반환 게시글 개수를 10개로 제한한다.
+      limit = "LIMIT 10";
+      if (lastNum > 0) {
+        // req.query.lastNum (게시판 마지막 번호) 보다 게시글 번호가 작은 10개를 응답한다.
+        where = "AND bo.no < ?";
+      }
+    }
 
     return new Promise((resolve, reject) => {
       const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, 
@@ -45,10 +53,10 @@ class BoardStroage {
       ON bo.student_id = st.id
       LEFT JOIN comments AS cmt
       ON bo.no = cmt.board_no
-      WHERE bo.category_no = ? ${subQuery}
+      WHERE bo.category_no = ? ${where}
       GROUP BY num
       ORDER BY num desc
-      LIMIT 10;`;
+      ${limit};`;
 
       db.query(query, [categoryNum, lastNum], (err, boards) => {
         if (err) reject(err);
