@@ -21,9 +21,15 @@ router.get(
 router.put("/:categoryName/:num", boardCtrl.process.updateByNum);
 router.patch("/:categoryName/:num", boardCtrl.process.updateOnlyHit); // 조회수 1 증가 API
 router.patch("/:categoryName/:num/status", boardCtrl.process.updateOnlyStatus); // 상태 플래그(판매중, 예약중, 거래완료 등)만 UPDATE
-router.patch("/:categoryName/:num/:commentNum", commentCtrl.process.updateByNo);
+router.patch(
+  "/:categoryName/:num/:commentNum",
+  commentCtrl.process.updateByNum
+);
 
 router.delete("/:categoryName/:num", boardCtrl.process.deleteByNum);
-router.delete("/:categoryName/:num/:commentNum", commentCtrl.process.delete);
+router.delete(
+  "/:categoryName/:num/:commentNum",
+  commentCtrl.process.deleteByNum
+);
 
 module.exports = router;

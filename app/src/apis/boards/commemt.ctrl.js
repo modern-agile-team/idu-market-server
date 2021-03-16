@@ -15,14 +15,14 @@ const process = {
     res.status(400).json(response);
   },
 
-  updateByNo: async (req, res) => {
+  updateByNum: async (req, res) => {
     const comment = new Comment(req);
-    const response = await comment.updateByNo();
-    if (response.success) return res.status(201).json(response);
-    res.status(409).json(response);
+    const response = await comment.updateByNum();
+    if (response.success) return res.status(200).json(response);
+    res.status(400).json(response);
   },
 
-  delete: async (req, res) => {
+  deleteByNum: async (req, res) => {
     const comment = new Comment(req);
     let response = {};
     if (req.body.depth === 0) {
@@ -30,7 +30,7 @@ const process = {
     } else {
       response = await comment.deleteReplyByNum();
     }
-    if (response.success) return res.status(201).json(response);
+    if (response.success) return res.status(200).json(response);
     res.status(400).json(response);
   },
 };
