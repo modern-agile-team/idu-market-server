@@ -144,7 +144,7 @@ class BoardStroage {
 
   static findAllByNum(board) {
     return new Promise((resolve, reject) => {
-      const sql = `SELECT student_id
+      const sql = `SELECT distinct student_id
       FROM comments
       WHERE board_no = ? AND student_id NOT IN (?);`;
       db.query(sql, board, (err, students) => {
