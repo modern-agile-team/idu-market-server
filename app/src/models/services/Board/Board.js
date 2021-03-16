@@ -16,14 +16,20 @@ class Board {
     const body = this.body;
     const categoryName = this.params.categoryName;
     const categoryNum = Category[categoryName];
+    if (!categoryNum)
+      return { success: false, msg: "존재하지 않는 게시판입니다." };
+
     body.price = String.makePrice(body.price);
 
     try {
-      const board = await BoardStorage.create(categoryNum, body);
-      if (board) {
-        return { success: true, msg: "게시판 생성 성공" };
+      const { success, num } = await BoardStorage.create(categoryNum, body);
+      if (success) {
+        return { success: true, msg: "게시판 생성에 성공하셨습니다.", num };
       }
-      return { success: false, msg: "게시판 등록에 실패하셨습니다." };
+      return {
+        success: false,
+        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주십시오.",
+      };
     } catch (err) {
       throw err;
     }
@@ -62,17 +68,27 @@ class Board {
     }
   }
 
-  async updateByNo() {
+  async updateByNum() {
     const num = this.params.num;
     const body = this.body;
     body.price = String.makePrice(body.price);
 
     try {
-      const isUpdate = await BoardStorage.update(body, num);
-      if (isUpdate) {
-        return { success: true, msg: "게시판 수정 성공" };
+      const board = await BoardStorage.findOneByNum(num);
+      if (!board) return { success: false, msg: "존재하지 않는 게시판입니다." };
+
+      const { success, boardNum } = await BoardStorage.updateByNum(body, num);
+      if (success) {
+        return {
+          success: true,
+          msg: "게시판 수정에 성공하셨습니다.",
+          num: boardNum,
+        };
       }
-      return { success: false, msg: "게시판 수정 실패" };
+      return {
+        success: false,
+        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주십시오.",
+      };
     } catch (err) {
       throw err;
     }
