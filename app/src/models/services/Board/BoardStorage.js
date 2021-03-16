@@ -106,6 +106,16 @@ class BoardStroage {
     });
   }
 
+  static updateOnlyStatusByNum(board, num) {
+    return new Promise((resolve, reject) => {
+      const query = `UPDATE boards SET status = ? WHERE no = ?;`;
+      db.query(query, [board.status, num], (err) => {
+        if (err) reject(err);
+        else resolve(true);
+      });
+    });
+  }
+
   static delete(num) {
     return new Promise((resolve, reject) => {
       const query = `DELETE FROM boards where no = ?`;

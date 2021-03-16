@@ -44,6 +44,13 @@ const process = {
     if (response.success) return res.status(201).json(response);
     res.status(400).json(response);
   },
+
+  updateOnlyStatus: async (req, res) => {
+    const board = new Board(req);
+    const response = await board.updateOnlyStatus();
+    if (response.success) return res.status(201).json(response);
+    res.status(400).json(response);
+  },
 };
 
 module.exports = {

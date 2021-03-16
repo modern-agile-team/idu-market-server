@@ -4,6 +4,7 @@ const BoardStorage = require("./BoardStorage");
 const Category = require("../Category/Category");
 const String = require("../../utils/String");
 const CommentStorage = require("./Comment/CommentStorage");
+const BoardStroage = require("./BoardStorage");
 
 class Board {
   constructor(req) {
@@ -147,6 +148,19 @@ class Board {
       };
 
       return response;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  async updateOnlyStatus() {
+    const num = this.params.num;
+    const body = this.body;
+
+    try {
+      const isUpdate = await BoardStroage.updateOnlyStatusByNum(body, num);
+      if (isUpdate) return { success: true, msg: "status 변경 성공" };
+      return { success: false, msg: "status 변경 실패" };
     } catch (err) {
       throw err;
     }

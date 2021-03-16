@@ -4,7 +4,6 @@ const express = require("express");
 const router = express.Router();
 const ctrl = require("./sale-list.ctrl");
 
-router.get("/", ctrl.output.read);
-router.post("/", ctrl.process.update);
+router.get("/", ctrl.read);
 
 module.exports = router;

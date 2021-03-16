@@ -1,9 +1,9 @@
-const Profile = require("../../models/services/profile/Profile");
+const Profile = require("../../models/services/Profile/Profile");
 
 const output = {
-  findAllById: async (req, res) => {
-    const user = await new Profile(req.body);
-    const response = await user.findAllById();
+  findOneById: async (req, res) => {
+    const student = await new Profile(req.params.studentId);
+    const response = await student.findOneById();
     if (response) return res.status(200).json(response);
     return res.status(400).json(response);
   },
@@ -11,8 +11,8 @@ const output = {
 
 const process = {
   update: async (req, res) => {
-    const user = await new Profile(req.body);
-    const response = await user.update();
+    const student = await new Profile(req.body);
+    const response = await student.update();
     if (response.success) return res.status(200).json(response);
     return res.status(409).json(response);
   },
