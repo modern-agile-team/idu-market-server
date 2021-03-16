@@ -131,7 +131,7 @@ class Board {
     }
   }
 
-  async deleteByNo() {
+  async deleteByNum() {
     const num = this.params.num;
     try {
       const isDelete = await BoardStorage.delete(num);
