@@ -16,6 +16,7 @@ router.get("/:categoryName/:num", boardCtrl.process.findOneByNum);
 
 router.put("/:categoryName/:num", boardCtrl.process.updateByNo);
 router.patch("/:categoryName/:num/:commentNum", commentCtrl.process.updateByNo);
+router.patch("/:categoryName/:num", boardCtrl.process.updateOnlyStatus);
 
 router.delete("/:categoryName/:num", boardCtrl.process.deleteByNo);
 router.delete("/:categoryName/:num/:commentNum", commentCtrl.process.delete);
