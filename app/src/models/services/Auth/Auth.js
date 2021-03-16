@@ -2,7 +2,6 @@ const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
 
 const AuthStorage = require("./AuthStorage");
-const WooahanDate = require("../../utils/WooahanDate");
 
 class Auth {
   static TOKEN_INVALID = -2;
@@ -50,12 +49,6 @@ class Auth {
         id,
       };
 
-      const auth = await AuthStorage.findOneById(id);
-      if (auth) {
-        const isUpdate = await AuthStorage.updateToken(user);
-        if (isUpdate) return { success: true, token };
-      }
-
       const isSave = await AuthStorage.saveToken(user);
       if (isSave) return { success: true, token };
     } catch (err) {
@@ -64,20 +57,18 @@ class Auth {
   }
 
   static async useableId(id) {
-    const auth = await AuthStorage.findOneById(id);
+    const auth = await AuthStorage.findOneByStudentId(id);
     if (auth) {
-      const currentDate = WooahanDate.getCurrentFullDate();
-      const tokenCreatedDate = Number(auth.token_created_date);
-      if (tokenCreatedDate + 300 < currentDate) {
-        return {
-          useable: false,
-          msg:
-            "비밀번호 변경 유효 시간(5분)이 지났습니다. 다시 시도해 주십시오.",
-        };
-      }
-      return { useable: true };
+      return {
+        useable: true,
+        msg: "등록된 토큰입니다.",
+      };
     }
-    return { useable: false, msg: "등록되지 않은 아이디 입니다." };
+    return {
+      useable: false,
+      msg:
+        "미등록된 토큰이거나 유효시간(20분)이 만료되었습니다. 비밀번호 찾기를 다시 시도해주십시오.",
+    };
   }
 }
 
