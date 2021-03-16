@@ -13,7 +13,10 @@ router.post(
 
 router.get("/:categoryName", boardCtrl.process.findAllByCategoryNum);
 router.get("/:categoryName/:num", boardCtrl.process.findOneByNum);
-router.get("/:categoryName/:num/comments", boardCtrl.process.findAllByNum);
+router.get(
+  "/:categoryName/:num/comments",
+  boardCtrl.process.findStudentIdByNum
+);
 
 router.put("/:categoryName/:num", boardCtrl.process.updateByNum);
 router.patch("/:categoryName/:num", boardCtrl.process.updateOnlyHit); // 조회수 1 증가 API

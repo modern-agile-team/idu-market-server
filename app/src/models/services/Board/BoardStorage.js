@@ -147,7 +147,7 @@ class BoardStroage {
     });
   }
 
-  static findAllByNum(board) {
+  static findStudentIdByNum(board) {
     return new Promise((resolve, reject) => {
       const sql = `SELECT distinct student_id
       FROM comments

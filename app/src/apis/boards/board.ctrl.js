@@ -24,9 +24,9 @@ const process = {
     return res.status(400).json(response);
   },
 
-  findAllByNum: async (req, res) => {
-    const student = new Board(req);
-    const response = await student.findAllByNum();
+  findStudentIdByNum: async (req, res) => {
+    const board = new Board(req);
+    const response = await board.findStudentIdByNum();
     if (response.success) return res.status(200).json(response);
     return res.status(400).json(response);
   },
