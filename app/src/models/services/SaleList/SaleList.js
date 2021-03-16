@@ -10,6 +10,7 @@ class SaleList {
     try {
       const saleLists = await SaleListStorage.findAllByStatus(studentId);
       if (saleLists.length !== 0) return { success: true, saleLists };
+      return { success: false, msg: "판매내역이 존재하지 않습니다" };
     } catch (err) {
       throw err;
     }
