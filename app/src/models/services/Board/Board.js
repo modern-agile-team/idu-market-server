@@ -20,6 +20,12 @@ class Board {
     if (!categoryNum)
       return { success: false, msg: "존재하지 않는 게시판입니다." };
 
+    if (body.price < 0 || body.price.toString().length >= 8) {
+      return {
+        success: false,
+        msg: "가격은 0 ~ 9999999 까지만 입력 가능합니다.",
+      };
+    }
     body.price = String.makePrice(body.price);
 
     try {
@@ -58,10 +64,10 @@ class Board {
     const num = this.params.num;
     try {
       const board = await BoardStorage.findOneByNum(num);
-      const comment = await CommentStorage.findOneByBoardNum(num);
+      const comments = await CommentStorage.findOneByBoardNum(num);
 
       if (board) {
-        return { success: true, msg: "게시판 상세 조회 성공", board, comment };
+        return { success: true, msg: "게시판 상세 조회 성공", board, comments };
       }
       return { success: false, msg: "게시판 상세 조회 실패" };
     } catch (err) {
@@ -72,6 +78,13 @@ class Board {
   async updateByNum() {
     const num = this.params.num;
     const body = this.body;
+
+    if (body.price < 0 || body.price.toString().length >= 8) {
+      return {
+        success: false,
+        msg: "가격은 0 ~ 9999999 까지만 입력 가능합니다.",
+      };
+    }
     body.price = String.makePrice(body.price);
 
     try {
