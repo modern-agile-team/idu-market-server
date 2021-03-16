@@ -14,10 +14,11 @@ router.post(
 router.get("/:categoryName", boardCtrl.process.findAllByCategoryNum);
 router.get("/:categoryName/:num", boardCtrl.process.findOneByNum);
 
-router.put("/:categoryName/:num", boardCtrl.process.updateByNo);
+router.put("/:categoryName/:num", boardCtrl.process.updateByNum);
+router.patch("/:categoryName/:num", boardCtrl.process.updateOnlyHit); // 조회수 1 증가 API
 router.patch("/:categoryName/:num/:commentNum", commentCtrl.process.updateByNo);
 
-router.delete("/:categoryName/:num", boardCtrl.process.deleteByNo);
+router.delete("/:categoryName/:num", boardCtrl.process.deleteByNum);
 router.delete("/:categoryName/:num/:commentNum", commentCtrl.process.delete);
 
 module.exports = router;

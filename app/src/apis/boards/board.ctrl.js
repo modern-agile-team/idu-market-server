@@ -24,9 +24,9 @@ const process = {
     return res.status(400).json(response);
   },
 
-  updateByNo: async (req, res) => {
+  updateByNum: async (req, res) => {
     const board = new Board(req);
-    const response = await board.updateByNo();
+    const response = await board.updateByNum();
     if (response.success) return res.status(201).json(response);
     res.status(409).json(response);
   },
@@ -38,7 +38,7 @@ const process = {
     res.status(400).json(response);
   },
 
-  deleteByNo: async (req, res) => {
+  deleteByNum: async (req, res) => {
     const board = new Board(req);
     const response = await board.deleteByNo();
     if (response.success) return res.status(201).json(response);
