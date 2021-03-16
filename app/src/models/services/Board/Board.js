@@ -149,6 +149,18 @@ class Board {
       throw err;
     }
   }
+
+  async findAllByNum() {
+    const board = [this.params.num, this.body.studentId];
+    console.log(board);
+    try {
+      const list = await BoardStorage.findAllByNum(board);
+      if (list.length !== 0) return { success: true, list };
+      return { success: false, msg: "댓글이 없음" };
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = Board;

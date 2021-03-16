@@ -29,10 +29,10 @@ class PurchaseListStorage {
     });
   }
 
-  static update(client) {
+  static create(client) {
     return new Promise((resolve, reject) => {
-      const sql = `INSERT INTO purchase_lists(board_no, category_no, student_id) VALUES(?, ?, ?)`;
-      const params = [client.boardNum, client.categoryNum, client.studentId];
+      const sql = `INSERT INTO purchase_lists(board_no, student_id) VALUES(?, ?)`;
+      const params = [client.boardNum, client.studentId];
       db.query(sql, params, (err) => {
         if (err) reject(err);
         else resolve(true);

@@ -141,6 +141,18 @@ class BoardStroage {
       });
     });
   }
+
+  static findAllByNum(board) {
+    return new Promise((resolve, reject) => {
+      const sql = `SELECT student_id
+      FROM comments
+      WHERE board_no = ? AND student_id NOT IN (?);`;
+      db.query(sql, board, (err, students) => {
+        if (err) reject(err);
+        else resolve(students);
+      });
+    });
+  }
 }
 
 module.exports = BoardStroage;
