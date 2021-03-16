@@ -4,7 +4,7 @@ const db = require("../../../config/db");
 
 class SaleListStorage {
   //판매목록 화면
-  static findOneByStatus(id) {
+  static findAllByStatus(id) {
     return new Promise((resolve, reject) => {
       const sql = ` SELECT bo.thumbnail, bo.title
       FROM boards bo
