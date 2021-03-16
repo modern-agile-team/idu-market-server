@@ -24,9 +24,9 @@ class BoardStroage {
           board.thumbnail,
           board.price,
         ],
-        (err) => {
+        (err, boards) => {
           if (err) reject(err);
-          else resolve(true);
+          else resolve({ success: true, num: boards.insertId });
         }
       );
     });
@@ -35,6 +35,7 @@ class BoardStroage {
   static findAllByCategoryNum(categoryNum, lastNum) {
     let where = "";
     let limit = "";
+    // 아래 if 문으로 Market API와 Board API를 구분짓게 된다.
     if (lastNum >= 0) {
       // req.query.lastNum (게시판 마지막 번호)가 0이면 반환 게시글 개수를 10개로 제한한다.
       limit = "LIMIT 10";
@@ -45,7 +46,7 @@ class BoardStroage {
     }
 
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, 
+      const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
       COUNT(cmt.content) AS commentCount
       FROM boards AS bo
@@ -67,7 +68,7 @@ class BoardStroage {
 
   static findOneByNum(num) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.name AS studentName, bo.title AS title, bo.content, bo.hit AS hit, bo.price AS price, 
+      const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.name AS studentName, bo.title AS title, bo.content, bo.hit AS hit, bo.price AS price, bo.status AS status,
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(bo.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
       FROM boards AS bo
       JOIN students AS st
@@ -81,13 +82,17 @@ class BoardStroage {
     });
   }
 
-  static update(board, num) {
+  static updateByNum(board, num) {
     return new Promise((resolve, reject) => {
       const query = `UPDATE boards SET title = ?, content = ?, price = ? where no = ?;`;
-      db.query(query, [board.title, board.content, board.price, num], (err) => {
-        if (err) reject(err);
-        else resolve(true);
-      });
+      db.query(
+        query,
+        [board.title, board.content, board.price, num],
+        (err, boards) => {
+          if (err) reject(err);
+          else resolve({ success: true, num: boards.insertId });
+        }
+      );
     });
   }
 
@@ -123,7 +128,7 @@ class BoardStroage {
 
   static findAllByIncludedTitleAndCategory(title, categoryNum) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, 
+      const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
       COUNT(cmt.content) AS commentCount
       FROM boards AS bo
