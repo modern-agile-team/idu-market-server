@@ -6,7 +6,7 @@ class PurchaseList {
   }
 
   async read() {
-    const studentId = this.body;
+    const studentId = this.body.params.studentId;
     try {
       const purchaseList = await PurchaseListStorage.findAllById(studentId);
       return { success: true, purchaseList };
@@ -15,12 +15,12 @@ class PurchaseList {
     }
   }
 
-  async update() {
+  async create() {
     const client = this.body;
     try {
       const isExist = await PurchaseListStorage.isExist(client);
       if (isExist) {
-        const response = await PurchaseListStorage.update(client);
+        const response = await PurchaseListStorage.create(client);
         if (response)
           return { success: true, msg: "구매목록에 저장되었습니다" };
       }

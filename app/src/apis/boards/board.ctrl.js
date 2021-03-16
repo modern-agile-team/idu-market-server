@@ -24,6 +24,13 @@ const process = {
     return res.status(400).json(response);
   },
 
+  findStudentIdByNum: async (req, res) => {
+    const board = new Board(req);
+    const response = await board.findStudentIdByNum();
+    if (response.success) return res.status(200).json(response);
+    return res.status(400).json(response);
+  },
+
   updateByNum: async (req, res) => {
     const board = new Board(req);
     const response = await board.updateByNum();
