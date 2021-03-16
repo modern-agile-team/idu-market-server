@@ -8,8 +8,8 @@ class SaleList {
   async read() {
     const studentId = this.body;
     try {
-      const saleLists = await SaleListStorage.findOneByStatus(studentId);
-      return { success: true, saleLists };
+      const saleLists = await SaleListStorage.findAllByStatus(studentId);
+      if (saleLists.length !== 0) return { success: true, saleLists };
     } catch (err) {
       throw err;
     }
