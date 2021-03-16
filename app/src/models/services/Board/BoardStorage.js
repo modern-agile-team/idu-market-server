@@ -69,7 +69,7 @@ class BoardStroage {
     });
   }
 
-  static update(board, num) {
+  static updateByNum(board, num) {
     return new Promise((resolve, reject) => {
       const query = `UPDATE boards SET title = ?, content = ?, price = ? where no = ?;`;
       db.query(query, [board.title, board.content, board.price, num], (err) => {

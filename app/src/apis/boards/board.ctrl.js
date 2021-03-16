@@ -14,7 +14,7 @@ const process = {
     const board = new Board(req);
     const response = await board.findAllByCategoryNum();
     if (response.success) return res.status(200).json(response);
-    return res.status(404).json(response);
+    return res.status(400).json(response);
   },
 
   findOneByNum: async (req, res) => {
@@ -24,24 +24,24 @@ const process = {
     return res.status(400).json(response);
   },
 
-  updateByNo: async (req, res) => {
+  updateByNum: async (req, res) => {
     const board = new Board(req);
-    const response = await board.updateByNo();
-    if (response.success) return res.status(201).json(response);
-    res.status(409).json(response);
+    const response = await board.updateByNum();
+    if (response.success) return res.status(200).json(response);
+    res.status(400).json(response);
   },
 
   updateOnlyHit: async (req, res) => {
     const board = new Board(req);
     const response = await board.updateOnlyHit();
-    if (response.success) return res.status(201).json(response);
+    if (response.success) return res.status(200).json(response);
     res.status(400).json(response);
   },
 
-  deleteByNo: async (req, res) => {
+  deleteByNum: async (req, res) => {
     const board = new Board(req);
-    const response = await board.deleteByNo();
-    if (response.success) return res.status(201).json(response);
+    const response = await board.deleteByNum();
+    if (response.success) return res.status(200).json(response);
     res.status(400).json(response);
   },
 };

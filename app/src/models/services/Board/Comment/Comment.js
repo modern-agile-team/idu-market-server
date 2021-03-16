@@ -10,10 +10,10 @@ class Comment {
     const body = this.body;
     const boardNum = this.params.num;
     try {
-      let comment = await CommentStorage.create(body, boardNum);
+      let isCreate = await CommentStorage.createByBoardNum(body, boardNum);
       const commentNum = await CommentStorage.findOneCommentNum();
-      comment = await CommentStorage.updateGroupNum(commentNum[0].no);
-      if (comment) {
+      isCreate = await CommentStorage.updateGroupNum(commentNum[0].no);
+      if (isCreate) {
         return { success: true, msg: "댓글 생성 성공" };
       }
       return { success: false, msg: "댓글 생성 실패" };
@@ -27,14 +27,14 @@ class Comment {
     const boardNum = this.params.num;
     const groupNum = this.params.groupNum;
     try {
-      const comment = await CommentStorage.createReplyByGroupNum(
+      const isCreate = await CommentStorage.createReplyByGroupNum(
         body,
         boardNum,
         groupNum
       );
-      if (comment) {
-        await this.updateReply(groupNum);
-        return { success: true, msg: "답글 생성 성공" };
+      if (isCreate) {
+        const replyFlag = await this.updateComment(groupNum);
+        return { success: true, msg: "답글 생성 성공", replyFlag };
       }
       return { success: false, msg: "답글 생성 실패" };
     } catch (err) {
@@ -42,27 +42,27 @@ class Comment {
     }
   }
 
-  async updateByNo() {
-    const commentNum = this.params.commentNum;
-    const body = this.body;
+  async updateComment(groupNum) {
     try {
-      const comment = await CommentStorage.update(body, commentNum);
-      if (comment) {
-        return { success: true, msg: "댓글 수정 성공" };
+      const isUpdateComment = await CommentStorage.updateComment(groupNum);
+      if (isUpdateComment) {
+        return { success: true, msg: "플래그 설정 성공" };
       }
-      return { success: false, msg: "댓글 수정 실패" };
+      return { success: false, msg: "플래그 설정 실패" };
     } catch (err) {
       throw err;
     }
   }
 
-  async updateReply(groupNum) {
+  async updateByNum() {
+    const commentNum = this.params.commentNum;
+    const body = this.body;
     try {
-      const comment = await CommentStorage.updateReply(groupNum);
-      if (comment) {
-        return { success: true, msg: "플래그 설정 성공" };
+      const isUpdate = await CommentStorage.updateByNum(body, commentNum);
+      if (isUpdate) {
+        return { success: true, msg: "댓글 수정 성공" };
       }
-      return { success: false, msg: "플래그 설정 실패" };
+      return { success: false, msg: "댓글 수정 실패" };
     } catch (err) {
       throw err;
     }
@@ -72,14 +72,14 @@ class Comment {
     const num = this.params.commentNum;
     try {
       const replyFlag = await CommentStorage.findOneReplyFlag(num);
-      let comment = new Boolean(false);
-      if (replyFlag.Num === 0) {
-        comment = await CommentStorage.deleteCommentByNum(num);
+      let isDelete = new Boolean(false);
+      if (replyFlag === 0) {
+        isDelete = await CommentStorage.deleteCommentByNum(num);
       } else {
-        const hidden = await CommentStorage.updatehiddenFlag(num);
-        if (hidden) return { success: true, msg: "댓글 숨김 처리" };
+        const isUpdateHidden = await CommentStorage.updatehiddenFlag(num);
+        if (isUpdateHidden) return { success: true, msg: "댓글 숨김 처리" };
       }
-      if (comment) {
+      if (isDelete) {
         return { success: true, msg: "댓글 삭제 성공" };
       }
       return { success: false, msg: "댓글 삭제 실패" };
@@ -90,9 +90,20 @@ class Comment {
 
   async deleteReplyByNum() {
     const num = this.params.commentNum;
+    const groupNum = await CommentStorage.findOneGroupNum(num);
     try {
-      const comment = await CommentStorage.deleteReplyByNum(num);
-      if (comment) {
+      const isDelete = await CommentStorage.deleteReplyByNum(num);
+      const replyFlag = await CommentStorage.updateReplyFlag(groupNum);
+      if (replyFlag === 1) {
+        const hiddenFlag = await CommentStorage.findOneHiddenFlag(groupNum);
+        if (hiddenFlag === 1) {
+          const response = await CommentStorage.deleteHiddenComment(groupNum);
+          if (response) {
+            return { success: true, msg: "답글 삭제 및 숨김 댓글 삭제" };
+          }
+        }
+      }
+      if (isDelete) {
         return { success: true, msg: "답글 삭제 성공" };
       }
       return { success: false, msg: "답글 삭제 실패" };

@@ -56,12 +56,12 @@ class Board {
     }
   }
 
-  async updateByNo() {
+  async updateByNum() {
     const num = this.params.num;
     const body = this.body;
     body.price = String.makePrice(body.price);
     try {
-      const board = await BoardStorage.update(body, num);
+      const board = await BoardStorage.updateByNum(body, num);
       if (board) {
         return { success: true, msg: "게시판 수정 성공" };
       }
@@ -94,7 +94,7 @@ class Board {
     }
   }
 
-  async deleteByNo() {
+  async deleteByNum() {
     const num = this.params.num;
     try {
       const board = await BoardStorage.delete(num);
