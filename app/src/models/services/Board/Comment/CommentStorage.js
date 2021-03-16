@@ -88,11 +88,11 @@ class CommentStorage {
 
   static updateByNum(comment, num) {
     return new Promise((resolve, reject) => {
-      const query = `UPDATE comments SET content = ? WHERE no = ?;`;
+      const query = `UPDATE comments SET content = ? WHERE no = ? AND student_id = ?;`;
 
-      db.query(query, [comment.content, num], (err) => {
+      db.query(query, [comment.content, num, comment.studentId], (err, row) => {
         if (err) reject(err);
-        else resolve(true);
+        else resolve(row.affectedRows);
       });
     });
   }
@@ -110,11 +110,11 @@ class CommentStorage {
 
   static deleteCommentByNum(num) {
     return new Promise((resolve, rejcet) => {
-      const query = `DELETE FROM comments WHERE no = ? AND reply_flag = 0`;
+      const query = `DELETE FROM comments WHERE no = ? AND reply_flag = 0 AND depth = 0`;
 
-      db.query(query, [num], (err) => {
+      db.query(query, [num], (err, row) => {
         if (err) rejcet(err);
-        else resolve(true);
+        else resolve(row.affectedRows);
       });
     });
   }
@@ -141,13 +141,13 @@ class CommentStorage {
     });
   }
 
-  static deleteReplyByNum(num) {
+  static deleteReplyByNum(num, body) {
     return new Promise((resolve, reject) => {
-      const query = `DELETE FROM comments WHERE no = ? AND depth = 1`;
+      const query = `DELETE FROM comments WHERE no = ? AND depth = 1 AND student_id = ?`;
 
-      db.query(query, [num], (err) => {
+      db.query(query, [num, body.studentId], (err, row) => {
         if (err) reject(err);
-        else resolve(true);
+        else resolve(row.affectedRows);
       });
     });
   }

@@ -1,7 +1,7 @@
 const db = require("../../../config/db");
 
 class ProfileStorage {
-  static findAllById(id) {
+  static findOneById(id) {
     return new Promise((resolve, reject) => {
       const sql = `SELECT st.id, st.name, st.email, st.profile_path
       FROM students st
@@ -27,7 +27,7 @@ class ProfileStorage {
     });
   }
 
-  static findOneById(id) {
+  static findOneByStudentId(id) {
     return new Promise((resolve, reject) => {
       const sql = `SELECT bo.title, comments.content
       FROM comments

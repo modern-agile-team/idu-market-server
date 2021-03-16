@@ -59,7 +59,7 @@ class Comment {
     const body = this.body;
     try {
       const isUpdate = await CommentStorage.updateByNum(body, commentNum);
-      if (isUpdate) {
+      if (isUpdate === 1) {
         return { success: true, msg: "댓글 수정 성공" };
       }
       return { success: false, msg: "댓글 수정 실패" };
@@ -79,7 +79,7 @@ class Comment {
         const isUpdateHidden = await CommentStorage.updatehiddenFlag(num);
         if (isUpdateHidden) return { success: true, msg: "댓글 숨김 처리" };
       }
-      if (isDelete) {
+      if (isDelete === 1) {
         return { success: true, msg: "댓글 삭제 성공" };
       }
       return { success: false, msg: "댓글 삭제 실패" };
@@ -90,9 +90,10 @@ class Comment {
 
   async deleteReplyByNum() {
     const num = this.params.commentNum;
+    const body = this.body;
     const groupNum = await CommentStorage.findOneGroupNum(num);
     try {
-      const isDelete = await CommentStorage.deleteReplyByNum(num);
+      const isDelete = await CommentStorage.deleteReplyByNum(num, body);
       const replyFlag = await CommentStorage.updateReplyFlag(groupNum);
       if (replyFlag === 1) {
         const hiddenFlag = await CommentStorage.findOneHiddenFlag(groupNum);
@@ -103,7 +104,7 @@ class Comment {
           }
         }
       }
-      if (isDelete) {
+      if (isDelete === 1) {
         return { success: true, msg: "답글 삭제 성공" };
       }
       return { success: false, msg: "답글 삭제 실패" };
