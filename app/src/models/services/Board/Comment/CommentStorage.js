@@ -35,16 +35,16 @@ class CommentStorage {
 
   static findAllByBoardNum(boardNum) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT st.id AS studentId, st.name AS studentName, cmt.no AS commentNum, cmt.content AS commentContent, cmt.group_no AS commentGroupNum, 
-      cmt.depth AS commentDepth, cmt.reply_flag AS commentReplyFlag, cmt.hidden_flag AS commentHiddenFlag, 
-      date_format(cmt.in_date, '%Y-%m-%d %H:%i:%s') AS commentInDate, date_format(cmt.update_date, '%Y-%m-%d %H:%i:%s') AS commentUpdateDate
+      const query = `SELECT st.id AS studentId, st.name AS studentName, cmt.no AS num, cmt.content, cmt.group_no AS groupNum, 
+      cmt.depth, cmt.reply_flag AS replyFlag, cmt.hidden_flag AS hiddenFlag, 
+      date_format(cmt.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(cmt.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
       FROM comments cmt
       JOIN students AS st
       ON cmt.student_id = st.id
       LEFT JOIN boards AS bo
       ON cmt.board_no = bo.no
       WHERE cmt.board_no = ?
-      ORDER BY commentGroupNum, commentInDate;`;
+      ORDER BY groupNum, inDate;`;
 
       db.query(query, [boardNum], (err, comment) => {
         if (err) reject(err);
