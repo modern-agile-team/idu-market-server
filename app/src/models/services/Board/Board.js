@@ -64,7 +64,7 @@ class Board {
     const num = this.params.num;
     try {
       const board = await BoardStorage.findOneByNum(num);
-      const comments = await CommentStorage.findOneByBoardNum(num);
+      const comments = await CommentStorage.findAllByBoardNum(num);
 
       if (board) {
         return { success: true, msg: "게시판 상세 조회 성공", board, comments };
