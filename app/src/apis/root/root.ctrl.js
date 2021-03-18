@@ -1,6 +1,29 @@
 const User = require("../../models/services/User/User");
 const Email = require("../../models/services/Email/Email");
 
+const auth = {
+  resAuthorizedUserInfo: (req, res) => {
+    // 인증 미들웨어를 통과했으므로 인증된 사용자이다.
+    // 따라서 유저 정보를 응답한다.
+    const user = req.user;
+    delete user.iat;
+
+    res.status(200).json({
+      success: true,
+      msg: "로그인된 사용자입니다. 서비스 이용이 가능합니다.",
+      user,
+    });
+  },
+
+  resUnAuthorizedInfo: (req, res) => {
+    // 비인증 미들웨어를 통과했으므로 비인증된 사용자이다.
+    res.status(200).json({
+      success: true,
+      msg: "로그인되지 않은 사용자입니다. 서비스 이용이 가능합니다.",
+    });
+  },
+};
+
 const process = {
   login: async (req, res) => {
     try {
@@ -59,5 +82,6 @@ const process = {
 };
 
 module.exports = {
+  auth,
   process,
 };
