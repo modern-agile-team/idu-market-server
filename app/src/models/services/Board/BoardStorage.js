@@ -4,14 +4,6 @@ const db = require("../../../config/db");
 
 class BoardStroage {
   static create(num, board) {
-    if (!board.thumbnail) {
-      board.thumbnail = process.env.DEFAULT_THUMBNAIL;
-    }
-
-    if (!board.price) {
-      board.price = "0";
-    }
-
     return new Promise((resolve, reject) => {
       const query = `INSERT INTO boards (student_id, category_no, title, content, thumbnail, price) VALUES (?, ?, ?, ?, ?, ?);`;
       db.query(

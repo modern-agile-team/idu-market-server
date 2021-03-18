@@ -14,22 +14,31 @@ class Board {
   }
 
   async createByCategoryName() {
-    const body = this.body;
+    const board = this.body;
     const categoryName = this.params.categoryName;
     const categoryNum = Category[categoryName];
-    if (!categoryNum)
+
+    if (categoryNum === undefined)
       return { success: false, msg: "존재하지 않는 게시판입니다." };
 
-    if (body.price < 0 || body.price.toString().length >= 8) {
+    if (!board.thumbnail) {
+      board.thumbnail = process.env.DEFAULT_THUMBNAIL;
+    }
+
+    if (!board.price) {
+      board.price = "0";
+    }
+
+    if (board.price < 0 || board.price.toString().length >= 8) {
       return {
         success: false,
         msg: "가격은 0 ~ 9999999 까지만 입력 가능합니다.",
       };
     }
-    body.price = String.makePrice(body.price);
+    board.price = String.makePrice(board.price);
 
     try {
-      const { success, num } = await BoardStorage.create(categoryNum, body);
+      const { success, num } = await BoardStorage.create(categoryNum, board);
       if (success) {
         return { success: true, msg: "게시판 생성에 성공하셨습니다.", num };
       }
