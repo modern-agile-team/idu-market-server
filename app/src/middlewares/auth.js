@@ -2,7 +2,7 @@ const Auth = require("../models/services/Auth/Auth");
 
 // 로그인 된 유저들만 서비스 이용을 허가하는 미들웨어
 const logined = async (req, res, next) => {
-  const token = req.headers.token;
+  const token = req.headers["x-auth-token"];
 
   // 토큰 없음
   if (!token)
