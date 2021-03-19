@@ -1,34 +1,35 @@
-"use strict";
-
-const Auth = require("../models/services/Auth");
+const Auth = require("../models/services/Auth/Auth");
 
 // 로그인 된 유저들만 서비스 이용을 허가하는 미들웨어
 const logined = async (req, res, next) => {
-  const token = req.headers.token;
+  const token = req.headers["x-auth-token"];
 
   // 토큰 없음
   if (!token)
-    return res.json({ success: false, msg: "JWT가 존재하지 않습니다." });
+    return res
+      .status(401)
+      .json({ success: false, msg: "JWT가 존재하지 않습니다." });
 
   // decode
   const user = await Auth.verifyJWT(token);
+
   // 유효기간 만료
   if (user === Auth.TOKEN_EXPIRED)
-    return res.status(403).json({
+    return res.status(401).json({
       success: false,
       msg: "JWT의 유효 시간이 만료되었습니다.",
     });
   // 유효하지 않는 토큰
   if (user === Auth.TOKEN_INVALID)
     return res
-      .status(403)
+      .status(401)
       .json({ success: false, msg: "유효하지 않은 JWT 입니다." });
   if (user.id === undefined)
     return res
-      .status(403)
+      .status(401)
       .json({ success: false, msg: "유효하지 않은 JWT 입니다." });
 
-  req.id = user.id;
+  req.user = user;
   next();
 };
 
