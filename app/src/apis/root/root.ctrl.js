@@ -1,5 +1,6 @@
 const User = require("../../models/services/User/User");
 const Email = require("../../models/services/Email/Email");
+const logger = require("../../config/logger");
 
 const auth = {
   resAuthorizedUserInfo: (req, res) => {
@@ -29,7 +30,11 @@ const process = {
     try {
       const user = new User(req);
       const response = await user.login();
-      if (response.success) return res.status(201).json(response);
+      if (response.success) {
+        logger.info(`POST /api/jwt 201 ${response.msg}`);
+        return res.status(201).json(response);
+      }
+      logger.error(`POST /api/jwt 400 ${response.msg}`);
       return res.status(400).json(response);
     } catch (err) {
       throw err;
@@ -40,9 +45,14 @@ const process = {
     try {
       const user = new User(req);
       const response = await user.signup();
-      if (response.success) return res.status(201).json(response);
+      if (response.success) {
+        logger.info(`POST /api/user 201 ${response.msg}`);
+        return res.status(201).json(response);
+      }
+      logger.error(`POST /api/user 400 ${response.msg}`);
       return res.status(409).json(response);
     } catch (err) {
+      logger.error(`POST /api/user 400 err: ${err}`);
       throw err;
     }
   },
@@ -51,9 +61,14 @@ const process = {
     try {
       const email = new Email(req);
       const response = await email.sendId();
-      if (response.success) return res.status(200).json(response);
+      if (response.success) {
+        logger.info(`POST /api/forgot-id 200 ${response.msg}`);
+        return res.status(200).json(response);
+      }
+      logger.error(`POST /api/forgot-id 400 ${response.msg}`);
       return res.status(400).json(response);
     } catch (err) {
+      logger.error(`POST /api/forgot-id 400 err: ${err}`);
       throw err;
     }
   },
@@ -62,9 +77,14 @@ const process = {
     try {
       const email = new Email(req);
       const response = await email.sendLinkForPsword();
-      if (response.success) return res.status(200).json(response);
+      if (response.success) {
+        logger.info(`POST /api/forgot-password 200 ${response.msg}`);
+        return res.status(200).json(response);
+      }
+      logger.error(`POST /api/forgot-password 400 ${response.msg}`);
       return res.status(400).json(response);
     } catch (err) {
+      logger.error(`POST /api/forgot-password 400 err: ${err}`);
       throw err;
     }
   },
@@ -73,9 +93,14 @@ const process = {
     try {
       const user = new User(req);
       const response = await user.resetPassword();
-      if (response.success) return res.status(200).json(response);
+      if (response.success) {
+        logger.info(`PATCH /api/password 200 ${response.msg}`);
+        return res.status(200).json(response);
+      }
+      logger.error(`PATCH /api/password 400 ${response.msg}`);
       return res.status(400).json(response);
     } catch (err) {
+      logger.error(`PATCH /api/password 400 err: ${err}`);
       throw err;
     }
   },
