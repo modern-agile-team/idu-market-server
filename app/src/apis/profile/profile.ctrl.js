@@ -6,7 +6,7 @@ const output = {
     const student = await new Profile(req.params.studentId);
     const response = await student.findOneById();
     if (response) {
-      logger.info(`GET /api/students/studentId 200 ${response.msg}`);
+      logger.info(`GET /api/students/studentId 200 ${response}`);
       return res.status(200).json(response);
     }
     logger.error(`GET /api/students/studentId 400 ${response.msg}`);

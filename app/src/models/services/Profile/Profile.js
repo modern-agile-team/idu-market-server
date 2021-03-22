@@ -7,11 +7,11 @@ class Profile {
 
   async findOneById() {
     const studentId = this.id;
-    const comments = await ProfileStorage.findOneByStudentId(studentId);
-    const title = await ProfileStorage.findtitleById(studentId);
+    // const comments = await ProfileStorage.findOneByStudentId(studentId);
+    // const title = await ProfileStorage.findtitleById(studentId);
     const profile = await ProfileStorage.findOneById(studentId);
     if (profile.length) {
-      const response = { profile, title, comments };
+      const response = { profile };
       return response;
     }
     return { success: false, msg: "아이디가 존재하지 않습니다." };
