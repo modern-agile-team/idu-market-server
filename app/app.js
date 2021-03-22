@@ -8,6 +8,8 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const morgan = require("morgan");
+const logger = require("../app/src/config/logger");
 
 const app = express();
 dotenv.config();
@@ -34,6 +36,7 @@ const sale = require(`.${dist}/src/apis/sale-list`);
 const notification = require(`.${dist}/src/apis/notification`);
 const profile = require(`.${dist}/src/apis/profile`);
 
+app.use(morgan("tiny", { stream: logger.stream }));
 app.use("/", view);
 app.use("/api/", root);
 app.use("/api/watchlist", watchList);
