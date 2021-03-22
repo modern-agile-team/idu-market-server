@@ -8,7 +8,7 @@ class Auth {
   static TOKEN_EXPIRED = -3;
   static jwtOption = {
     algorithm: "HS256",
-    expiresIn: "30m",
+    expiresIn: "1d",
     issuer: "wooahan agile",
   };
 
