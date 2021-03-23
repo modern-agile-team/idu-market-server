@@ -14,6 +14,17 @@ class ProfileStorage {
     });
   }
 
+  static updateByImage(image, student) {
+    return new Promise((resolve, reject) => {
+      const sql = `UPDATE students st SET st.profile_path = ? WHERE st.id = ?`;
+
+      db.query(sql, [image, student], (err) => {
+        if (err) reject(err);
+        resolve(true);
+      });
+    });
+  }
+
   // static findtitleById(id) {
   //   return new Promise((resolve, reject) => {
   //     const sql = `SELECT bo.title
