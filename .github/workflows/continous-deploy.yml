@@ -30,7 +30,7 @@ jobs:
       # Docker Hub ID와 PW는 GitHub settings에 있는 secrets에 저장해둡니다.
       # [Your DockerHub ID]/[Your Repository Name] 예시) dal96k/woomin-facebook
       - name: Docker image build and push
-        uses: docker/build-push-action@v1
+        uses: docker/build-push-action@v2
         with:
           username: ${{ secrets.DOCKER_ID }}
           password: ${{ secrets.DOCKER_PW }}
