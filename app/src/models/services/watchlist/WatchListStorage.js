@@ -4,8 +4,9 @@ class WatchListStorage {
   //장바구니 화면
   static findAllByStudentId(studentId) {
     return new Promise((resolve, reject) => {
-      const sql = ` SELECT cat.name AS category, bo.title, wl.student_id, bo.student_id AS seller
-      FROM watch_lists wl 
+      const sql = ` SELECT bo.no AS num, wl.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, bo.student_id AS seller, cat.name AS categoryName,
+      (SELECT  COUNT(cmt.content) FROM comments cmt WHERE wl.board_no = cmt.board_no) AS commentCount, date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate
+      FROM watch_lists wl
       JOIN boards bo
       ON bo.no = wl.board_no 
       JOIN categories cat

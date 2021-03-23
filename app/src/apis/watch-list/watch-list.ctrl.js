@@ -5,8 +5,8 @@ const output = {
   findAllByStudentId: async (req, res) => {
     const watchList = new WatchList(req);
     const response = await watchList.findAllByStudentId();
-    if (response.success) {
-      logger.info(`GET /api/watchlist/studentId 200 ${response.success}`);
+    if (response) {
+      logger.info(`GET /api/watchlist/studentId 200 ${response}`);
       return res.status(200).json(response);
     }
     logger.error(`GET /api/sale-list/studentId 409 ${response.msg}`);
