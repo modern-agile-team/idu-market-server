@@ -24,7 +24,7 @@ class Profile {
       const response = await ProfileStorage.update(user);
       if (response) return { success: true, msg: "정상적으로 수정되었습니다." };
     } catch {
-      return { success: false, msg: " 이미 존재하는 아이디 입니다." };
+      return { success: false, msg: "db에러: 서버 쪽에 말씀해주세요" };
     }
   }
 
