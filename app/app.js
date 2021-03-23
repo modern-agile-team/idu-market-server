@@ -22,6 +22,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
+app.use(morgan("tiny", { stream: logger.stream }));
 
 let dist = "";
 if (process.env.NODE_ENV === "production") dist = "/dist";
@@ -36,7 +37,6 @@ const sale = require(`.${dist}/src/apis/sale-list`);
 const notification = require(`.${dist}/src/apis/notification`);
 const profile = require(`.${dist}/src/apis/profile`);
 
-app.use(morgan("tiny", { stream: logger.stream }));
 app.use("/", view);
 app.use("/api/", root);
 app.use("/api/watchlist", watchList);
