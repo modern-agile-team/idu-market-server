@@ -24,8 +24,8 @@ class WatchList {
   async findAllByStudentId() {
     const studentId = this.params.studentId;
     try {
-      const response = await WatchListStorage.findAllByStudentId(studentId);
-      return response;
+      const boards = await WatchListStorage.findAllByStudentId(studentId);
+      return { success: true, msg: "관심목록 조회 성공", boards };
     } catch (err) {
       throw err;
     }

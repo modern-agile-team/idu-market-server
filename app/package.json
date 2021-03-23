@@ -24,13 +24,18 @@
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-asyncify": "^1.0.1",
+    "jest": "^26.6.3",
     "jsonwebtoken": "^8.5.1",
+    "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "multer-s3": "^2.9.0",
     "mysql2": "^2.2.5",
     "nodemailer": "^6.4.18",
     "nodemon": "^2.0.7",
-    "redis": "^3.0.2"
+    "redis": "^3.0.2",
+    "supertest": "^6.1.3",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.0",
