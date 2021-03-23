@@ -48,9 +48,10 @@ class WatchListStorage {
     return new Promise((resolve, reject) => {
       const sql = `DELETE FROM watch_lists WHERE board_no = ? AND student_id = ?`;
       const params = [product, studentId];
-      db.query(sql, params, (err) => {
+      db.query(sql, params, (err, result) => {
         if (err) reject(err);
-        resolve(true);
+        if (result.affectedRows) resolve(true);
+        resolve(false);
       });
     });
   }
