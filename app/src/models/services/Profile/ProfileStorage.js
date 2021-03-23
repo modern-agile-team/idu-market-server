@@ -3,7 +3,7 @@ const db = require("../../../config/db");
 class ProfileStorage {
   static findOneById(id) {
     return new Promise((resolve, reject) => {
-      const sql = `SELECT st.id, st.name, st.email, st.profile_path
+      const sql = `SELECT st.id, st.name, st.email, st.profile_path AS profilePath
       FROM students st
       where st.id= ?;`;
 

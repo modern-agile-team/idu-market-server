@@ -29,13 +29,16 @@ class Profile {
   }
 
   async updateByImage() {
-    const image = this.body.profileImage;
+    const image = this.body.profilePath;
     const student = this.id;
-    console.log(image);
-    console.log(student);
     try {
       const response = await ProfileStorage.updateByImage(image, student);
-      if (response) return { success: true, msg: "정상적으로 수정되었습니다." };
+      if (response)
+        return {
+          success: true,
+          msg: "정상적으로 수정되었습니다.",
+          profilePath: image,
+        };
     } catch {
       return {
         success: false,
