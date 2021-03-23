@@ -19,10 +19,10 @@ const process = {
     const watchList = new WatchList(req);
     const response = await watchList.update();
     if (response.success) {
-      logger.info(`POST /api/watchlist/studentId/add 200 ${response.msg}`);
+      logger.info(`POST /api/watchlist/studentId 200 ${response.msg}`);
       return res.status(200).json(response);
     }
-    logger.error(`POST /api/watchlist/studentId/add 409 ${response.msg}`);
+    logger.error(`POST /api/watchlist/studentId 409 ${response.msg}`);
     return res.status(409).json(response);
   },
 
@@ -30,10 +30,10 @@ const process = {
     const watchList = new WatchList(req);
     const response = await watchList.delete();
     if (response.success) {
-      logger.info(`DELETE /api/watchlist/studentId/delete 200 ${response.msg}`);
+      logger.info(`DELETE /api/watchlist/studentId 200 ${response.msg}`);
       return res.status(200).json(response);
     }
-    logger.error(`DELETE /api/watchlist/studentId/delete 409 ${response.msg}`);
+    logger.error(`DELETE /api/watchlist/studentId 409 ${response.msg}`);
     return res.status(409).json(response);
   },
 };
