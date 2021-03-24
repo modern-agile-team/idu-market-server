@@ -26,7 +26,7 @@ const process = {
     return res.status(409).json(response);
   },
 
-  updateByImage: async (req, res) => {
+  updateImage: async (req, res) => {
     const student = await new Profile(req);
     const response = await student.updateByImage();
     if (response) {

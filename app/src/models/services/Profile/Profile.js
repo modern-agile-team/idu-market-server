@@ -48,7 +48,7 @@ class Profile {
     } catch {
       return {
         success: false,
-        msg: " DB에서 수정 불가능 서버 쪽에 말해주세요.",
+        msg: " db에러: 서버 쪽에 말씀해주세요",
       };
     }
   }
