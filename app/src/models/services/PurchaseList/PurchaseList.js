@@ -24,7 +24,7 @@ class PurchaseList {
         if (response)
           return { success: true, msg: "구매목록에 저장되었습니다" };
       }
-      return { success: false, msg: "이미 구매목록에 저장이 되어있음" };
+      return { success: false, msg: "이미 구매목록에 저장이 되었습니다." };
     } catch (err) {
       throw err;
     }

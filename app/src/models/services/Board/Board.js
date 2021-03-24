@@ -181,8 +181,13 @@ class Board {
 
     try {
       const isUpdate = await BoardStroage.updateOnlyStatusByNum(body, num);
-      if (isUpdate) return { success: true, msg: "status 변경 성공" };
-      return { success: false, msg: "존재하지않는 게시판" };
+      if (isUpdate)
+        return {
+          success: true,
+          status: body.status,
+          msg: "status 변경 성공하였습니다.",
+        };
+      return { success: false, msg: "존재하지않는 게시판입니다." };
     } catch (err) {
       throw err;
     }
