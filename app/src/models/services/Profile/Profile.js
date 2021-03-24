@@ -20,8 +20,9 @@ class Profile {
 
   async update() {
     const user = this.body;
+    const studentId = this.id;
     try {
-      const response = await ProfileStorage.update(user);
+      const response = await ProfileStorage.update(user, studentId);
       if (response) return { success: true, msg: "정상적으로 수정되었습니다." };
     } catch {
       return { success: false, msg: "db에러: 서버 쪽에 말씀해주세요" };

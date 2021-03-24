@@ -42,7 +42,7 @@ const process = {
     const response = await board.findStudentIdByNum();
     if (response.success) {
       logger.info(
-        `GET /api/boards/categoryName/num/comment 200 ${response.msg}`
+        `GET /api/boards/categoryName/num/comments 200 ${response.msg}`
       );
       return res.status(200).json(response);
     }

@@ -192,7 +192,7 @@ class Board {
     const board = [this.params.num, this.body.studentId];
     try {
       const list = await BoardStorage.findStudentIdByNum(board);
-      return { success: true, list };
+      return { success: true, msg: "성공적으로 조회되었습니다.", list };
     } catch (err) {
       throw err;
     }
