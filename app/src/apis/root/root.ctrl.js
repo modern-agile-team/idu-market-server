@@ -8,6 +8,8 @@ const auth = {
     // 따라서 유저 정보를 응답한다.
     const user = req.user;
     delete user.iat;
+    delete user.exp;
+    delete user.iss;
 
     res.status(200).json({
       success: true,
