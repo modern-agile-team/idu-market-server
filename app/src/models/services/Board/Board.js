@@ -192,16 +192,6 @@ class Board {
       throw err;
     }
   }
-
-  async findStudentIdByNum() {
-    const board = [this.params.num, this.body.studentId];
-    try {
-      const list = await BoardStorage.findStudentIdByNum(board);
-      return { success: true, list };
-    } catch (err) {
-      throw err;
-    }
-  }
 }
 
 module.exports = Board;
