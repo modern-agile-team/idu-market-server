@@ -9,7 +9,11 @@ class PurchaseList {
     const studentId = this.body.params.studentId;
     try {
       const purchaseList = await PurchaseListStorage.findAllById(studentId);
-      return { success: true, purchaseList };
+      return {
+        success: true,
+        msg: "구매목록 조회 성공했습니다.",
+        purchaseList,
+      };
     } catch (err) {
       throw err;
     }
@@ -24,7 +28,7 @@ class PurchaseList {
         if (response)
           return { success: true, msg: "구매목록에 저장되었습니다" };
       }
-      return { success: false, msg: "이미 구매목록에 저장이 되어있음" };
+      return { success: false, msg: "이미 구매목록에 저장이 되었습니다." };
     } catch (err) {
       throw err;
     }

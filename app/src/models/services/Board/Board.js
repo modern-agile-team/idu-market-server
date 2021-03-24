@@ -74,9 +74,18 @@ class Board {
     try {
       const board = await BoardStorage.findOneByNum(num);
       const comments = await CommentStorage.findAllByBoardNum(num);
-
+      const watchListFlag = await BoardStorage.findOneWatchListFlag(
+        this.body,
+        num
+      );
       if (board) {
-        return { success: true, msg: "게시판 상세 조회 성공", board, comments };
+        return {
+          success: true,
+          msg: "게시판 상세 조회 성공",
+          board,
+          comments,
+          watchListFlag,
+        };
       }
       return { success: false, msg: "게시판 상세 조회 실패" };
     } catch (err) {
@@ -181,18 +190,13 @@ class Board {
 
     try {
       const isUpdate = await BoardStroage.updateOnlyStatusByNum(body, num);
-      if (isUpdate) return { success: true, msg: "status 변경 성공" };
+      if (isUpdate)
+        return {
+          success: true,
+          msg: "status 변경 성공되었습니다.",
+          status: body.status,
+        };
       return { success: false, msg: "존재하지않는 게시판" };
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  async findStudentIdByNum() {
-    const board = [this.params.num, this.body.studentId];
-    try {
-      const list = await BoardStorage.findStudentIdByNum(board);
-      return { success: true, msg: "성공적으로 조회되었습니다.", list };
     } catch (err) {
       throw err;
     }
