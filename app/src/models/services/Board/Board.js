@@ -74,9 +74,18 @@ class Board {
     try {
       const board = await BoardStorage.findOneByNum(num);
       const comments = await CommentStorage.findAllByBoardNum(num);
-
+      const watchListFlag = await BoardStorage.findOneWatchListFlag(
+        this.body,
+        num
+      );
       if (board) {
-        return { success: true, msg: "게시판 상세 조회 성공", board, comments };
+        return {
+          success: true,
+          msg: "게시판 상세 조회 성공",
+          board,
+          comments,
+          watchListFlag,
+        };
       }
       return { success: false, msg: "게시판 상세 조회 실패" };
     } catch (err) {
