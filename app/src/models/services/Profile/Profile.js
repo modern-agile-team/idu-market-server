@@ -1,5 +1,5 @@
 const ProfileStorage = require("./ProfileStorage");
-const User = require("../User/User");
+const UserStorage = require("../User/UserStorage");
 const Auth = require("../Auth/Auth");
 
 class Profile {
@@ -36,7 +36,7 @@ class Profile {
     try {
       const response = await ProfileStorage.updateImage(image, studentId);
       if (response) {
-        const user = await User.findOneById(studentId);
+        const user = await UserStorage.findOneById(studentId);
         const jwt = await Auth.createJWT(user);
         return {
           success: true,
