@@ -169,6 +169,16 @@ class Comment {
       throw err;
     }
   }
+
+  async findStudentIdByNum() {
+    const board = [this.params.num];
+    try {
+      const students = await CommentStorage.findStudentIdByNum(board);
+      return { success: true, msg: "comments조회 완료 되었습니다.", students };
+    } catch (err) {
+      throw err;
+    }
+  }
 }
 
 module.exports = Comment;

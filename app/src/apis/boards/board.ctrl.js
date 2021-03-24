@@ -37,21 +37,6 @@ const process = {
     res.status(400).json(response);
   },
 
-  findStudentIdByNum: async (req, res) => {
-    const board = new Board(req);
-    const response = await board.findStudentIdByNum();
-    if (response.success) {
-      logger.info(
-        `GET /api/boards/categoryName/num/comment 200 ${response.msg}`
-      );
-      return res.status(200).json(response);
-    }
-    logger.error(
-      `GET /api/boards/categoryName/num.comments 400 ${response.msg}`
-    );
-    res.status(400).json(response);
-  },
-
   updateByNum: async (req, res) => {
     const board = new Board(req);
     const response = await board.updateByNum();
