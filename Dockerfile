@@ -12,5 +12,5 @@ RUN npm install
 # 앱 소스 추가
 COPY ./app .
 
-# EXPOSE 9700
+EXPOSE 8080
 CMD [ "node", "bin/www.js" ]
