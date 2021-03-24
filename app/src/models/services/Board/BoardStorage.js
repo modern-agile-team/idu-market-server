@@ -74,6 +74,19 @@ class BoardStroage {
     });
   }
 
+  static findOneWatchListFlag(watchList, num) {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM boards bo
+      JOIN watch_lists wl
+      ON bo.no = wl.board_no
+      WHERE wl.student_id = ? and bo.no = ?;`;
+      db.query(query, [watchList.studentId, num], (err, watchList) => {
+        if (err) reject(err);
+        else resolve(watchList.length);
+      });
+    });
+  }
+
   static updateByNum(board, num) {
     return new Promise((resolve, reject) => {
       const query = `UPDATE boards SET title = ?, content = ?, price = ? where no = ?;`;
@@ -135,18 +148,6 @@ class BoardStroage {
       db.query(query, [title, categoryNum], (err, boards) => {
         if (err) reject(err);
         else resolve(boards);
-      });
-    });
-  }
-
-  static findStudentIdByNum(board) {
-    return new Promise((resolve, reject) => {
-      const sql = `SELECT distinct student_id
-      FROM comments
-      WHERE board_no = ? AND student_id NOT IN (?);`;
-      db.query(sql, board, (err, students) => {
-        if (err) reject(err);
-        else resolve(students);
       });
     });
   }

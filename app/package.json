@@ -10,13 +10,15 @@
     "start": "nodemon ./bin/www.js",
     "build": "babel src -w -d dist/src",
     "lint": "eslint src --fix",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --forceExit --runInBand --detectOpenHandles /src"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "@babel/runtime": "^7.13.10",
     "aws-sdk": "^2.858.0",
+    "babel-runtime": "^6.26.0",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -24,33 +26,36 @@
     "ejs": "^3.1.6",
     "express": "^4.17.1",
     "express-asyncify": "^1.0.1",
-    "jest": "^26.6.3",
     "jsonwebtoken": "^8.5.1",
-    "morgan": "^1.10.0",
     "multer": "^1.4.2",
     "multer-s3": "^2.9.0",
     "mysql2": "^2.2.5",
     "nodemailer": "^6.4.18",
     "nodemon": "^2.0.7",
-    "redis": "^3.0.2",
-    "supertest": "^6.1.3",
-    "winston": "^3.3.3",
-    "winston-daily-rotate-file": "^4.5.1"
+    "redis": "^3.0.2"
   },
   "devDependencies": {
     "@babel/cli": "^7.13.0",
     "@babel/core": "^7.13.8",
     "@babel/plugin-proposal-class-properties": "^7.13.0",
+    "@babel/plugin-transform-runtime": "^7.13.10",
     "@babel/preset-env": "^7.13.9",
+    "babel-core": "^6.26.3",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-polyfill": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-0": "^6.24.1",
+    "cross-env": "^7.0.3",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "husky": "^4.3.8",
+    "jest": "^26.6.3",
     "lint-staged": "^10.5.4",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "supertest": "^6.1.3"
   },
   "husky": {
     "hooks": {

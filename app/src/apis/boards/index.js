@@ -15,7 +15,7 @@ router.get("/:categoryName", boardCtrl.process.findAllByCategoryNum);
 router.get("/:categoryName/:num", boardCtrl.process.findOneByNum);
 router.get(
   "/:categoryName/:num/comments",
-  boardCtrl.process.findStudentIdByNum
+  commentCtrl.process.findStudentIdByNum
 );
 
 router.put("/:categoryName/:num", boardCtrl.process.updateByNum);
