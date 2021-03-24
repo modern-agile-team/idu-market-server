@@ -9,7 +9,11 @@ class PurchaseList {
     const studentId = this.body.params.studentId;
     try {
       const purchaseList = await PurchaseListStorage.findAllById(studentId);
-      return { success: true, purchaseList };
+      return {
+        success: true,
+        msg: "구매목록 조회 성공했습니다.",
+        purchaseList,
+      };
     } catch (err) {
       throw err;
     }
