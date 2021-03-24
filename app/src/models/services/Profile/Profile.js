@@ -36,8 +36,8 @@ class Profile {
     try {
       const response = await ProfileStorage.updateImage(image, studentId);
       if (response) {
-        const user = User.findOneById(studentId);
-        const jwt = Auth.createJWT(user);
+        const user = await User.findOneById(studentId);
+        const jwt = await Auth.createJWT(user);
         return {
           success: true,
           msg: "정상적으로 이미지가 수정되었습니다.",
