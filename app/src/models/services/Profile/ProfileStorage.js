@@ -53,13 +53,13 @@ class ProfileStorage {
   //   });
   // }
 
-  static update(body) {
+  static update(body, studentId) {
     return new Promise((resolve, reject) => {
       const sql = `UPDATE students st
       SET st.email = ?
       WHERE st.id = ?;`;
 
-      db.query(sql, [body.email], (err) => {
+      db.query(sql, [body.email, studentId], (err) => {
         if (err) reject(err);
         resolve(true);
       });
