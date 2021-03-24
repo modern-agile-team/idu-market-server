@@ -8,6 +8,8 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const morgan = require("morgan");
+const logger = require("../app/src/config/logger");
 
 const app = express();
 dotenv.config();
@@ -20,6 +22,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
+app.use(morgan("tiny", { stream: logger.stream }));
 
 let dist = "";
 if (process.env.NODE_ENV === "production") dist = "/dist";

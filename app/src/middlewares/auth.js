@@ -35,7 +35,7 @@ const logined = async (req, res, next) => {
 
 // 로그인이 안된 유저들만 서비스 이용을 허가하는 미들웨어
 const notLogined = async (req, res, next) => {
-  const token = req.headers.token;
+  const token = req.headers["x-auth-token"];
 
   // 토큰 없으면 로그인이 안된 것이므로 허용한다.
   if (!token) next();
