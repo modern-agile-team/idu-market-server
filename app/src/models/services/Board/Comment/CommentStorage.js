@@ -196,6 +196,18 @@ class CommentStorage {
       });
     });
   }
+
+  static findStudentIdByNum(board) {
+    return new Promise((resolve, reject) => {
+      const sql = `SELECT distinct student_id
+      FROM comments
+      WHERE board_no = ?;`;
+      db.query(sql, board, (err, students) => {
+        if (err) reject(err);
+        else resolve(students);
+      });
+    });
+  }
 }
 
 module.exports = CommentStorage;
