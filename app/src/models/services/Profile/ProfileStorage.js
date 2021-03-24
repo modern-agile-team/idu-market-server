@@ -14,7 +14,7 @@ class ProfileStorage {
     });
   }
 
-  static updateByImage(image, student) {
+  static updateImage(image, student) {
     return new Promise((resolve, reject) => {
       const sql = `UPDATE students st SET st.profile_path = ? WHERE st.id = ?`;
 

@@ -1,4 +1,6 @@
 const ProfileStorage = require("./ProfileStorage");
+const User = require("../User/User");
+const Auth = require("../Auth/Auth");
 
 class Profile {
   constructor(req) {
@@ -28,17 +30,21 @@ class Profile {
     }
   }
 
-  async updateByImage() {
+  async updateImage() {
     const image = this.body.profilePath;
-    const student = this.id;
+    const studentId = this.id;
     try {
-      const response = await ProfileStorage.updateByImage(image, student);
-      if (response)
+      const response = await ProfileStorage.updateImage(image, studentId);
+      if (response) {
+        const user = User.findOneById(studentId);
+        const jwt = Auth.createJWT(user);
         return {
           success: true,
-          msg: "정상적으로 수정되었습니다.",
+          msg: "정상적으로 이미지가 수정되었습니다.",
           profilePath: image,
+          jwt,
         };
+      }
     } catch {
       return {
         success: false,
