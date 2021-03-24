@@ -17,6 +17,8 @@ class Auth {
       id: user.id,
       email: user.email,
       name: user.name,
+      profilePath: user.profile_path,
+      isAdmin: user.admin_flag,
     };
 
     return jwt.sign(payload, process.env.JWT_SECRET, this.jwtOption);
