@@ -1,7 +1,5 @@
 const express = require("express");
-const asyncify = require("express-asyncify");
-
-const router = asyncify(express.Router());
+const router = express.Router();
 
 const { logined, notLogined } = require("../../middlewares/auth");
 const ctrl = require("./root.ctrl");
