@@ -1,4 +1,4 @@
-FROM node:12
+FROM node:14
 MAINTAINER 박우림 <woorimprog@gmil.com>
 
 # 앱 디렉터리 생성
@@ -21,5 +21,5 @@ COPY ./app/src ./src
 COPY ./app/app.js .
 
 # 노드 서버 가동
-EXPOSE 8080
+EXPOSE 5000
 CMD ["npm", "start"]
