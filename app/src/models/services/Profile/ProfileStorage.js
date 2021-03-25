@@ -14,11 +14,11 @@ class ProfileStorage {
     });
   }
 
-  static updateByImage(image, student) {
+  static updateImage(image, studentId) {
     return new Promise((resolve, reject) => {
       const sql = `UPDATE students st SET st.profile_path = ? WHERE st.id = ?`;
 
-      db.query(sql, [image, student], (err) => {
+      db.query(sql, [image, studentId], (err) => {
         if (err) reject(err);
         resolve(true);
       });
@@ -53,13 +53,13 @@ class ProfileStorage {
   //   });
   // }
 
-  static update(body) {
+  static update(body, studentId) {
     return new Promise((resolve, reject) => {
       const sql = `UPDATE students st
       SET st.email = ?
       WHERE st.id = ?;`;
 
-      db.query(sql, [body.email], (err) => {
+      db.query(sql, [body.email, studentId], (err) => {
         if (err) reject(err);
         resolve(true);
       });

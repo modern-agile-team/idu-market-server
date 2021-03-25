@@ -1,4 +1,6 @@
 const ProfileStorage = require("./ProfileStorage");
+const UserStorage = require("../User/UserStorage");
+const Auth = require("../Auth/Auth");
 
 class Profile {
   constructor(req) {
@@ -20,29 +22,34 @@ class Profile {
 
   async update() {
     const user = this.body;
+    const studentId = this.id;
     try {
-      const response = await ProfileStorage.update(user);
+      const response = await ProfileStorage.update(user, studentId);
       if (response) return { success: true, msg: "정상적으로 수정되었습니다." };
     } catch {
       return { success: false, msg: "db에러: 서버 쪽에 말씀해주세요" };
     }
   }
 
-  async updateByImage() {
+  async updateImage() {
     const image = this.body.profilePath;
-    const student = this.id;
+    const studentId = this.id;
     try {
-      const response = await ProfileStorage.updateByImage(image, student);
-      if (response)
+      const response = await ProfileStorage.updateImage(image, studentId);
+      if (response) {
+        const user = await UserStorage.findOneById(studentId);
+        const jwt = await Auth.createJWT(user);
         return {
           success: true,
-          msg: "정상적으로 수정되었습니다.",
+          msg: "정상적으로 이미지가 수정되었습니다.",
           profilePath: image,
+          jwt,
         };
+      }
     } catch {
       return {
         success: false,
-        msg: " DB에서 수정 불가능 서버 쪽에 말해주세요.",
+        msg: " db에러: 서버 쪽에 말씀해주세요",
       };
     }
   }

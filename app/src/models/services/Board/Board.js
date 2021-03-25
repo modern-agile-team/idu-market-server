@@ -190,18 +190,13 @@ class Board {
 
     try {
       const isUpdate = await BoardStroage.updateOnlyStatusByNum(body, num);
-      if (isUpdate) return { success: true, msg: "status 변경 성공" };
+      if (isUpdate)
+        return {
+          success: true,
+          msg: "status 변경 성공되었습니다.",
+          status: body.status,
+        };
       return { success: false, msg: "존재하지않는 게시판" };
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  async findStudentIdByNum() {
-    const board = [this.params.num, this.body.studentId];
-    try {
-      const list = await BoardStorage.findStudentIdByNum(board);
-      return { success: true, list };
     } catch (err) {
       throw err;
     }
