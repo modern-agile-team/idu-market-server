@@ -18,19 +18,8 @@ RUN npm install
 # 노드 서버 가동을 위해 필요한 파일들 복사
 COPY ./app/bin ./bin
 COPY ./app/src ./src
-COPY ./app/.env .
 COPY ./app/app.js .
 
 # 노드 서버 가동
 EXPOSE 8080
 CMD ["npm", "start"]
-# 앱 의존성 설치
-# COPY ./app/package*.json ./
-
-# RUN npm install
-
-# # 앱 소스 추가
-# COPY ./app .
-
-# EXPOSE 8080
-# CMD [ "node", "bin/www.js" ]
