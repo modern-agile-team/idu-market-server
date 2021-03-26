@@ -73,12 +73,13 @@ class Board {
     const num = this.params.num;
     const categoryName = this.params.categoryName;
     const categoryNum = Category[categoryName];
+    const studentId = this.params.studentId;
 
     try {
       const board = await BoardStorage.findOneByNum(num);
       const comments = await CommentStorage.findAllByBoardNum(num);
       const watchListFlag = await BoardStorage.findOneWatchListFlag(
-        this.body,
+        studentId,
         num
       );
       if (categoryNum === board.categoryNum) {
