@@ -9,7 +9,7 @@ class WatchListStorage {
       FROM watch_lists wl
       JOIN boards bo
       ON bo.no = wl.board_no 
-      JOIN comments cmt
+      LEFT JOIN comments cmt
       ON wl.board_no = cmt.board_no
       WHERE wl.student_id = ?
       GROUP BY wl.no
@@ -36,7 +36,7 @@ class WatchListStorage {
   //장바구니에 담는 코드
   static update(studentId, board) {
     return new Promise((resolve, reject) => {
-      const sql = `INSERT INTO watch_lists(board_no, category_no, category_name, student_id) VALUES(?, 2, ?, ?)`;
+      const sql = `INSERT INTO watch_lists(board_no, category_name, student_id) VALUES(?, ?, ?)`;
       const params = [board.boardNum, board.categoryName, studentId];
       db.query(sql, params, (err) => {
         if (err) reject(err);
