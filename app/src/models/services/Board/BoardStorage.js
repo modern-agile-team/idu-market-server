@@ -61,7 +61,7 @@ class BoardStroage {
   static findOneByNum(num) {
     return new Promise((resolve, reject) => {
       const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.name AS studentName, bo.title AS title, bo.content, bo.hit AS hit, bo.price AS price, bo.status AS status,
-      date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(bo.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
+      bo.category_no AS categoryNum, date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(bo.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
       FROM boards AS bo
       JOIN students AS st
       ON bo.student_id = st.id
@@ -74,13 +74,13 @@ class BoardStroage {
     });
   }
 
-  static findOneWatchListFlag(watchList, num) {
+  static findOneWatchListFlag(studentId, num) {
     return new Promise((resolve, reject) => {
       const query = `SELECT * FROM boards bo
       JOIN watch_lists wl
       ON bo.no = wl.board_no
       WHERE wl.student_id = ? and bo.no = ?;`;
-      db.query(query, [watchList.studentId, num], (err, watchList) => {
+      db.query(query, [studentId, num], (err, watchList) => {
         if (err) reject(err);
         else resolve(watchList.length);
       });

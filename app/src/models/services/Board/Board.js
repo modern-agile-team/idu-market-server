@@ -19,7 +19,7 @@ class Board {
     const categoryNum = Category[categoryName];
 
     if (categoryNum === undefined)
-      return { success: false, msg: "존재하지 않는 게시판입니다." };
+      return { success: false, msg: "요청하신 경로가 잘못되었습니다." };
 
     if (!board.thumbnail) {
       board.thumbnail = process.env.DEFAULT_THUMBNAIL;
@@ -56,6 +56,9 @@ class Board {
     const categoryNum = Category[categoryName];
     const lastNum = this.query.lastNum;
 
+    if (categoryNum === undefined)
+      return { success: false, msg: "존재하지 않는 게시판입니다." };
+
     try {
       const boards = await BoardStorage.findAllByCategoryNum(
         categoryNum,
@@ -72,21 +75,27 @@ class Board {
   async findOneByNum() {
     const num = this.params.num;
     const categoryName = this.params.categoryName;
+    const categoryNum = Category[categoryName];
+    const studentId = this.params.studentId;
+
+    if (categoryNum === undefined)
+      return { success: false, msg: "존재하지 않는 게시판입니다." };
+
     try {
       const board = await BoardStorage.findOneByNum(num);
       const comments = await CommentStorage.findAllByBoardNum(num);
       const watchListFlag = await BoardStorage.findOneWatchListFlag(
-        this.body,
+        studentId,
         num
       );
-      if (board) {
+
+      if (categoryNum === board.categoryNum) {
         return {
           success: true,
           msg: "게시판 상세 조회 성공",
           board,
           comments,
           watchListFlag,
-          categoryName,
         };
       }
       return { success: false, msg: "게시판 상세 조회 실패" };
@@ -153,6 +162,7 @@ class Board {
 
   async deleteByNum() {
     const num = this.params.num;
+
     try {
       const isDelete = await BoardStorage.delete(num);
       if (isDelete) {
@@ -195,7 +205,7 @@ class Board {
       if (isUpdate)
         return {
           success: true,
-          msg: "status 변경 성공되었습니다.",
+          msg: "status가 변경되었습니다.",
           status: body.status,
         };
       return { success: false, msg: "존재하지않는 게시판" };
