@@ -6,7 +6,7 @@ class SaleListStorage {
   //판매목록 화면
   static findAllByStatus(id) {
     return new Promise((resolve, reject) => {
-      const sql = ` SELECT bo.no AS num, bo.thumbnail, bo.title, bo.hit, 
+      const sql = ` SELECT bo.no AS num, bo.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, 
       bo.price, cat.name, (SELECT  COUNT(cmt.content) FROM comments cmt WHERE bo.no = cmt.board_no) AS commentCount
       ,date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate
       FROM boards bo
