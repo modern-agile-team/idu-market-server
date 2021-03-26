@@ -1,7 +1,7 @@
 const logger = require("../../config/logger.js");
 const SaleList = require("../../models/services/SaleList/SaleList.js");
 
-const output = {
+const process = {
   read: async (req, res) => {
     const student = new SaleList(req.params.studentId);
     const response = await student.read();
@@ -14,4 +14,4 @@ const output = {
   },
 };
 
-module.exports = output;
+module.exports = { process };
