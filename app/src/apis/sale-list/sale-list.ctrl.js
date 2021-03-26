@@ -6,7 +6,7 @@ const process = {
     const student = new SaleList(req.params.studentId);
     const response = await student.read();
     if (response.success) {
-      logger.info(`GET /api/sale-list/studentId 200 ${response.success}`);
+      logger.info(`GET /api/sale-list/studentId 200 ${response.msg}`);
       return res.status(200).json(response);
     }
     logger.error(`GET /api/sale-list/studentId 400 ${response.msg}`);

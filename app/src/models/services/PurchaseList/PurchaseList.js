@@ -1,12 +1,13 @@
 const PurchaseListStorage = require("./PurchaseListStorage");
 
 class PurchaseList {
-  constructor(body) {
-    this.body = body;
+  constructor(req) {
+    this.body = req.body;
+    this.params = req.params;
   }
 
   async read() {
-    const studentId = this.body.params.studentId;
+    const studentId = this.params.studentId;
     try {
       const purchaseList = await PurchaseListStorage.findAllById(studentId);
       return {
@@ -22,6 +23,10 @@ class PurchaseList {
   async create() {
     const client = this.body;
     try {
+      const isExistBoard = await PurchaseListStorage.isExistBoard(client);
+      if (!isExistBoard)
+        return { success: false, msg: "게시판이 존재하지 않습니다." };
+
       const isExist = await PurchaseListStorage.isExist(client);
       if (isExist) {
         const response = await PurchaseListStorage.create(client);
