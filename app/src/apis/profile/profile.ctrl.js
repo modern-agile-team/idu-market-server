@@ -1,7 +1,7 @@
 const Profile = require("../../models/services/Profile/Profile");
 const logger = require("../../config/logger");
 
-const output = {
+const process = {
   findOneById: async (req, res) => {
     const profile = await new Profile(req);
     const response = await profile.findOneById();
@@ -12,9 +12,7 @@ const output = {
     logger.error(`GET /api/students/studentId 400 ${response.msg}`);
     return res.status(400).json(response);
   },
-};
 
-const process = {
   update: async (req, res) => {
     const profile = await new Profile(req);
     const response = await profile.update();
@@ -38,4 +36,4 @@ const process = {
   },
 };
 
-module.exports = { output, process };
+module.exports = { process };

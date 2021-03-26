@@ -40,18 +40,6 @@ class PurchaseListStorage {
     });
   }
 
-  static isExistBoard(client) {
-    return new Promise((resolve, reject) => {
-      const sql = `SELECT bo.no FROM boards bo WHERE bo.no = ?`;
-      db.query(sql, [client.boardNum], (err, board) => {
-        if (err) reject(err);
-        if (board.length) {
-          resolve(true);
-        } else resolve(false);
-      });
-    });
-  }
-
   static create(client) {
     return new Promise((resolve, reject) => {
       const sql = `INSERT INTO purchase_lists(board_no, student_id) VALUES(?, ?)`;
