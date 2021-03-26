@@ -12,7 +12,7 @@ router.post(
 );
 
 router.get("/:categoryName", boardCtrl.process.findAllByCategoryNum);
-router.get("/:categoryName/:num", boardCtrl.process.findOneByNum);
+router.get("/:categoryName/:num/:studentId", boardCtrl.process.findOneByNum);
 router.get(
   "/:categoryName/:num/comments",
   commentCtrl.process.findStudentIdByNum
