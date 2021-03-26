@@ -72,6 +72,8 @@ class Board {
   async findOneByNum() {
     const num = this.params.num;
     const categoryName = this.params.categoryName;
+    const categoryNum = Category[categoryName];
+
     try {
       const board = await BoardStorage.findOneByNum(num);
       const comments = await CommentStorage.findAllByBoardNum(num);
@@ -79,14 +81,13 @@ class Board {
         this.body,
         num
       );
-      if (board) {
+      if (categoryNum === board.categoryNum) {
         return {
           success: true,
           msg: "게시판 상세 조회 성공",
           board,
           comments,
           watchListFlag,
-          categoryName,
         };
       }
       return { success: false, msg: "게시판 상세 조회 실패" };
