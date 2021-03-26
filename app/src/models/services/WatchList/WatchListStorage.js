@@ -4,14 +4,16 @@ class WatchListStorage {
   //장바구니 화면
   static findAllByStudentId(studentId) {
     return new Promise((resolve, reject) => {
-      const sql = ` SELECT bo.no AS num, wl.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, bo.student_id AS seller, cat.name AS categoryName,
-      (SELECT  COUNT(cmt.content) FROM comments cmt WHERE wl.board_no = cmt.board_no) AS commentCount, date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate
+      const sql = ` SELECT bo.no AS num, wl.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, bo.student_id AS seller, wl.category_name AS categoryName,
+      COUNT(cmt.content) AS commentCount, date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate
       FROM watch_lists wl
       JOIN boards bo
       ON bo.no = wl.board_no 
-      JOIN categories cat
-      ON cat.no = wl.category_no
-      WHERE wl.student_id = ?`;
+      JOIN comments cmt
+      ON wl.board_no = cmt.board_no
+      WHERE wl.student_id = ?
+      GROUP BY wl.no
+      ORDER BY wl.no DESC`;
       db.query(sql, [studentId], (err, boards) => {
         if (err) reject(err);
         resolve(boards);
@@ -34,7 +36,7 @@ class WatchListStorage {
   //장바구니에 담는 코드
   static update(studentId, board) {
     return new Promise((resolve, reject) => {
-      const sql = `INSERT INTO watch_lists(board_no, category_no, student_id) VALUES(?, (SELECT no FROM categories WHERE name = ?), ?)`;
+      const sql = `INSERT INTO watch_lists(board_no, category_no, category_name, student_id) VALUES(?, 2, ?, ?)`;
       const params = [board.boardNum, board.categoryName, studentId];
       db.query(sql, params, (err) => {
         if (err) reject(err);

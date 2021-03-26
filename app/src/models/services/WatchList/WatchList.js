@@ -11,6 +11,7 @@ class WatchList {
     const board = this.body;
     try {
       const isExist = await WatchListStorage.isExist(studentId, board);
+      console.log(isExist);
       if (isExist) {
         const response = await WatchListStorage.update(studentId, board);
         if (response)
