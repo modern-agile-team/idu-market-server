@@ -1,12 +1,13 @@
 const PurchaseListStorage = require("./PurchaseListStorage");
 
 class PurchaseList {
-  constructor(body) {
-    this.body = body;
+  constructor(req) {
+    this.body = req.body;
+    this.params = req.params;
   }
 
   async read() {
-    const studentId = this.body.params.studentId;
+    const studentId = this.params.studentId;
     try {
       const purchaseList = await PurchaseListStorage.findAllById(studentId);
       return {
@@ -30,7 +31,7 @@ class PurchaseList {
       }
       return { success: false, msg: "이미 구매목록에 저장이 되었습니다." };
     } catch (err) {
-      throw err;
+      return { success: false, msg: "게시판이 존재하지 않습니다." };
     }
   }
 }
