@@ -19,7 +19,7 @@ class Board {
     const categoryNum = Category[categoryName];
 
     if (categoryNum === undefined)
-      return { success: false, msg: "존재하지 않는 게시판입니다." };
+      return { success: false, msg: "요청하신 경로가 잘못되었습니다." };
 
     if (!board.thumbnail) {
       board.thumbnail = process.env.DEFAULT_THUMBNAIL;
@@ -56,13 +56,20 @@ class Board {
     const categoryNum = Category[categoryName];
     const lastNum = this.query.lastNum;
 
+    if (categoryNum === undefined)
+      return { success: false, msg: "존재하지 않는 게시판입니다." };
+
     try {
       const boards = await BoardStorage.findAllByCategoryNum(
         categoryNum,
         lastNum
       );
-      if (boards) {
-        return { success: true, msg: "게시판 조회 성공", boards };
+      if (boards.length) {
+        return {
+          success: true,
+          msg: "게시판 전체 조회에 성공하셨습니다.",
+          boards,
+        };
       }
     } catch (err) {
       throw err;
@@ -71,12 +78,29 @@ class Board {
 
   async findOneByNum() {
     const num = this.params.num;
+    const categoryName = this.params.categoryName;
+    const categoryNum = Category[categoryName];
+    const studentId = this.params.studentId;
+
+    if (categoryNum === undefined)
+      return { success: false, msg: "존재하지 않는 게시판입니다." };
+
     try {
       const board = await BoardStorage.findOneByNum(num);
       const comments = await CommentStorage.findAllByBoardNum(num);
+      const watchListFlag = await BoardStorage.findOneWatchListFlag(
+        studentId,
+        num
+      );
 
-      if (board) {
-        return { success: true, msg: "게시판 상세 조회 성공", board, comments };
+      if (categoryNum === board.categoryNum) {
+        return {
+          success: true,
+          msg: "게시판 상세 조회 성공",
+          board,
+          comments,
+          watchListFlag,
+        };
       }
       return { success: false, msg: "게시판 상세 조회 실패" };
     } catch (err) {
@@ -142,6 +166,7 @@ class Board {
 
   async deleteByNum() {
     const num = this.params.num;
+
     try {
       const isDelete = await BoardStorage.delete(num);
       if (isDelete) {
@@ -184,20 +209,10 @@ class Board {
       if (isUpdate)
         return {
           success: true,
+          msg: "status가 변경되었습니다.",
           status: body.status,
-          msg: "status 변경 성공하였습니다.",
         };
-      return { success: false, msg: "존재하지않는 게시판입니다." };
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  async findStudentIdByNum() {
-    const board = [this.params.num, this.body.studentId];
-    try {
-      const list = await BoardStorage.findStudentIdByNum(board);
-      return { success: true, list };
+      return { success: false, msg: "존재하지않는 게시판" };
     } catch (err) {
       throw err;
     }

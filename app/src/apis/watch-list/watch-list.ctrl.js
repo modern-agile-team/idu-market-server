@@ -1,7 +1,7 @@
 const logger = require("../../config/logger");
 const WatchList = require("../../models/services/WatchList/WatchList");
 
-const output = {
+const process = {
   findAllByStudentId: async (req, res) => {
     const watchList = new WatchList(req);
     const response = await watchList.findAllByStudentId();
@@ -12,9 +12,7 @@ const output = {
     logger.error(`GET /api/sale-list/studentId 409 ${response.msg}`);
     return res.status(409).json(response);
   },
-};
 
-const process = {
   update: async (req, res) => {
     const watchList = new WatchList(req);
     const response = await watchList.update();
@@ -38,4 +36,4 @@ const process = {
   },
 };
 
-module.exports = { output, process };
+module.exports = { process };

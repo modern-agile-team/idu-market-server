@@ -62,6 +62,21 @@ const process = {
     );
     res.status(400).json(response);
   },
+
+  findStudentIdByNum: async (req, res) => {
+    const comment = new Comment(req);
+    const response = await comment.findStudentIdByNum();
+    if (response.success) {
+      logger.info(
+        `GET /api/boards/categoryName/num/comments 200 ${response.msg}`
+      );
+      return res.status(200).json(response);
+    }
+    logger.error(
+      `GET /api/boards/categoryName/num.comments 400 ${response.msg}`
+    );
+    res.status(400).json(response);
+  },
 };
 
 module.exports = {

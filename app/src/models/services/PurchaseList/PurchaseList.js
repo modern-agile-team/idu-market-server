@@ -1,15 +1,20 @@
 const PurchaseListStorage = require("./PurchaseListStorage");
 
 class PurchaseList {
-  constructor(body) {
-    this.body = body;
+  constructor(req) {
+    this.body = req.body;
+    this.params = req.params;
   }
 
   async read() {
-    const studentId = this.body.params.studentId;
+    const studentId = this.params.studentId;
     try {
       const purchaseList = await PurchaseListStorage.findAllById(studentId);
-      return { success: true, purchaseList };
+      return {
+        success: true,
+        msg: "구매목록 조회 성공했습니다.",
+        purchaseList,
+      };
     } catch (err) {
       throw err;
     }

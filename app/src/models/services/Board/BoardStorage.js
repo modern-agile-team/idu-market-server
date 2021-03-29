@@ -38,7 +38,7 @@ class BoardStroage {
     }
 
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
+      const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.profile_path AS profilePath, st.nickname, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
       COUNT(cmt.content) AS commentCount
       FROM boards AS bo
@@ -60,8 +60,8 @@ class BoardStroage {
 
   static findOneByNum(num) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.name AS studentName, bo.title AS title, bo.content, bo.hit AS hit, bo.price AS price, bo.status AS status,
-      date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(bo.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
+      const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.name AS studentName, st.profile_path AS profilePath, st.nickname, bo.title AS title, bo.content, bo.hit AS hit, bo.price AS price, bo.status AS status,
+      bo.category_no AS categoryNum, date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(bo.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
       FROM boards AS bo
       JOIN students AS st
       ON bo.student_id = st.id
@@ -70,6 +70,19 @@ class BoardStroage {
       db.query(query, [num], (err, boards) => {
         if (err) reject(err);
         else resolve(boards[0]);
+      });
+    });
+  }
+
+  static findOneWatchListFlag(studentId, num) {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT * FROM boards bo
+      JOIN watch_lists wl
+      ON bo.no = wl.board_no
+      WHERE wl.student_id = ? and bo.no = ?;`;
+      db.query(query, [studentId, num], (err, watchList) => {
+        if (err) reject(err);
+        else resolve(watchList.length);
       });
     });
   }
@@ -120,7 +133,7 @@ class BoardStroage {
 
   static findAllByIncludedTitleAndCategory(title, categoryNum) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
+      const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.nickname, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
       COUNT(cmt.content) AS commentCount
       FROM boards AS bo
@@ -135,18 +148,6 @@ class BoardStroage {
       db.query(query, [title, categoryNum], (err, boards) => {
         if (err) reject(err);
         else resolve(boards);
-      });
-    });
-  }
-
-  static findStudentIdByNum(board) {
-    return new Promise((resolve, reject) => {
-      const sql = `SELECT distinct student_id
-      FROM comments
-      WHERE board_no = ? AND student_id NOT IN (?);`;
-      db.query(sql, board, (err, students) => {
-        if (err) reject(err);
-        else resolve(students);
       });
     });
   }
