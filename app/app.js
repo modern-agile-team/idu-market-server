@@ -40,5 +40,5 @@ app.use("/api/purchase-list", purchase);
 app.use("/api/sale-list", sale);
 app.use("/api/notification", notification);
 app.use("/api/students", profile);
-
+console.log("배포 자동화 테스트");
 module.exports = app;
