@@ -22,4 +22,4 @@ COPY ./app/app.js .
 
 # 노드 서버 가동
 EXPOSE 5000
-CMD ["nodemon", "./bin/www.js"]
+CMD ["npm", "start"]
