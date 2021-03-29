@@ -56,12 +56,27 @@ class ProfileStorage {
   static update(body, studentId) {
     return new Promise((resolve, reject) => {
       const sql = `UPDATE students st
-      SET st.email = ?
+      SET st.email = ?, st.nickname = ?, st.major_no = ?
       WHERE st.id = ?;`;
 
-      db.query(sql, [body.email, studentId], (err) => {
+      db.query(
+        sql,
+        [body.email, body.nickname, body.majorNum, studentId],
+        (err) => {
+          if (err) reject(err);
+          resolve(true);
+        }
+      );
+    });
+  }
+
+  static findAllByEmailAndNickname(email, nickname) {
+    return new Promise((resolve, reject) => {
+      const query = "SELECT * FROM students WHERE email=? OR nickname=?;";
+
+      db.query(query, [email, nickname], (err, users) => {
         if (err) reject(err);
-        resolve(true);
+        else resolve(users);
       });
     });
   }
