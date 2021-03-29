@@ -64,8 +64,12 @@ class Board {
         categoryNum,
         lastNum
       );
-      if (boards) {
-        return { success: true, msg: "게시판 조회 성공", boards };
+      if (boards.length) {
+        return {
+          success: true,
+          msg: "게시판 전체 조회에 성공하셨습니다.",
+          boards,
+        };
       }
     } catch (err) {
       throw err;
