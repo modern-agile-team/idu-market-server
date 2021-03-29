@@ -76,7 +76,8 @@ class User {
 
     const users = await UserStorage.findAllByIdAndEmail(
       client.id,
-      client.email
+      client.email,
+      client.nickname
     );
 
     if (users.length === 0) {
@@ -85,8 +86,10 @@ class User {
       for (let user of users) {
         if (user.id === client.id) {
           return { saveable: false, msg: "이미 존재하는 아이디 입니다." };
-        } else if (user.email === client.email)
+        } else if (user.email === client.email) {
           return { saveable: false, msg: "이미 가입된 이메일 입니다." };
+        } else if (user.nickname === client.nickname)
+          return { saveable: false, msg: "이미 사용되고 있는 이름 입니다." };
       }
     }
   }
