@@ -17,10 +17,10 @@ const process = {
     const profile = await new Profile(req);
     const response = await profile.update();
     if (response) {
-      logger.info(`POST /api/students/studentId 200 ${response.msg}`);
+      logger.info(`PUT /api/students/studentId 200 ${response.msg}`);
       return res.status(200).json(response);
     }
-    logger.error(`POST /api/students/studentId 409 ${response.msg}`);
+    logger.error(`PUT /api/students/studentId 409 ${response.msg}`);
     return res.status(409).json(response);
   },
 

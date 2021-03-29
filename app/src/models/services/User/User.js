@@ -33,7 +33,7 @@ class User {
     const client = this.body;
 
     try {
-      const inspector = await this.inspectIdAndEmail();
+      const inspector = await this.inspectIdAndEmailAndNickname();
 
       if (inspector.saveable) {
         const { hash, salt } = await Cryptor.encrypt(client.psword);
@@ -71,10 +71,10 @@ class User {
     }
   }
 
-  async inspectIdAndEmail() {
+  async inspectIdAndEmailAndNickname() {
     const client = this.body;
 
-    const users = await UserStorage.findAllByIdAndEmail(
+    const users = await UserStorage.findAllByIdAndEmailAndNickname(
       client.id,
       client.email,
       client.nickname
@@ -96,9 +96,8 @@ class User {
 
   async isExistNameAndEmail() {
     const client = this.body;
-
     const user = await UserStorage.findOneByEmail(client.email);
-    console.log(user);
+
     if (user) {
       if (user.name !== client.name)
         return { isExist: false, msg: "등록되지 않은 이름 입니다." };
@@ -111,7 +110,6 @@ class User {
 
   async isExistIdAndEmail() {
     const client = this.body;
-    console.log(client);
     const user = await UserStorage.findOneByIdAndEmail(client.id, client.email);
 
     if (user) {

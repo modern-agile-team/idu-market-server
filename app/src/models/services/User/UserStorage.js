@@ -45,7 +45,7 @@ class UserStorage {
     });
   }
 
-  static findAllByIdAndEmail(id, email, nickname) {
+  static findAllByIdAndEmailAndNickname(id, email, nickname) {
     return new Promise((resolve, reject) => {
       const query =
         "SELECT * FROM students WHERE id=? OR email=? OR nickname=?;";
