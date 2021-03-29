@@ -31,7 +31,7 @@ class PurchaseList {
       }
       return { success: false, msg: "이미 구매목록에 저장이 되었습니다." };
     } catch (err) {
-      return { success: false, msg: "게시판이 존재하지 않습니다." };
+      throw err;
     }
   }
 }
