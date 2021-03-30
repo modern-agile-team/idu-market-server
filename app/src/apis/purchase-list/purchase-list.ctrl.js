@@ -6,7 +6,7 @@ const process = {
     const student = new PurchaseList(req);
     const response = await student.read();
     if (response.isError) {
-      logger.error(`GET /api/purchase-list 409 ${response.errMsg}`);
+      logger.error(`GET /api/purchase-list 400 ${response.errMsg}`);
       return res.status(400).json(response.clientMsg);
     }
     if (response.success) {

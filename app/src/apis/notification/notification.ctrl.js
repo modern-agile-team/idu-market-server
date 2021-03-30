@@ -5,6 +5,10 @@ const process = {
   notify: async (req, res) => {
     const email = new Email(req);
     const response = await email.sendNotification();
+    if (response.isError) {
+      logger.error(`GET /api/notification 400 ${response.errMsg}`);
+      return res.status(400).json(response.clientMsg);
+    }
     if (response) {
       logger.info(`POST /api/notification 200 ${response.msg}`);
       return res.status(200).json(response);
