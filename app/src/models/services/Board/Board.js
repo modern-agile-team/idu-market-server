@@ -5,6 +5,7 @@ const Category = require("../Category/Category");
 const String = require("../../utils/String");
 const CommentStorage = require("./Comment/CommentStorage");
 const BoardStroage = require("./BoardStorage");
+const Error = require("../../utils/Error");
 
 class Board {
   constructor(req) {
@@ -44,10 +45,10 @@ class Board {
       }
       return {
         success: false,
-        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주십시오.",
+        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주세요",
       };
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 
@@ -56,8 +57,9 @@ class Board {
     const categoryNum = Category[categoryName];
     const lastNum = this.query.lastNum;
 
-    if (categoryNum === undefined)
+    if (categoryNum === undefined) {
       return { success: false, msg: "존재하지 않는 게시판입니다." };
+    }
 
     try {
       const boards = await BoardStorage.findAllByCategoryNum(
@@ -68,7 +70,7 @@ class Board {
         return { success: true, msg: "게시판 조회 성공", boards };
       }
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 
@@ -100,7 +102,7 @@ class Board {
       }
       return { success: false, msg: "게시판 상세 조회 실패" };
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 
@@ -133,7 +135,7 @@ class Board {
         msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주십시오.",
       };
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 
@@ -156,7 +158,7 @@ class Board {
         msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주십시오.",
       };
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 
@@ -170,7 +172,7 @@ class Board {
       }
       return { success: false, msg: "게시판 삭제 실패" };
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 
@@ -192,7 +194,7 @@ class Board {
 
       return response;
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 
@@ -210,7 +212,7 @@ class Board {
         };
       return { success: false, msg: "존재하지않는 게시판" };
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 }
