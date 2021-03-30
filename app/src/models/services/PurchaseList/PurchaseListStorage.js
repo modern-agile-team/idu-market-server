@@ -9,7 +9,7 @@ class PurchaseListStorage {
       ,date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, bo.student_id AS sellerId,
       (SELECT nickname FROM students st where bo.student_id = st.id) AS sellerName
           FROM purchase_lists pu 
-          JOIN boards bo  
+          JOIN boards bo
           ON bo.no = pu.board_no 
           JOIN categories cat
           ON bo.category_no = cat.no

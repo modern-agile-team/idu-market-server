@@ -1,6 +1,7 @@
 const ProfileStorage = require("./ProfileStorage");
 const UserStorage = require("../User/UserStorage");
 const Auth = require("../Auth/Auth");
+const error = require("../../utils/Error");
 
 class Profile {
   constructor(req) {
@@ -12,12 +13,16 @@ class Profile {
     const studentId = this.params.studentId;
     // const comments = await ProfileStorage.findOneByStudentId(studentId);
     // const title = await ProfileStorage.findtitleById(studentId);
-    const profile = await ProfileStorage.findOneById(studentId);
-    if (profile) {
-      const response = profile;
-      return response;
+    try {
+      const profile = await ProfileStorage.findOneById(studentId);
+      if (profile) {
+        const response = profile;
+        return { success: true, profile: response };
+      }
+      return { sucess: false, msg: "존재하지 않는 아이디입니다." };
+    } catch (err) {
+      return error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
-    return { success: false, msg: "아이디가 존재하지 않습니다." };
   }
 
   async inspectEmailAndNickName() {
@@ -49,11 +54,17 @@ class Profile {
       if (inspector.saveable) {
         const response = await ProfileStorage.update(user, studentId);
         if (response)
-          return { success: true, msg: "정상적으로 수정되었습니다." };
+          return {
+            success: true,
+            email: user.email,
+            nickname: user.nickname,
+            majorNum: user.majorNum,
+            msg: "정상적으로 수정되었습니다.",
+          };
       }
       return inspector;
     } catch (err) {
-      throw err;
+      return error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 
@@ -73,7 +84,7 @@ class Profile {
         };
       }
     } catch (err) {
-      throw err;
+      return error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 }

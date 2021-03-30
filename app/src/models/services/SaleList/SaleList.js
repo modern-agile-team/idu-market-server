@@ -1,4 +1,5 @@
 const SaleListStorage = require("./SaleListStorage");
+const error = require("../../utils/Error");
 
 class SaleList {
   constructor(body) {
@@ -17,7 +18,7 @@ class SaleList {
         };
       return { success: false, msg: "판매내역이 존재하지 않습니다" };
     } catch (err) {
-      throw err;
+      return error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 }
