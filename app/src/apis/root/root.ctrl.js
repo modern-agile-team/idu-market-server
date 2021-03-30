@@ -1,7 +1,7 @@
 const User = require("../../models/services/User/User");
 const Email = require("../../models/services/Email/Email");
 const logger = require("../../config/logger");
-const error = require("../../models/utils/Error");
+const Error = require("../../models/utils/Error");
 
 const auth = {
   resAuthorizedUserInfo: (req, res) => {
@@ -40,7 +40,7 @@ const process = {
       logger.error(`POST /api/jwt 400 ${response.msg}`);
       return res.status(400).json(response);
     } catch (err) {
-      const server = error.ctrl("서버 개발자에게 문의해주십시오", err);
+      const server = Error.ctrl("서버 개발자에게 문의해주십시오", err);
       logger.error(`POST /api/jwt 400 ${server.errMsg}`);
       return res.status(400).json(server.clientMsg);
     }
@@ -57,7 +57,7 @@ const process = {
       logger.error(`POST /api/user 400 ${response.msg}`);
       return res.status(409).json(response);
     } catch (err) {
-      const server = error.ctrl("서버 개발자에게 문의해주십시오", err);
+      const server = Error.ctrl("서버 개발자에게 문의해주십시오", err);
       logger.error(`POST /api/user 400 ${server.errMsg}`);
       return res.status(400).json(server.clientMsg);
     }
@@ -74,7 +74,7 @@ const process = {
       logger.error(`POST /api/forgot-id 400 ${response.msg}`);
       return res.status(400).json(response);
     } catch (err) {
-      const server = error.ctrl("서버 개발자에게 문의해주십시오", err);
+      const server = Error.ctrl("서버 개발자에게 문의해주십시오", err);
       logger.error(`POST /api/forgot-id 400 ${server.errMsg}`);
       return res.status(400).json(server.clientMsg);
     }
@@ -91,7 +91,7 @@ const process = {
       logger.error(`POST /api/forgot-password 400 ${response.msg}`);
       return res.status(400).json(response);
     } catch (err) {
-      const server = error.ctrl("서버 개발자에게 문의해주십시오", err);
+      const server = Error.ctrl("서버 개발자에게 문의해주십시오", err);
       logger.error(`POST /api/forgot-password 400 ${server.errMsg}`);
       return res.status(400).json(server.clientMsg);
     }
@@ -108,7 +108,7 @@ const process = {
       logger.error(`PATCH /api/password 400 ${response.msg}`);
       return res.status(400).json(response);
     } catch (err) {
-      const server = error.ctrl("서버 개발자에게 문의해주십시오", err);
+      const server = Error.ctrl("서버 개발자에게 문의해주십시오", err);
       logger.error(`PATCH /api/password 400 ${server.errMsg}`);
       return res.status(400).json(server.clientMsg);
     }
