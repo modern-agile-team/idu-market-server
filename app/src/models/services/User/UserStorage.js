@@ -45,11 +45,12 @@ class UserStorage {
     });
   }
 
-  static findAllByIdAndEmail(id, email) {
+  static findAllByIdAndEmailAndNickname(id, email, nickname) {
     return new Promise((resolve, reject) => {
-      const query = "SELECT * FROM students WHERE id=? OR email=?;";
+      const query =
+        "SELECT * FROM students WHERE id=? OR email=? OR nickname=?;";
 
-      db.query(query, [id, email], (err, users) => {
+      db.query(query, [id, email, nickname], (err, users) => {
         if (err) reject(err);
         else resolve(users);
       });
@@ -59,11 +60,19 @@ class UserStorage {
   static async save(client) {
     return new Promise((resolve, reject) => {
       const query =
-        "INSERT INTO students(id, major_no, name, email, psword, salt) VALUES(?, ?, ?, ?, ?, ?);";
+        "INSERT INTO students(id, major_no, name, nickname, email, psword, salt) VALUES(?, ?, ?, ?, ?, ?, ?);";
 
       db.query(
         query,
-        [client.id, 16, client.name, client.email, client.psword, client.salt],
+        [
+          client.id,
+          16,
+          client.name,
+          client.email,
+          client.nickname,
+          client.psword,
+          client.salt,
+        ],
         (err) => {
           if (err) reject(err);
           else resolve(true);

@@ -1,7 +1,7 @@
 const PurchaseList = require("../../models/services/PurchaseList/PurchaseList");
 const logger = require("../../config/logger");
 
-const output = {
+const process = {
   read: async (req, res) => {
     const student = new PurchaseList(req);
     const response = await student.read();
@@ -13,11 +13,9 @@ const output = {
     logger.error(`GET /api/purchase-list/studentId 400 ${response.msg}`);
     return res.status(400).json(response);
   },
-};
 
-const process = {
   create: async (req, res) => {
-    const purchaseList = new PurchaseList(req.body);
+    const purchaseList = new PurchaseList(req);
     const response = await purchaseList.create();
     if (response.success) {
       logger.info(`POST /api/purchase-list 201 ${response.msg}`);
@@ -28,4 +26,4 @@ const process = {
   },
 };
 
-module.exports = { output, process };
+module.exports = { process };

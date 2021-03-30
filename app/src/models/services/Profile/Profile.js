@@ -4,12 +4,12 @@ const Auth = require("../Auth/Auth");
 
 class Profile {
   constructor(req) {
-    this.id = req.params.studentId;
+    this.params = req.params;
     this.body = req.body;
   }
 
   async findOneById() {
-    const studentId = this.id;
+    const studentId = this.params.studentId;
     // const comments = await ProfileStorage.findOneByStudentId(studentId);
     // const title = await ProfileStorage.findtitleById(studentId);
     const profile = await ProfileStorage.findOneById(studentId);
@@ -20,20 +20,46 @@ class Profile {
     return { success: false, msg: "아이디가 존재하지 않습니다." };
   }
 
+  async inspectEmailAndNickName() {
+    const client = this.body;
+    const users = await ProfileStorage.findAllByEmailAndNickname(
+      client.email,
+      client.nickname
+    );
+
+    if (users.length === 0) {
+      return { saveable: true };
+    } else {
+      for (let user of users) {
+        if (user.email === client.email) {
+          return { saveable: false, msg: "이미 가입된 이메일 입니다." };
+        } else if (user.nickname === client.nickname)
+          return { saveable: false, msg: "이미 사용되고 있는 이름 입니다." };
+      }
+    }
+  }
+
   async update() {
     const user = this.body;
-    const studentId = this.id;
+    const studentId = this.params.studentId;
+
     try {
-      const response = await ProfileStorage.update(user, studentId);
-      if (response) return { success: true, msg: "정상적으로 수정되었습니다." };
-    } catch {
-      return { success: false, msg: "db에러: 서버 쪽에 말씀해주세요" };
+      const inspector = await this.inspectEmailAndNickName();
+
+      if (inspector.saveable) {
+        const response = await ProfileStorage.update(user, studentId);
+        if (response)
+          return { success: true, msg: "정상적으로 수정되었습니다." };
+      }
+      return inspector;
+    } catch (err) {
+      throw err;
     }
   }
 
   async updateImage() {
     const image = this.body.profilePath;
-    const studentId = this.id;
+    const studentId = this.params.studentId;
     try {
       const response = await ProfileStorage.updateImage(image, studentId);
       if (response) {
@@ -46,11 +72,8 @@ class Profile {
           jwt,
         };
       }
-    } catch {
-      return {
-        success: false,
-        msg: " db에러: 서버 쪽에 말씀해주세요",
-      };
+    } catch (err) {
+      throw err;
     }
   }
 }

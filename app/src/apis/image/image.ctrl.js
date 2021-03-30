@@ -1,20 +1,5 @@
-const Image = require("../../models/services/Image/Image");
 const s3 = require("../../middlewares/s3");
 const logger = require("../../config/logger");
-
-const output = {
-  findOneByNum: async (req, res) => {
-    const board = req.body;
-    const image = new Image(board);
-    const response = await image.findOneByNum();
-    if (response) {
-      logger.info(`GET api/image 200 ${response.msg}`);
-      return res.status(200).json(response);
-    }
-    logger.error(`GET api/image 400 ${response.msg}`);
-    return res.status(400).json(response);
-  },
-};
 
 const process = {
   upload: async (req, res) => {
@@ -59,4 +44,4 @@ const process = {
   },
 };
 
-module.exports = { output, process };
+module.exports = { process };
