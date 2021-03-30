@@ -35,7 +35,7 @@ class CommentStorage {
 
   static findAllByBoardNum(boardNum) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT st.id AS studentId, st.name AS studentName, cmt.no AS num, cmt.content, cmt.group_no AS groupNum, 
+      const query = `SELECT cmt.no AS num, st.id AS studentId, st.name AS studentName, st.nickname, st.profile_path AS profilePath, cmt.content, cmt.group_no AS groupNum, 
       cmt.depth, cmt.reply_flag AS replyFlag, cmt.hidden_flag AS hiddenFlag, 
       date_format(cmt.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(cmt.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
       FROM comments cmt
@@ -55,7 +55,7 @@ class CommentStorage {
 
   static findOneByNum(num) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT st.id AS studentId, st.name AS studentName, cmt.no AS num, cmt.content, cmt.group_no AS groupNum,
+      const query = `SELECT st.id AS studentId, st.name AS studentName, st.nickname, cmt.no AS num, cmt.content, cmt.group_no AS groupNum,
       cmt.depth, cmt.reply_flag AS replyFlag, cmt.hidden_flag AS hiddenFlag,
       date_format(cmt.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(cmt.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
       FROM comments AS cmt
@@ -193,6 +193,18 @@ class CommentStorage {
       db.query(query, [num], (err) => {
         if (err) reject(err);
         else resolve(true);
+      });
+    });
+  }
+
+  static findStudentIdByNum(board) {
+    return new Promise((resolve, reject) => {
+      const sql = `SELECT distinct student_id AS id
+      FROM comments
+      WHERE board_no = ?;`;
+      db.query(sql, board, (err, buyers) => {
+        if (err) reject(err);
+        else resolve(buyers);
       });
     });
   }

@@ -1,8 +1,3 @@
-"use strict";
-
-// es6+ 문법의 async-await 등 최신 문법을 변환해준다.
-require("babel-polyfill");
-
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -24,18 +19,16 @@ app.use(cookieParser());
 app.use(cors());
 app.use(morgan("tiny", { stream: logger.stream }));
 
-let dist = "";
-if (process.env.NODE_ENV === "production") dist = "/dist";
-const view = require(`.${dist}/src/apis/view`);
-const root = require(`.${dist}/src/apis/root`);
-const watchList = require(`.${dist}/src/apis/watch-list`);
-const image = require(`.${dist}/src/apis/image`);
-const search = require(`.${dist}/src/apis/search`);
-const boards = require(`.${dist}/src/apis/boards`);
-const purchase = require(`.${dist}/src/apis/purchase-list`);
-const sale = require(`.${dist}/src/apis/sale-list`);
-const notification = require(`.${dist}/src/apis/notification`);
-const profile = require(`.${dist}/src/apis/profile`);
+const view = require(`./src/apis/view`);
+const root = require(`./src/apis/root`);
+const watchList = require(`./src/apis/watch-list`);
+const image = require(`./src/apis/image`);
+const search = require(`./src/apis/search`);
+const boards = require(`./src/apis/boards`);
+const purchase = require(`./src/apis/purchase-list`);
+const sale = require(`./src/apis/sale-list`);
+const notification = require(`./src/apis/notification`);
+const profile = require(`./src/apis/profile`);
 
 app.use("/", view);
 app.use("/api/", root);

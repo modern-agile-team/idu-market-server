@@ -4,5 +4,5 @@ const router = express.Router();
 const ctrl = require("./image.ctrl");
 
 router.post("/", s3.upload.array("upload", 5), ctrl.process.upload);
-router.post("/delete", ctrl.process.delete);
+router.post("/remove", ctrl.process.delete);
 module.exports = router;
