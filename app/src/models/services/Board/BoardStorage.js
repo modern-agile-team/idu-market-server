@@ -60,7 +60,7 @@ class BoardStroage {
 
   static findOneByNum(num) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.name AS studentName, bo.title AS title, bo.content, bo.hit AS hit, bo.price AS price, bo.status AS status,
+      const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.name AS studentName, st.profile_path AS profilePath, bo.title AS title, bo.content, bo.hit AS hit, bo.price AS price, bo.status AS status,
       bo.category_no AS categoryNum, date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(bo.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
       FROM boards AS bo
       JOIN students AS st
