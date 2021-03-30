@@ -22,7 +22,7 @@ const process = {
     const response = await profile.update();
     if (response.isError) {
       logger.error(`PUT /api/students/studentId 409 ${response.errMsg}`);
-      return res.status(400).json(response.clientMsg);
+      return res.status(409).json(response.clientMsg);
     }
     if (response.success) {
       logger.info(`PUT /api/students/studentId 200 ${response.msg}`);
@@ -37,7 +37,7 @@ const process = {
     const response = await profile.updateImage();
     if (response.isError) {
       logger.error(`PATCH /api/students/studentId 409 ${response.errMsg}`);
-      return res.status(400).json(response.clientMsg);
+      return res.status(409).json(response.clientMsg);
     }
     if (response.success) {
       logger.info(`PATCH /api/students/studentId 200 ${response.msg}`);

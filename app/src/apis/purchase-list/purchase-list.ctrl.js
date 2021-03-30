@@ -7,7 +7,7 @@ const process = {
     const response = await student.read();
     if (response.isError) {
       logger.error(`GET /api/purchase-list 409 ${response.errMsg}`);
-      return res.status(409).json(response.clientMsg);
+      return res.status(400).json(response.clientMsg);
     }
     if (response.success) {
       logger.info(`GET /api/purchase-list/studentId 200 ${response.msg}`);
