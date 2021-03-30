@@ -2,6 +2,7 @@ const UserStorage = require("./UserStorage");
 const Auth = require("../Auth/Auth");
 const AuthStorage = require("../Auth/AuthStorage");
 const Cryptor = require("../../utils/Cryptor");
+const Error = require("../../utils/Error");
 
 class User {
   constructor(req) {
@@ -25,7 +26,7 @@ class User {
       }
       return { success: false, msg: "존재하지 않는 아이디입니다." };
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 
@@ -46,7 +47,7 @@ class User {
       }
       return inspector;
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 
@@ -67,7 +68,7 @@ class User {
         }
       }
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 

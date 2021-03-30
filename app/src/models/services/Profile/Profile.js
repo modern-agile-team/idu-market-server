@@ -1,7 +1,7 @@
 const ProfileStorage = require("./ProfileStorage");
 const UserStorage = require("../User/UserStorage");
 const Auth = require("../Auth/Auth");
-const error = require("../../utils/Error");
+const Error = require("../../utils/Error");
 
 class Profile {
   constructor(req) {
@@ -21,7 +21,7 @@ class Profile {
       }
       return { sucess: false, msg: "존재하지 않는 아이디입니다." };
     } catch (err) {
-      return error.ctrl("서버 개발자에게 문의해주십시오", err);
+      return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 
@@ -64,7 +64,7 @@ class Profile {
       }
       return inspector;
     } catch (err) {
-      return error.ctrl("서버 개발자에게 문의해주십시오", err);
+      return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 
@@ -84,7 +84,7 @@ class Profile {
         };
       }
     } catch (err) {
-      return error.ctrl("서버 개발자에게 문의해주십시오", err);
+      return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 }

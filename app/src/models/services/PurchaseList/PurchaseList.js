@@ -1,4 +1,4 @@
-const error = require("../../utils/Error");
+const Error = require("../../utils/Error");
 const PurchaseListStorage = require("./PurchaseListStorage");
 
 class PurchaseList {
@@ -17,7 +17,7 @@ class PurchaseList {
         purchaseList,
       };
     } catch (err) {
-      return error.ctrl("서버 개발자에게 문의해주십시오", err);
+      return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 
@@ -32,7 +32,7 @@ class PurchaseList {
       }
       return { success: false, msg: "이미 구매목록에 저장이 되었습니다." };
     } catch (err) {
-      return error.ctrl("서버 개발자에게 문의해주십시오", err);
+      return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 }

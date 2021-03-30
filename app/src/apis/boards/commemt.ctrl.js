@@ -22,10 +22,12 @@ const process = {
       );
       return res.status(201).json(response);
     }
-    logger.error(
-      `POST /api/boards/categoryName/num/groupNum 400 ${response.msg}`
-    );
-    res.status(400).json(response);
+    if (response.isError) {
+      logger.error(
+        `POST /api/boards/categoryName/num/groupNum 400 ${response.errMsg}`
+      );
+      return res.status(400).json(response.clientMsg);
+    }
   },
 
   updateByNum: async (req, res) => {
@@ -37,10 +39,12 @@ const process = {
       );
       return res.status(200).json(response);
     }
-    logger.error(
-      `PATCH /api/boards/categoryName/num/commentNum 400 ${response.msg}`
-    );
-    res.status(400).json(response);
+    if (response.isError) {
+      logger.error(
+        `PATCH /api/boards/categoryName/num/commentNum 400 ${response.errMsg}`
+      );
+      return res.status(400).json(response.clientMsg);
+    }
   },
 
   deleteByNum: async (req, res) => {
@@ -57,10 +61,12 @@ const process = {
       );
       return res.status(200).json(response);
     }
-    logger.error(
-      `DELETE /api/boards/categoryName/num/commentNum 400 ${response.msg}`
-    );
-    res.status(400).json(response);
+    if (response.isError) {
+      logger.error(
+        `DELETE /api/boards/categoryName/num/commentNum 400 ${response.errMsg}`
+      );
+      return res.status(400).json(response.clientMsg);
+    }
   },
 
   findStudentIdByNum: async (req, res) => {
@@ -72,10 +78,12 @@ const process = {
       );
       return res.status(200).json(response);
     }
-    logger.error(
-      `GET /api/boards/categoryName/num.comments 400 ${response.msg}`
-    );
-    res.status(400).json(response);
+    if (response.isError) {
+      logger.error(
+        `GET /api/boards/categoryName/num.comments 400 ${response.errMsg}`
+      );
+      return res.status(400).json(response.clientMsg);
+    }
   },
 };
 

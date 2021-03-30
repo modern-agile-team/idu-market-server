@@ -35,7 +35,7 @@ class CommentStorage {
 
   static findAllByBoardNum(boardNum) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT cmt.no AS num, st.id AS studentId, st.name AS studentName, st.nickname, st.profile_path AS profilePath, cmt.content, cmt.group_no AS groupNum, 
+      const query = `SELECT st.id AS studentId, st.name AS studentName, st.profile_path AS profilePath, cmt.no AS num, cmt.content, cmt.group_no AS groupNum, 
       cmt.depth, cmt.reply_flag AS replyFlag, cmt.hidden_flag AS hiddenFlag, 
       date_format(cmt.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(cmt.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
       FROM comments cmt
