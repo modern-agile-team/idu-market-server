@@ -20,6 +20,9 @@ COPY ./app/bin ./bin
 COPY ./app/src ./src
 COPY ./app/app.js .
 
+# forever 설치
+RUN npm install -g pm2
+
 # 노드 서버 가동
-EXPOSE 5000
-CMD ["npm", "start"]
+EXPOSE 9800
+CMD ["pm2-runtime", "start", "./bin/www.js"]
