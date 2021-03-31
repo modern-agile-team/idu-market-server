@@ -199,9 +199,12 @@ class CommentStorage {
 
   static findStudentIdByNum(board) {
     return new Promise((resolve, reject) => {
-      const sql = `SELECT distinct student_id AS id
-      FROM comments
-      WHERE board_no = ?;`;
+      const sql = `SELECT DISTINCT nickname 
+      FROM comments cm
+      JOIN students st
+      ON st.id = cm.student_id
+      WHERE board_no = ? AND cm.hidden_flag = 0;`;
+
       db.query(sql, board, (err, buyers) => {
         if (err) reject(err);
         else resolve(buyers);

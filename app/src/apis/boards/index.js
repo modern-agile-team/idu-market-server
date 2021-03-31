@@ -12,11 +12,11 @@ router.post(
 );
 
 router.get("/:categoryName", boardCtrl.process.findAllByCategoryNum);
-router.get("/:categoryName/:num/:studentId", boardCtrl.process.findOneByNum);
 router.get(
   "/:categoryName/:num/comments",
   commentCtrl.process.findStudentIdByNum
 );
+router.get("/:categoryName/:num/:studentId", boardCtrl.process.findOneByNum);
 
 router.put("/:categoryName/:num", boardCtrl.process.updateByNum);
 router.patch("/:categoryName/:num", boardCtrl.process.updateOnlyHit); // 조회수 1 증가 API
