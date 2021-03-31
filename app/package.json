@@ -10,7 +10,7 @@
     "start": "nodemon ./bin/www.js",
     "build": "babel src -w -d dist/src",
     "lint": "eslint src --fix",
-    "test": "jest --forceExit --detectOpenHandles"
+    "test": "jest --forceExit"
   },
   "keywords": [],
   "author": "",

@@ -1,5 +1,3 @@
-"use strict";
-
 const BoardStorage = require("./BoardStorage");
 const Category = require("../Category/Category");
 const String = require("../../utils/String");
