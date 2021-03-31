@@ -31,15 +31,15 @@ const process = {
 
       const response = await s3.deleteImage(keys);
       if (response) {
-        logger.info(`DELETE /api/image/delete 200 삭제 성공`);
+        logger.info(`POST /api/image/remove 200 삭제 성공`);
         return res
           .status(200)
           .json({ success: true, msg: "삭제 완료되었습니다." });
       }
-      logger.error(`DELETE /api/image/delete 400 s3 접근 오류`);
+      logger.error(`POST /api/image/remove 400 s3 접근 오류`);
       return res.status(400).json({ success: false, msg: "s3 접근 오류" });
     }
-    logger.error(`DELETE /api/image/delete 400 이미지가 없습니다.`);
+    logger.error(`POST /api/image/remove 400 이미지가 없습니다.`);
     return res.status(400).json({ success: false, msg: "사진이 없습니다." });
   },
 };

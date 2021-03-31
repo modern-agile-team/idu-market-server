@@ -4,6 +4,7 @@ const User = require("../User/User");
 const UserStorage = require("../User/UserStorage");
 const Auth = require("../Auth/Auth");
 const mailOption = require("../../../config/mail");
+const error = require("../../utils/Error");
 
 const CHANGE_PSWORD_URL = process.env.CHANGE_PASSWORD_URL;
 
@@ -46,7 +47,7 @@ class Email {
 
       return promise.then((res) => res);
     } catch (err) {
-      throw err;
+      return error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 
@@ -87,7 +88,7 @@ class Email {
 
       return promise.then((res) => res);
     } catch (err) {
-      throw err;
+      return error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 
@@ -127,7 +128,7 @@ class Email {
 
       return promise.then((res) => res);
     } catch (err) {
-      throw err;
+      return error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 }
