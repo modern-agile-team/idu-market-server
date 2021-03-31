@@ -10,7 +10,7 @@ const board = {
 };
 
 describe("게시판 API 테스트", () => {
-  it("게시판 생성 시 201 반환", async () => {
+  it("POST 게시판 생성 시 201 반환", async () => {
     try {
       const res = await server.post("/api/boards/book").send(board);
       expect(res.statusCode).toEqual(201);
@@ -19,7 +19,7 @@ describe("게시판 API 테스트", () => {
     }
   });
 
-  it("게시판 조회 시 200 반환", async () => {
+  it("GET 게시판 조회 시 200 반환", async () => {
     try {
       const res = await server.get("/api/boards/book");
       expect(res.statusCode).toEqual(200);
@@ -28,7 +28,16 @@ describe("게시판 API 테스트", () => {
     }
   });
 
-  it("게시판 수정 시 200 반환", async () => {
+  it("GET 게시판 상세 조회 시 200 반환", async () => {
+    try {
+      const res = await server.get("/api/boards/book/767/test");
+      expect(res.statusCode).toEqual(200);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  it("PUT 게시판 수정 시 200 반환", async () => {
     try {
       const res = await server
         .put("/api/boards/book/760")
@@ -39,25 +48,7 @@ describe("게시판 API 테스트", () => {
     }
   });
 
-  it("게시판 삭제 시 200 반환", async () => {
-    try {
-      const res = await server.delete("/api/boards/book/763");
-      expect(res.statusCode).toEqual(200);
-    } catch (err) {
-      console.log(err);
-    }
-  });
-
-  it("게시판 삭제 시 200 반환", async () => {
-    try {
-      const res = await server.delete("/api/boards/book/763");
-      expect(res.statusCode).toEqual(200);
-    } catch (err) {
-      console.log(err);
-    }
-  });
-
-  it("게시판 조회 수 1증가 시 200 반환", async () => {
+  it("PATCH 게시판 조회 수 1증가 시 200 반환", async () => {
     try {
       const res = await server.patch("/api/boards/book/765");
       expect(res.statusCode).toEqual(200);
@@ -66,20 +57,29 @@ describe("게시판 API 테스트", () => {
     }
   });
 
-  it("게시판 상세 조회 시 200 반환", async () => {
+  it("PATCH 게시판 status 변경 시 200 반환", async () => {
     try {
-      const res = await server.get("/api/boards/book/767/test");
+      const res = await server
+        .patch("/api/boards/book/767/status")
+        .send({ status: 2 });
       expect(res.statusCode).toEqual(200);
     } catch (err) {
       console.log(err);
     }
   });
 
-  it("게시판 status 변경 시 200 반환", async () => {
+  it("DELETE 게시판 삭제 시 200 반환", async () => {
     try {
-      const res = await server
-        .patch("/api/boards/book/767/status")
-        .send({ status: 2 });
+      const res = await server.delete("/api/boards/book/763");
+      expect(res.statusCode).toEqual(200);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+
+  it("DELETE 게시판 삭제 시 200 반환", async () => {
+    try {
+      const res = await server.delete("/api/boards/book/763");
       expect(res.statusCode).toEqual(200);
     } catch (err) {
       console.log(err);
