@@ -26,7 +26,8 @@ class PurchaseList {
     try {
       const isExist = await PurchaseListStorage.isExist(client);
       if (isExist) {
-        const response = await PurchaseListStorage.create(client);
+        const student = await PurchaseListStorage.findNicknameById(client);
+        const response = await PurchaseListStorage.create(student, client);
         if (response)
           return { success: true, msg: "구매목록에 저장되었습니다" };
       }

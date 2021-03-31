@@ -30,11 +30,14 @@ class PurchaseListStorage {
 
   static isExist(client) {
     return new Promise((resolve, reject) => {
-      const isExist = `SELECT bo.no, pu.student_id FROM purchase_lists pu
+      const isExist = `SELECT bo.no, st.nickname
+      FROM purchase_lists pu
       JOIN boards bo
-      ON bo.no = board_no 
-      WHERE pu.board_no=? AND pu.student_id=?`;
-      const testParams = [client.boardNum, client.studentId];
+      ON bo.no = board_no
+      JOIN students st
+      ON pu.student_id = st.id
+      WHERE pu.board_no=? AND st.nickname=?`;
+      const testParams = [client.boardNum, client.nickname];
       db.query(isExist, testParams, (err, rows) => {
         if (err) reject(err);
         if (!rows.length) {
@@ -44,10 +47,23 @@ class PurchaseListStorage {
     });
   }
 
-  static create(client) {
+  static findNicknameById(client) {
     return new Promise((resolve, reject) => {
-      const sql = `INSERT INTO purchase_lists(board_no, nickname) VALUES(?, ?)`;
-      const params = [client.boardNum, client.nickname];
+      const sql = `SELECT st.id
+      FROM students st
+      WHERE st.nickname = ?`;
+
+      db.query(sql, [client.nickname], (err, id) => {
+        if (err) reject(err);
+        resolve(...id);
+      });
+    });
+  }
+
+  static create(student, client) {
+    return new Promise((resolve, reject) => {
+      const sql = `INSERT INTO purchase_lists(board_no, student_id) VALUES(?, ?)`;
+      const params = [client.boardNum, student.id];
       db.query(sql, params, (err) => {
         if (err) reject(err);
         else resolve(true);
