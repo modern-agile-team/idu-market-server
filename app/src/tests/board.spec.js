@@ -2,15 +2,14 @@ const request = require("supertest");
 const app = require("../../app");
 const server = request(app);
 
-// const board = {
-//   studentId: "test1",
-//   title: "테스트2",
-//   content: "테스트2",
-//   price: "200000",
-// };
+const board = {
+  studentId: "test1",
+  title: "테스트2",
+  content: "테스트2",
+  price: "200000",
+};
 
 describe("게시판 API 테스트", () => {
-  /*
   it("게시판 생성 시 201 반환", async () => {
     try {
       const res = await server.post("/api/boards/book").send(board);
@@ -19,7 +18,6 @@ describe("게시판 API 테스트", () => {
       console.log(err);
     }
   });
-
 
   it("게시판 조회 시 200 반환", async () => {
     try {
@@ -30,8 +28,7 @@ describe("게시판 API 테스트", () => {
     }
   });
 
-
-  it("게시판 수정 시 201 반환", async () => {
+  it("게시판 수정 시 200 반환", async () => {
     try {
       const res = await server
         .put("/api/boards/book/760")
@@ -69,18 +66,20 @@ describe("게시판 API 테스트", () => {
     }
   });
 
-  it("상태플러그 변경 성공 시 200 반환", async () => {
+  it("게시판 상세 조회 시 200 반환", async () => {
     try {
-      const res = await server.patch("/api/boards/book/765/1");
+      const res = await server.get("/api/boards/book/767/test");
       expect(res.statusCode).toEqual(200);
     } catch (err) {
       console.log(err);
     }
   });
-  */
-  it("댓글 생성 시 200 반환", async () => {
+
+  it("게시판 status 변경 시 200 반환", async () => {
     try {
-      const res = await server.post("/api/boards/book/765");
+      const res = await server
+        .patch("/api/boards/book/767/status")
+        .send({ status: 2 });
       expect(res.statusCode).toEqual(200);
     } catch (err) {
       console.log(err);

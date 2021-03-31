@@ -1,4 +1,5 @@
 const CommentStorage = require("./CommentStorage");
+const Error = require("../../../utils/Error");
 
 class Comment {
   constructor(req) {
@@ -32,7 +33,7 @@ class Comment {
 
       return { success: false, msg: "댓글 생성 실패" };
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 
@@ -59,7 +60,7 @@ class Comment {
       }
       return { success: false, msg: "답글 생성 실패" };
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 
@@ -85,7 +86,7 @@ class Comment {
           "댓글을 수정한 studentId와 수정될 commentNum이 올바른지 확인하십시오.",
       };
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 
@@ -125,7 +126,7 @@ class Comment {
           "답글을 삭제하려면 depth가 1이어야 합니다. 댓글을 삭제하려는 것이 맞다면 댓글 번호가 올바른지 확인해 주십시오.",
       };
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 
@@ -166,7 +167,7 @@ class Comment {
           "댓글을 삭제하려면 depth가 0이어야 합니다. 답글을 삭제하려는 것이 맞다면 답글 번호가 올바른지 확인해 주십시오.",
       };
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 
@@ -176,7 +177,7 @@ class Comment {
       const buyers = await CommentStorage.findStudentIdByNum(board);
       return { success: true, msg: "comments조회 완료 되었습니다.", buyers };
     } catch (err) {
-      throw err;
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
   }
 }

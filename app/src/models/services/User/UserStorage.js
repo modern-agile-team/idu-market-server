@@ -66,10 +66,10 @@ class UserStorage {
         query,
         [
           client.id,
-          16,
+          client.major,
           client.name,
-          client.email,
           client.nickname,
+          client.email,
           client.psword,
           client.salt,
         ],
