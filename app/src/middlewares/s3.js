@@ -30,8 +30,15 @@ const deleteImage = async (keys) => {
     objectKeys.push(rest);
   }
 
-  const params = {
+  const original = {
     Bucket: "woowahan-agile",
+    Delete: {
+      Objects: objectKeys,
+      Quiet: false,
+    },
+  };
+  const resizeImage = {
+    Bucket: "resize-woowahan-agile",
     Delete: {
       Objects: objectKeys,
       Quiet: false,
@@ -39,11 +46,16 @@ const deleteImage = async (keys) => {
   };
   try {
     const result = await s3
-      .deleteObjects(params, (err) => {
+      .deleteObjects(original, (err) => {
         if (err) throw err;
       })
       .promise();
-    return result;
+    const delResize = await s3
+      .deleteObjects(resizeImage, (err) => {
+        if (err) throw err;
+      })
+      .promise();
+    return { result, delResize };
   } catch (err) {
     return err;
   }

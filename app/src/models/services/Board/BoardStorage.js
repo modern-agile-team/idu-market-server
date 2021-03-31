@@ -38,7 +38,7 @@ class BoardStroage {
     }
 
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
+      const query = `SELECT bo.no AS num, st.id AS studnetId, st.nickname AS nickname, st.profile_path AS profilePath, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
       COUNT(cmt.content) AS commentCount
       FROM boards AS bo
@@ -133,7 +133,7 @@ class BoardStroage {
 
   static findAllByIncludedTitleAndCategory(title, categoryNum) {
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, bo.student_id AS studentId, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
+      const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.profile_path AS profilePath, st.nickname, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
       COUNT(cmt.content) AS commentCount
       FROM boards AS bo
