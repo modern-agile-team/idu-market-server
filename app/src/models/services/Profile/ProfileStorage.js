@@ -4,8 +4,10 @@ class ProfileStorage {
   static findOneById(id) {
     return new Promise((resolve, reject) => {
       const sql = `SELECT st.id, st.name, st.nickname, st.email, 
-      st.profile_path AS profilePath, st.major_no AS major
+      st.profile_path AS profilePath, majors.name AS major
       FROM students st
+      JOIN majors
+      ON st.major_no = majors.no
       where st.id= ?;`;
 
       db.query(sql, [id], (err, profile) => {
