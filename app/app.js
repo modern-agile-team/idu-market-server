@@ -4,7 +4,7 @@ const cookieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const cors = require("cors");
 const morgan = require("morgan");
-const logger = require("../app/src/config/logger");
+const logger = require("./src/config/logger");
 
 const app = express();
 dotenv.config();

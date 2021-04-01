@@ -141,7 +141,7 @@ class Board {
     const categoryNum = Category[this.params.categoryName];
     const num = this.params.num;
 
-    if (!categoryNum)
+    if (categoryNum === undefined)
       return { success: false, msg: "존재하지 않는 게시판입니다." };
 
     try {
