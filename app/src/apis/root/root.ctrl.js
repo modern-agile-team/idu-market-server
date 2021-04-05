@@ -41,8 +41,8 @@ const process = {
       return res.status(400).json(response);
     } catch (err) {
       const server = Error.ctrl("서버 개발자에게 문의해주십시오", err);
-      logger.error(`POST /api/jwt 400 ${server.errMsg}`);
-      return res.status(400).json(server.clientMsg);
+      logger.error(`POST /api/jwt 500 ${server.errMsg}`);
+      return res.status(500).json(server.clientMsg);
     }
   },
 
@@ -51,15 +51,15 @@ const process = {
       const user = new User(req);
       const response = await user.signup();
       if (response.success) {
-        logger.info(`POST /api/user 201 ${response.msg}`);
+        logger.info(`POST /api/student 201 ${response.msg}`);
         return res.status(201).json(response);
       }
-      logger.error(`POST /api/user 400 ${response.msg}`);
+      logger.error(`POST /api/student 409 ${response.msg}`);
       return res.status(409).json(response);
     } catch (err) {
       const server = Error.ctrl("서버 개발자에게 문의해주십시오", err);
-      logger.error(`POST /api/user 400 ${server.errMsg}`);
-      return res.status(400).json(server.clientMsg);
+      logger.error(`POST /api/student 500 ${server.errMsg}`);
+      return res.status(500).json(server.clientMsg);
     }
   },
 
@@ -75,8 +75,8 @@ const process = {
       return res.status(400).json(response);
     } catch (err) {
       const server = Error.ctrl("서버 개발자에게 문의해주십시오", err);
-      logger.error(`POST /api/forgot-id 400 ${server.errMsg}`);
-      return res.status(400).json(server.clientMsg);
+      logger.error(`POST /api/forgot-id 500 ${server.errMsg}`);
+      return res.status(500).json(server.clientMsg);
     }
   },
 
@@ -92,8 +92,8 @@ const process = {
       return res.status(400).json(response);
     } catch (err) {
       const server = Error.ctrl("서버 개발자에게 문의해주십시오", err);
-      logger.error(`POST /api/forgot-password 400 ${server.errMsg}`);
-      return res.status(400).json(server.clientMsg);
+      logger.error(`POST /api/forgot-password 500 ${server.errMsg}`);
+      return res.status(500).json(server.clientMsg);
     }
   },
 
@@ -109,8 +109,8 @@ const process = {
       return res.status(400).json(response);
     } catch (err) {
       const server = Error.ctrl("서버 개발자에게 문의해주십시오", err);
-      logger.error(`PATCH /api/password 400 ${server.errMsg}`);
-      return res.status(400).json(server.clientMsg);
+      logger.error(`PATCH /api/password 500 ${server.errMsg}`);
+      return res.status(500).json(server.clientMsg);
     }
   },
 };
