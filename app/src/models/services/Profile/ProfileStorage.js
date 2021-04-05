@@ -28,35 +28,35 @@ class ProfileStorage {
     });
   }
 
-  // static findtitleById(id) {
-  //   return new Promise((resolve, reject) => {
-  //     const sql = `SELECT bo.title
-  //     FROM boards bo
-  //     WHERE bo.student_id = ?`;
+  static findtitleById(id) {
+    return new Promise((resolve, reject) => {
+      const sql = `SELECT bo.title
+      FROM boards bo
+      WHERE bo.student_id = ?`;
 
-  //     db.query(sql, [id], (err, title) => {
-  //       if (err) reject(err);
-  //       resolve(title);
-  //     });
-  //   });
-  // }
+      db.query(sql, [id], (err, title) => {
+        if (err) reject(err);
+        resolve(title);
+      });
+    });
+  }
 
-  // static findOneByStudentId(id) {
-  //   return new Promise((resolve, reject) => {
-  //     const sql = `SELECT bo.title, comments.content
-  //     FROM comments
-  //     JOIN boards bo
-  //     ON bo.no = comments.board_no
-  //     WHERE comments.student_id = ?`;
+  static findOneByStudentId(id) {
+    return new Promise((resolve, reject) => {
+      const sql = `SELECT bo.title, comments.content
+      FROM comments
+      JOIN boards bo
+      ON bo.no = comments.board_no
+      WHERE comments.student_id = ?`;
 
-  //     db.query(sql, [id], (err, comments) => {
-  //       if (err) reject(err);
-  //       resolve(comments);
-  //     });
-  //   });
-  // }
+      db.query(sql, [id], (err, comments) => {
+        if (err) reject(err);
+        resolve(comments);
+      });
+    });
+  }
 
-  static update(body, studentId) {
+  static updateAll(body, studentId) {
     return new Promise((resolve, reject) => {
       const sql = `UPDATE students st
       SET st.email = ?, st.nickname = ?, st.major_no = ?
@@ -70,6 +70,45 @@ class ProfileStorage {
           resolve(true);
         }
       );
+    });
+  }
+
+  static updateEmailAndMajor(body, studentId) {
+    return new Promise((resolve, reject) => {
+      const sql = `UPDATE students st
+      SET st.email = ?, st.major_no = ?
+      WHERE st.id = ?`;
+
+      db.query(sql, [body.email, body.majorNum, studentId], (err) => {
+        if (err) reject(err);
+        resolve(true);
+      });
+    });
+  }
+
+  static updateNicknameAndMajor(body, studentId) {
+    return new Promise((resolve, reject) => {
+      const sql = `UPDATE students st
+      SET st.nickname = ?, st.major_no = ?
+      WHERE st.id = ?`;
+
+      db.query(sql, [body.nickname, body.majorNum, studentId], (err) => {
+        if (err) reject(err);
+        resolve(true);
+      });
+    });
+  }
+
+  static updateOnlyMajor(body, studentId) {
+    return new Promise((resolve, reject) => {
+      const sql = `UPDATE students st
+      SET st.major_no = ?
+      WHERE st.id = ?`;
+
+      db.query(sql, [body.majorNum, studentId], (err) => {
+        if (err) reject(err);
+        resolve(true);
+      });
     });
   }
 

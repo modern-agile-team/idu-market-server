@@ -11,7 +11,7 @@ const s3 = new aws.S3({
 const upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: "woowahan-agile/board",
+    bucket: "wooahan-agile/board",
     acl: "public-read",
     region: "ap-northeast-2",
     key: function (req, file, cb) {
@@ -31,31 +31,31 @@ const deleteImage = async (keys) => {
   }
 
   const original = {
-    Bucket: "woowahan-agile",
+    Bucket: "wooahan-agile",
     Delete: {
       Objects: objectKeys,
       Quiet: false,
     },
   };
-  const resizeImage = {
-    Bucket: "resize-woowahan-agile",
-    Delete: {
-      Objects: objectKeys,
-      Quiet: false,
-    },
-  };
+  // const resizeImage = {
+  //   Bucket: "resize-wooahan-agile",
+  //   Delete: {
+  //     Objects: objectKeys,
+  //     Quiet: false,
+  //   },
+  // };
   try {
     const result = await s3
       .deleteObjects(original, (err) => {
         if (err) throw err;
       })
       .promise();
-    const delResize = await s3
-      .deleteObjects(resizeImage, (err) => {
-        if (err) throw err;
-      })
-      .promise();
-    return { result, delResize };
+    // const delResize = await s3
+    //   .deleteObjects(resizeImage, (err) => {
+    //     if (err) throw err;
+    //   })
+    //   .promise();
+    return result;
   } catch (err) {
     return err;
   }
