@@ -50,7 +50,7 @@ describe("게시판 API 테스트", () => {
 
   it("PATCH 게시판 조회 수 1증가 시 200 반환", async () => {
     try {
-      const res = await server.patch("/api/boards/book/765");
+      const res = await server.patch("/api/boards/notice/610");
       expect(res.statusCode).toEqual(200);
     } catch (err) {
       console.log(err);

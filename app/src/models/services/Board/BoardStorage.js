@@ -111,6 +111,16 @@ class BoardStroage {
     });
   }
 
+  static findOneHitByBoardNum(num) {
+    return new Promise((resolve, reject) => {
+      const query = `SELECT hit FROM boards WHERE no = ?;`;
+      db.query(query, [num], (err, board) => {
+        if (err) reject(err);
+        else resolve(board[0].hit);
+      });
+    });
+  }
+
   static updateOnlyStatusByNum(board, num) {
     return new Promise((resolve, reject) => {
       const query = `UPDATE boards SET status = ? WHERE no = ?;`;
