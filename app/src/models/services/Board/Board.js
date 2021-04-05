@@ -2,7 +2,6 @@ const BoardStorage = require("./BoardStorage");
 const Category = require("../Category/Category");
 const String = require("../../utils/String");
 const CommentStorage = require("./Comment/CommentStorage");
-const BoardStroage = require("./BoardStorage");
 const Error = require("../../utils/Error");
 
 class Board {
@@ -141,7 +140,7 @@ class Board {
     const categoryNum = Category[this.params.categoryName];
     const num = this.params.num;
 
-    if (!categoryNum)
+    if (categoryNum === undefined)
       return { success: false, msg: "존재하지 않는 게시판입니다." };
 
     try {
@@ -201,7 +200,7 @@ class Board {
     const body = this.body;
 
     try {
-      const isUpdate = await BoardStroage.updateOnlyStatusByNum(body, num);
+      const isUpdate = await BoardStorage.updateOnlyStatusByNum(body, num);
       if (isUpdate)
         return {
           success: true,
