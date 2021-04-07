@@ -23,24 +23,24 @@ app.use(
 
 // import view from "./src/apis/view";
 import root from "./src/apis/root";
-// const watchList = require(`./src/apis/watch-list`);
-// const image = require(`./src/apis/image`);
 // const search = require(`./src/apis/search`);
 // const boards = require(`./src/apis/boards`);
-// const purchase = require(`./src/apis/purchase-list`);
-// const sale = require(`./src/apis/sale-list`);
 // const notification = require(`./src/apis/notification`);
-// const profile = require(`./src/apis/profile`);
+import sale from "./src/apis/sale-list";
+import purchase from "./src/apis/purchase-list";
+import watchlist from "./src/apis/watch-list";
+import profile from "./src/apis/profile";
+import image from "./src/apis/image";
 
 // app.use("/", view);
-// app.use("/api/", root);
-// app.use("/api/watchlist", watchList);
-// app.use("/api/image", image);
+app.use("/api/", root);
 // app.use("/api/search", search);
 // app.use("/api/boards", boards);
-// app.use("/api/purchase-list", purchase);
-// app.use("/api/sale-list", sale);
 // app.use("/api/notification", notification);
-// app.use("/api/students", profile);
+app.use("/api/sale-list", sale);
+app.use("/api/purchase-list", purchase);
+app.use("/api/watchlist", watchlist);
+app.use("/api/students", profile);
+app.use("/api/image", image);
 
 export default app;
