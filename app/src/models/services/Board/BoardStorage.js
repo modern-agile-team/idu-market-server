@@ -38,7 +38,7 @@ class BoardStroage {
     }
 
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, st.id AS studentId, st.nickname AS nickname, st.profile_path AS profilePath, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
+      const query = `SELECT bo.no AS num, st.id AS studentId, st.nickname AS nickname, st.admin_flag AS isAuth, st.profile_path AS profilePath, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
       COUNT(cmt.content) AS commentCount
       FROM boards AS bo
