@@ -7,4 +7,4 @@ const application: express.Application = app;
 
 application
   .listen(PORT, () => logger.info(`${PORT} 포트에서 서버가 가동되었습니다.`))
-  .on(`error`, (err) => console.error(err));
+  .on(`error`, (err) => logger.error(err));
