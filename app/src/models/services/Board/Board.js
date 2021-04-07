@@ -83,10 +83,7 @@ class Board {
     try {
       const board = await BoardStorage.findOneByNum(num);
       const comments = await CommentStorage.findAllByBoardNum(num);
-      const watchListFlag = await BoardStorage.findOneWatchListFlag(
-        studentId,
-        num
-      );
+      const isWatchList = await BoardStorage.isWatchList(studentId, num);
 
       if (categoryNum === board.categoryNum) {
         return {
@@ -94,7 +91,7 @@ class Board {
           msg: "게시판 상세 조회 성공",
           board,
           comments,
-          watchListFlag,
+          isWatchList,
         };
       }
       return { success: false, msg: "게시판 상세 조회 실패" };
