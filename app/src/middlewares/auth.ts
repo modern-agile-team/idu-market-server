@@ -2,17 +2,17 @@ import { Request, Response, NextFunction } from "express";
 
 import Auth from "../models/services/Auth/Auth";
 
-interface Student {
-  id?: string;
-  email?: string;
-  name?: string;
-  profile_path?: string;
-  admin_flag?: number;
-  err?: string;
+interface response {
+  success: boolean;
+  msg: string;
 }
 
 // 로그인 된 유저들만 서비스 이용을 허가하는 미들웨어
-const logined = async (req: Request, res: Response, next: NextFunction) => {
+const logined = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | undefined> => {
   const token: string = (req.headers["x-auth-token"] as string) || "";
 
   // 토큰 없음
@@ -22,7 +22,7 @@ const logined = async (req: Request, res: Response, next: NextFunction) => {
       .json({ success: false, msg: "JWT가 존재하지 않습니다." });
 
   // decode
-  const auth: Student = await Auth.verifyJWT(token);
+  const auth = await Auth.verifyJWT(token);
 
   // 유효기간 만료
   if (auth.err === Auth.TOKEN_EXPIRED)
@@ -45,7 +45,11 @@ const logined = async (req: Request, res: Response, next: NextFunction) => {
 };
 
 // 로그인이 안된 유저들만 서비스 이용을 허가하는 미들웨어
-const notLogined = async (req: Request, res: Response, next: NextFunction) => {
+const notLogined = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<Response | void> => {
   const token: string = (req.headers["x-auth-token"] as string) || "";
 
   // 토큰 없으면 로그인이 안된 것이므로 허용한다.

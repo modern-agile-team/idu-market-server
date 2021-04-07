@@ -6,11 +6,33 @@ import Error from "../../utils/Error";
 
 interface Student {
   id?: string;
-  email?: string;
+  major_no?: number;
   name?: string;
+  nickname?: string;
+  email?: string;
+  psword?: string;
+  salt?: string;
   profile_path?: string;
-  admin_flag?: number;
+  admin_flag?: string;
+  in_date?: string;
   err?: string;
+}
+
+interface response {
+  success: boolean;
+  msg: string;
+  token?: string;
+}
+
+interface error {
+  isError: boolean;
+  errMsg: string;
+  clientMsg: string;
+}
+
+interface Useable {
+  useable: boolean;
+  msg: string;
 }
 
 class Auth {
@@ -46,7 +68,7 @@ class Auth {
     }
   }
 
-  static async createToken(id: string): Promise<string | object> {
+  static async createToken(id: string): Promise<error | response> {
     try {
       const token = crypto.randomBytes(30).toString("hex").slice(0, 30); // token 생성
       const student = {
@@ -55,14 +77,15 @@ class Auth {
       };
 
       const isSave = await AuthStorage.saveToken(student);
-      if (isSave) return { success: true, token };
+      if (isSave)
+        return { success: true, msg: "토큰이 생성되었습니다.", token };
       return { success: false, msg: "토큰 생성에 실패하셨습니다." };
     } catch (err) {
       return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 
-  static async useableId(id: string): Promise<string | object> {
+  static async useableId(id: string): Promise<Useable> {
     const auth = await AuthStorage.findOneByStudentId(id);
     if (auth) {
       return {

@@ -5,13 +5,18 @@ import Student from "../../models/services/Student/Student";
 import Email from "../../models/services/Email/Email";
 import Error from "../../models/utils/Error";
 
+interface response {
+  success: boolean;
+  msg: string;
+}
+
 const auth = {
   resAuthorizedStudentInfo: (req: Request, res: Response) => {
     // 인증 미들웨어를 통과했으므로 인증된 사용자이다.
     // 따라서 유저 정보를 응답한다.
     const auth = req.auth;
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       msg: "로그인된 사용자입니다. 서비스 이용이 가능합니다.",
       auth,
@@ -20,7 +25,7 @@ const auth = {
 
   resUnAuthorizedInfo: (req: Request, res: Response) => {
     // 비인증 미들웨어를 통과했으므로 비인증된 사용자이다.
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       msg: "로그인되지 않은 사용자입니다. 서비스 이용이 가능합니다.",
     });
@@ -31,7 +36,7 @@ const process = {
   login: async (req: Request, res: Response): Promise<Response> => {
     try {
       const student = new Student(req);
-      const response = await student.login();
+      const response = (await student.login()) as response;
       if (response.success) {
         logger.info(`POST /api/jwt 201 ${response.msg}`);
         return res.status(201).json(response);
@@ -48,7 +53,7 @@ const process = {
   signup: async (req: Request, res: Response): Promise<Response> => {
     try {
       const student = new Student(req);
-      const response = await student.signup();
+      const response = (await student.signup()) as response;
       if (response.success) {
         logger.info(`POST /api/student 201 ${response.msg}`);
         return res.status(201).json(response);
@@ -65,7 +70,7 @@ const process = {
   sendEmailForId: async (req: Request, res: Response): Promise<Response> => {
     try {
       const email = new Email(req);
-      const response = await email.sendId();
+      const response = (await email.sendId()) as response;
       if (response.success) {
         logger.info(`POST /api/forgot-id 200 ${response.msg}`);
         return res.status(200).json(response);
@@ -85,7 +90,7 @@ const process = {
   ): Promise<Response> => {
     try {
       const email = new Email(req);
-      const response = await email.sendLinkForPsword();
+      const response = (await email.sendLinkForPsword()) as response;
       if (response.success) {
         logger.info(`POST /api/forgot-password 200 ${response.msg}`);
         return res.status(200).json(response);
@@ -102,7 +107,7 @@ const process = {
   resetPsword: async (req: Request, res: Response): Promise<Response> => {
     try {
       const student = new Student(req);
-      const response = await student.resetPassword();
+      const response = (await student.resetPassword()) as response;
       if (response.success) {
         logger.info(`PATCH /api/password 200 ${response.msg}`);
         return res.status(200).json(response);
