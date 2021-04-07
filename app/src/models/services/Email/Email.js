@@ -79,7 +79,7 @@ class Email {
           transporter.sendMail(message);
           resolve({
             success: true,
-            mag: "이메일로 발송된 URL을 통해 비밀번호를 재설정 할 수 있습니다.",
+            msg: "이메일로 발송된 URL을 통해 비밀번호를 재설정 할 수 있습니다.",
           });
         } catch (err) {
           reject({ success: false, err: String(err) });

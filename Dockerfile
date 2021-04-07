@@ -20,7 +20,7 @@ COPY ./app/bin ./bin/
 COPY ./app/src ./src/
 COPY ./app/app.js ./
 
-# forever 설치
+# pm2 설치
 RUN npm install -g pm2
 
 # 노드 서버 가동
