@@ -19,6 +19,10 @@ class Comment {
 
       if (isCreate) {
         const comment = await CommentStorage.findOneByNum(num);
+
+        const comments = Object.values(JSON.parse(JSON.stringify(comment)));
+        console.log(comments);
+
         const isUpdate = await CommentStorage.updateGroupNum(comment.num);
         if (isUpdate) {
           comment.groupNum = comment.num;

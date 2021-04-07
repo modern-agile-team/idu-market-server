@@ -65,7 +65,7 @@ class CommentStorage {
 
       db.query(query, [num], (err, comments) => {
         if (err) reject(err);
-        resolve(comments[0]);
+        resolve(comments);
       });
     });
   }
