@@ -22,7 +22,7 @@ app.use(
 );
 
 // import view from "./src/apis/view";
-// import root from "./src/apis/root";
+import root from "./src/apis/root";
 // const search = require(`./src/apis/search`);
 // const boards = require(`./src/apis/boards`);
 // const notification = require(`./src/apis/notification`);
@@ -33,7 +33,7 @@ import profile from "./src/apis/profile";
 import image from "./src/apis/image";
 
 // app.use("/", view);
-// app.use("/api/", root);
+app.use("/api/", root);
 // app.use("/api/search", search);
 // app.use("/api/boards", boards);
 // app.use("/api/notification", notification);
