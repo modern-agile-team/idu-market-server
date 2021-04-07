@@ -16,7 +16,7 @@ type body = profile;
 type findEmailAndNickname = profile;
 
 class ProfileStorage {
-  static findOneById(id: string): Promise<profile[]> {
+  static findOneById(id: string): Promise<profile> {
     return new Promise((resolve, reject) => {
       const sql = `SELECT st.id, st.name, st.nickname, st.email, 
       st.profile_path AS profilePath, majors.name AS major
@@ -30,7 +30,7 @@ class ProfileStorage {
         const user: profile[] = Object.values(
           JSON.parse(JSON.stringify(profile))
         );
-        resolve(user);
+        resolve(user[0]);
       });
     });
   }

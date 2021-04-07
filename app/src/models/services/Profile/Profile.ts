@@ -22,7 +22,7 @@ interface profile {
 interface response {
   success: boolean;
   msg: string;
-  profile?: profile[];
+  profile?: profile;
 }
 interface updateImage extends response {
   profilePath?: string;
