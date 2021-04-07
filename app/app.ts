@@ -20,7 +20,7 @@ app.use(cors());
 // app.use(morgan("tiny", { stream: logger.stream }));
 
 // import view from "./src/apis/view";
-// import root from "./src/apis/root";
+import root from "./src/apis/root";
 // const watchList = require(`./src/apis/watch-list`);
 // const image = require(`./src/apis/image`);
 // const search = require(`./src/apis/search`);
