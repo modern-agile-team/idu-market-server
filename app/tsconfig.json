@@ -2,9 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "ES5",
-    "sourceMap": false,
-    "outDir": "./dist",
-    "strict": true
+    "outDir": "./dist"
   },
   "compileOnSave": true,
   "buildOnSave": true,
