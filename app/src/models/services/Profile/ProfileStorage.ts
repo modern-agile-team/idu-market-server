@@ -40,7 +40,7 @@ class ProfileStorage {
     studentId: string
   ): Promise<ResultSetHeader> {
     return new Promise((resolve, reject) => {
-      const sql = `UPDATE students st SET st.profile_path = ? WHERE st.id = ?`;
+      const sql = "UPDATE students st SET st.profile_path = ? WHERE st.id = ?";
 
       db.query(sql, [image, studentId], (err, data: ResultSetHeader) => {
         if (err) reject(err);
