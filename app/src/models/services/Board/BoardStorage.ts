@@ -1,11 +1,46 @@
-"use strict";
+import { ResultSetHeader, RowDataPacket } from "mysql2";
+import db from "../../../config/db";
 
-const db = require("../../../config/db");
+interface Board {
+  success: boolean;
+  num?: number;
+  boardNum?: number;
+}
+
+interface boards {
+  num: number;
+  studentId: string;
+  profilePath: string;
+  nickname: string;
+  thumbnail: string;
+  title: string;
+  hit: number;
+  price: string;
+  commentCount: number;
+  status: number;
+  inDate: string;
+}
+
+interface board {
+  num: number;
+  studentId: string;
+  profilePath: string;
+  nickname: string;
+  studentName: string;
+  title: string
+  content: string
+  hit: number
+  price: string;
+  status: number;
+  inDate: number
+  updateDate: string;
+  categoryNum?: number;
+}
 
 class BoardStroage {
-  static create(num, board) {
+  static create(num : number, board : any) : Promise<Board> {
     return new Promise((resolve, reject) => {
-      const query = `INSERT INTO boards (student_id, category_no, title, content, thumbnail, price) VALUES (?, ?, ?, ?, ?, ?);`;
+      const query = "INSERT INTO boards (student_id, category_no, title, content, thumbnail, price) VALUES (?, ?, ?, ?, ?, ?);";
       db.query(
         query,
         [
@@ -16,7 +51,7 @@ class BoardStroage {
           board.thumbnail,
           board.price,
         ],
-        (err, boards) => {
+        (err, boards : ResultSetHeader) => {
           if (err) reject(err);
           else resolve({ success: true, num: boards.insertId });
         }
@@ -24,7 +59,7 @@ class BoardStroage {
     });
   }
 
-  static findAllByCategoryNum(categoryNum, lastNum) {
+  static findAllByCategoryNum(categoryNum : number, lastNum : number): Promise<boards[]>  {
     let where = "";
     let limit = "";
     // 아래 if 문으로 Market API와 Board API를 구분짓게 된다.
@@ -38,7 +73,7 @@ class BoardStroage {
     }
 
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, st.id AS studentId, st.nickname AS nickname, st.admin_flag AS isAuth, st.profile_path AS profilePath, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
+      const query = `SELECT bo.no AS num, st.id AS studentId, st.nickname AS nickname, st.admin_flag as isAuth, st.profile_path AS profilePath, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
       COUNT(cmt.content) AS commentCount
       FROM boards AS bo
@@ -51,49 +86,55 @@ class BoardStroage {
       ORDER BY num desc
       ${limit};`;
 
-      db.query(query, [categoryNum, lastNum], (err, boards) => {
+      db.query(query, [categoryNum, lastNum], (err, boards : RowDataPacket[]) => {
+        const board: boards[] = Object.values(
+          JSON.parse(JSON.stringify(boards))
+        );
         if (err) reject(err);
-        else resolve(boards);
+        else resolve(board);
       });
     });
   }
 
-  static findOneByNum(num) {
+  static findOneByNum(num : number) : Promise<board> {
     return new Promise((resolve, reject) => {
-      const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.name AS studentName, st.nickname, st.admin_flag AS isAuth, st.profile_path AS profilePath, bo.title AS title, bo.content, bo.hit AS hit, bo.price AS price, bo.status AS status,
+      const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.name AS studentName, st.nickname, st.admin_flag as isAuth, st.profile_path AS profilePath, bo.title AS title, bo.content, bo.hit AS hit, bo.price AS price, bo.status AS status,
       bo.category_no AS categoryNum, date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(bo.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
       FROM boards AS bo
       JOIN students AS st
       ON bo.student_id = st.id
       WHERE bo.no = ?`;
 
-      db.query(query, [num], (err, boards) => {
+      db.query(query, [num], (err, boards : RowDataPacket[]) => { 
+        const board: board[] = Object.values(
+          JSON.parse(JSON.stringify(boards))
+        );
         if (err) reject(err);
-        else resolve(boards[0]);
+        else resolve(board[0]);
       });
     });
   }
 
-  static isWatchList(studentId, num) {
+  static isWatchList(studentId : string, num : number) : Promise<number> {
     return new Promise((resolve, reject) => {
       const query = `SELECT * FROM boards bo
       JOIN watch_lists wl
       ON bo.no = wl.board_no
       WHERE wl.student_id = ? and bo.no = ?;`;
-      db.query(query, [studentId, num], (err, watchList) => {
+      db.query(query, [studentId, num], (err, watchList : RowDataPacket[]) => {
         if (err) reject(err);
         else resolve(watchList.length);
       });
     });
   }
 
-  static updateByNum(board, num) {
+  static updateByNum(board : any, num : number) : Promise<Board>{
     return new Promise((resolve, reject) => {
-      const query = `UPDATE boards SET title = ?, content = ?, price = ? where no = ?;`;
+      const query = "UPDATE boards SET title = ?, content = ?, price = ? where no = ?;";
       db.query(
         query,
         [board.title, board.content, board.price, num],
-        (err, boards) => {
+        (err, boards : ResultSetHeader) => {
           if (err) reject(err);
           else resolve({ success: true, num: boards.insertId });
         }
@@ -101,9 +142,9 @@ class BoardStroage {
     });
   }
 
-  static updateOnlyHitByNum(num) {
+  static updateOnlyHitByNum(num : number) : Promise<boolean> {
     return new Promise((resolve, reject) => {
-      const query = `UPDATE boards SET hit = hit + 1 WHERE no = ?;`;
+      const query = "UPDATE boards SET hit = hit + 1 WHERE no = ?;";
       db.query(query, [num], (err) => {
         if (err) reject(err);
         else resolve(true);
@@ -111,19 +152,9 @@ class BoardStroage {
     });
   }
 
-  static findOneHitByBoardNum(num) {
+  static updateOnlyStatusByNum(board : any, num : number) : Promise<boolean>  {
     return new Promise((resolve, reject) => {
-      const query = `SELECT hit FROM boards WHERE no = ?;`;
-      db.query(query, [num], (err, board) => {
-        if (err) reject(err);
-        else resolve(board[0].hit);
-      });
-    });
-  }
-
-  static updateOnlyStatusByNum(board, num) {
-    return new Promise((resolve, reject) => {
-      const query = `UPDATE boards SET status = ? WHERE no = ?;`;
+      const query = "UPDATE boards SET status = ? WHERE no = ?;";
       db.query(query, [board.status, num], (err) => {
         if (err) reject(err);
         else resolve(true);
@@ -131,9 +162,9 @@ class BoardStroage {
     });
   }
 
-  static delete(num) {
+  static delete(num : number) : Promise<boolean>  {
     return new Promise((resolve, reject) => {
-      const query = `DELETE FROM boards where no = ?`;
+      const query = "DELETE FROM boards where no = ?";
       db.query(query, [num], (err) => {
         if (err) reject(err);
         else resolve(true);
@@ -141,7 +172,7 @@ class BoardStroage {
     });
   }
 
-  static findAllByIncludedTitleAndCategory(title, categoryNum) {
+  static findAllByIncludedTitleAndCategory(title : string, categoryNum : number) : Promise<RowDataPacket[]> {
     return new Promise((resolve, reject) => {
       const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.profile_path AS profilePath, st.nickname, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
@@ -155,7 +186,7 @@ class BoardStroage {
       GROUP BY num
       ORDER BY num desc;`;
 
-      db.query(query, [title, categoryNum], (err, boards) => {
+      db.query(query, [title, categoryNum], (err, boards : RowDataPacket[]) => {
         if (err) reject(err);
         else resolve(boards);
       });
@@ -163,4 +194,4 @@ class BoardStroage {
   }
 }
 
-module.exports = BoardStroage;
+export default BoardStroage;

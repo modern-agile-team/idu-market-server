@@ -1,20 +1,92 @@
-const BoardStorage = require("./BoardStorage");
-const Category = require("../Category/Category");
-const String = require("../../utils/String");
-const CommentStorage = require("./Comment/CommentStorage");
-const Error = require("../../utils/Error");
+import { Request } from "express";
+import BoardStorage from "./BoardStorage";
+import Category from "../Category/Category";
+import String from "../../utils/String";
+import CommentStorage from "./Comment/CommentStorage";
+import Error from "../../utils/Error";
+import { params, query } from "../../../config/types";
+
+interface response {
+  success: boolean;
+  msg: string;
+  num?: number;
+  status?: number;
+  isWatchList?: number;
+  categoryName?: string | undefined;
+  boards?: boards[];
+  board?: board;
+  comments?: comments[];
+}
+
+interface boards {
+  num: number;
+  studentId: string;
+  profilePath: string;
+  nickname: string;
+  thumbnail: string;
+  title: string;
+  hit: number;
+  price: string;
+  commentCount: number;
+  status: number;
+  inDate: string;
+}
+
+interface board {
+  num: number;
+  studentId: string;
+  profilePath: string;
+  nickname: string;
+  studentName: string;
+  title: string
+  content: string
+  hit: number
+  price: string;
+  status: number;
+  inDate: number
+  updateDate: string;
+  categoryNum?: number;
+}
+
+interface comments {
+  studentId: string;
+  studentName: string;
+  profilePath: string;
+  nickname: string;
+  commentNum: number;
+  commentContent: string;
+  commentGroupNum: number;
+  commentDepth: number;
+  commentReplyFlag: number;
+  commentHiddenFlag: number;
+  commentInDate: string;
+}
+
+interface error {
+  isError: boolean;
+  errMsg: string;
+  clientMsg: string;
+}
+
+interface Category {
+  [key: string] : string | undefined;
+}
 
 class Board {
-  constructor(req) {
+  body: any;
+  params: params;
+  query: query;
+  
+  constructor(readonly req : Request) {
     this.body = req.body;
     this.params = req.params;
     this.query = req.query;
   }
 
-  async createByCategoryName() {
+  async createByCategoryName() : Promise<response | error> {
     const board = this.body;
-    const categoryName = this.params.categoryName;
-    const categoryNum = Category[categoryName];
+    const categoryName : keyof Category = this.params.categoryName;
+    const categoryNum : number = Category[categoryName];
 
     if (categoryNum === undefined)
       return { success: false, msg: "요청하신 경로가 잘못되었습니다." };
@@ -49,10 +121,11 @@ class Board {
     }
   }
 
-  async findAllByCategoryNum() {
-    const categoryName = this.params.categoryName;
-    const categoryNum = Category[categoryName];
-    const lastNum = this.query.lastNum;
+  async findAllByCategoryNum() : Promise<response | error> {
+    const categoryName : keyof Category = this.params.categoryName;
+    const categoryNum : number = Category[categoryName];
+    const lastNum: string = this.query.lastNum as string;
+    const num = parseInt(lastNum);
 
     if (categoryNum === undefined) {
       return { success: false, msg: "존재하지 않는 게시판입니다." };
@@ -61,8 +134,9 @@ class Board {
     try {
       const boards = await BoardStorage.findAllByCategoryNum(
         categoryNum,
-        lastNum
+        num
       );
+
       if (boards) {
         return { success: true, msg: "게시판 조회 성공", boards };
       }
@@ -71,11 +145,11 @@ class Board {
     }
   }
 
-  async findOneByNum() {
-    const num = this.params.num;
-    const categoryName = this.params.categoryName;
-    const categoryNum = Category[categoryName];
-    const studentId = this.params.studentId;
+  async findOneByNum() : Promise<response | error> {
+    const num : number = parseInt(this.params.num);
+    const categoryName : keyof Category = this.params.categoryName;
+    const categoryNum : number = Category[categoryName];
+    const studentId : string = this.params.studentId;
 
     if (categoryNum === undefined)
       return { success: false, msg: "존재하지 않는 게시판입니다." };
@@ -83,7 +157,10 @@ class Board {
     try {
       const board = await BoardStorage.findOneByNum(num);
       const comments = await CommentStorage.findAllByBoardNum(num);
-      const isWatchList = await BoardStorage.isWatchList(studentId, num);
+      const isWatchList = await BoardStorage.isWatchList(
+        studentId,
+        num
+      );
 
       if (categoryNum === board.categoryNum) {
         return {
@@ -92,6 +169,7 @@ class Board {
           board,
           comments,
           isWatchList,
+          categoryName,
         };
       }
       return { success: false, msg: "게시판 상세 조회 실패" };
@@ -100,9 +178,9 @@ class Board {
     }
   }
 
-  async updateByNum() {
-    const num = this.params.num;
-    const body = this.body;
+  async updateByNum() : Promise<response | error> {
+    const num : number = parseInt(this.params.num);
+    const body : any = this.body;
 
     if (body.price < 0 || body.price.toString().length >= 8) {
       return {
@@ -133,9 +211,9 @@ class Board {
     }
   }
 
-  async updateOnlyHit() {
-    const categoryNum = Category[this.params.categoryName];
-    const num = this.params.num;
+  async updateOnlyHit() : Promise<response | error> {
+    const categoryNum : number = Category[this.params.categoryName];
+    const num : number = parseInt(this.params.num);
 
     if (categoryNum === undefined)
       return { success: false, msg: "존재하지 않는 게시판입니다." };
@@ -145,9 +223,7 @@ class Board {
       if (!board) return { success: false, msg: "존재하지 않는 게시판입니다." };
 
       const isUpdate = await BoardStorage.updateOnlyHitByNum(num);
-      const hit = await BoardStorage.findOneHitByBoardNum(num);
-      if (isUpdate)
-        return { success: true, msg: "조회수가 1 증가하였습니다.", hit };
+      if (isUpdate) return { success: true, msg: "조회수가 1 증가하였습니다." };
 
       return {
         success: false,
@@ -158,8 +234,8 @@ class Board {
     }
   }
 
-  async deleteByNum() {
-    const num = this.params.num;
+  async deleteByNum() : Promise<response | error> {
+    const num : number = parseInt(this.params.num);
 
     try {
       const isDelete = await BoardStorage.delete(num);
@@ -172,14 +248,18 @@ class Board {
     }
   }
 
-  async search() {
-    const categoryNum = Category[this.query.categoryName];
-    const title = this.query.content;
+  async search() : Promise<response | error> {
+    const categoryNum = Category[this.query.categoryName as string];
+    const title: string = this.query.content as string;
 
     try {
-      const boards = await BoardStorage.findAllByIncludedTitleAndCategory(
+      const boardsSearch = await BoardStorage.findAllByIncludedTitleAndCategory(
         title,
         categoryNum
+      );
+
+      const boards: boards[] = Object.values(
+        JSON.parse(JSON.stringify(boardsSearch))
       );
 
       const response = {
@@ -194,12 +274,13 @@ class Board {
     }
   }
 
-  async updateOnlyStatus() {
+  async updateOnlyStatus() : Promise<response | error> {
     const num = this.params.num;
     const body = this.body;
+    const number: number = parseInt(num);
 
     try {
-      const isUpdate = await BoardStorage.updateOnlyStatusByNum(body, num);
+      const isUpdate = await BoardStorage.updateOnlyStatusByNum(body, number);
       if (isUpdate)
         return {
           success: true,
@@ -213,4 +294,5 @@ class Board {
   }
 }
 
-module.exports = Board;
+export default Board;
+
