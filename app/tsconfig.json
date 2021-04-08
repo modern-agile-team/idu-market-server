@@ -1,13 +1,14 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "ES5",
-    "sourceMap": false,
-    "outDir": "./dist",
-    "strict": true
+      "module": "commonjs",
+      "outDir": "./built",
+      "allowJs": true,
+      "target": "es5"
   },
-  "compileOnSave": true,
-  "buildOnSave": true,
-  "include": ["./**/*"],
-  "exclude": ["node_modules"]
+  "include": [
+      "./src/**/*"
+  ],
+  "exclude": [
+    "node_moudles"
+  ]
 }
