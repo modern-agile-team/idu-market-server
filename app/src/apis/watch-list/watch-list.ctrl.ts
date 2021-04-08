@@ -34,8 +34,8 @@ const process = {
     const watchList = new WatchList(req);
     const response: response = await watchList.findAllByStudentId();
     if (response.isError) {
-      logger.error(`GET /api/sale-list/studentId 409 ${response.errMsg}`);
-      return res.status(409).json(response.clientMsg);
+      logger.error(`GET /api/sale-list/studentId 500 ${response.errMsg}`);
+      return res.status(500).json(response.clientMsg);
     }
     if (response.success) {
       logger.info(`GET /api/watchlist/studentId 200 ${response.msg}`);
@@ -49,8 +49,8 @@ const process = {
     const watchList = new WatchList(req);
     const response: response = await watchList.update();
     if (response.isError) {
-      logger.error(`POST /api/sale-list/studentId 409 ${response.errMsg}`);
-      return res.status(409).json(response.clientMsg);
+      logger.error(`POST /api/sale-list/studentId 500 ${response.errMsg}`);
+      return res.status(500).json(response.clientMsg);
     }
     if (response.success) {
       logger.info(`POST /api/watchlist/studentId 200 ${response.msg}`);
@@ -64,8 +64,8 @@ const process = {
     const watchList = new WatchList(req);
     const response: response = await watchList.delete();
     if (response.isError) {
-      logger.error(`DELETE /api/sale-list/studentId 409 ${response.errMsg}`);
-      return res.status(409).json(response.clientMsg);
+      logger.error(`DELETE /api/sale-list/studentId 500 ${response.errMsg}`);
+      return res.status(500).json(response.clientMsg);
     }
     if (response.success) {
       logger.info(`DELETE /api/watchlist/studentId 200 ${response.msg}`);

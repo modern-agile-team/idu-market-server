@@ -16,8 +16,8 @@ const process = {
     const profile = await new Profile(req);
     const response: response = await profile.findOneById();
     if (response.isError) {
-      logger.error(`GET /api/students/studentId 400 ${response.errMsg}`);
-      return res.status(400).json(response.clientMsg);
+      logger.error(`GET /api/students/studentId 500 ${response.errMsg}`);
+      return res.status(500).json(response.clientMsg);
     }
     if (response.success) {
       logger.info(`GET /api/students/studentId 200 ${response.msg}`);
@@ -31,8 +31,8 @@ const process = {
     const profile = await new Profile(req);
     const response: response = await profile.update();
     if (response.isError) {
-      logger.error(`PUT /api/students/studentId 409 ${response.errMsg}`);
-      return res.status(409).json(response.clientMsg);
+      logger.error(`PUT /api/students/studentId 500 ${response.errMsg}`);
+      return res.status(500).json(response.clientMsg);
     }
     if (response.success) {
       logger.info(`PUT /api/students/studentId 200 ${response.msg}`);

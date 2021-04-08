@@ -1,8 +1,10 @@
-const logger = require("../../config/logger");
-const Board = require("../../models/services/Board/Board");
+import { Request, Response } from "express";
+
+import logger from "../../config/logger";
+import Board from "../../models/services/Board/Board";
 
 const process = {
-  search: async (req, res) => {
+  search: async (req: Request, res: Response): Promise<Response> => {
     const board = new Board(req);
     const response = await board.search();
     if (response.success) {
@@ -15,6 +17,6 @@ const process = {
   },
 };
 
-module.exports = {
+export default {
   process,
 };
