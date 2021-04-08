@@ -2,7 +2,7 @@
 import { Request } from "express";
 import { params } from "../../../config/types";
 import Error from "../../utils/Error";
-import WatchListStorage from "./WatchLIstStorage";
+import WatchListStorage from "./WatchListStorage";
 
 interface watchlist {
   num: number;

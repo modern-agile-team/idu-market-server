@@ -30,8 +30,8 @@ const process = {
     const student = new SaleList(req);
     const response: response = await student.read();
     if (response.isError) {
-      logger.error(`GET /api/sale-list 400 ${response.errMsg}`);
-      return res.status(400).json(response.clientMsg);
+      logger.error(`GET /api/sale-list 500 ${response.errMsg}`);
+      return res.status(500).json(response.clientMsg);
     }
     if (response.success) {
       logger.info(`GET /api/sale-list/studentId 200 ${response.msg}`);

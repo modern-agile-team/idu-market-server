@@ -14,9 +14,9 @@ const process = {
         .status(200)
         .json({ success: true, msg: "업로드 성공되었습니다.", url: path });
     } catch (err) {
-      logger.error(`POST /api/image 400 업로드 실패 err: ${err}`);
+      logger.error(`POST /api/image 500 업로드 실패 err: ${err}`);
       return res
-        .status(400)
+        .status(500)
         .json({ success: false, msg: "이미지가 없습니다." });
     }
   },
