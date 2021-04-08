@@ -2,6 +2,8 @@
 import { Request } from "express";
 import { params } from "../../../config/types";
 import Error from "../../utils/Error";
+import Auth from "../Auth/Auth";
+import StudentStorage from "../Student/StudentStorage";
 import ProfileStorage from "./ProfileStorage";
 
 interface error {
@@ -26,6 +28,7 @@ interface response {
 }
 interface updateImage extends response {
   profilePath?: string;
+  jwt?: string;
 }
 
 interface updateResponse {
@@ -99,13 +102,13 @@ class Profile {
     try {
       const response = await ProfileStorage.updateImage(image, studentId);
       if (response) {
-        // const user = await UserStorage.findOneById(studentId);
-        // const jwt = await Auth.createJWT(user);
+        const user = await StudentStorage.findOneById(studentId);
+        const jwt = await Auth.createJWT(user);
         return {
           success: true,
           msg: "정상적으로 이미지가 수정되었습니다.",
           profilePath: image,
-          // jwt,
+          jwt,
         };
       }
       return { success: false, msg: "서버 개발자에게 문의해주십시오" };
