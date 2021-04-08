@@ -1,12 +1,22 @@
+import { responseMarkerType } from "aws-sdk/clients/iam";
 import { Request, Response } from "express";
 
 import logger from "../../config/logger";
 import Board from "../../models/services/Board/Board";
 
+interface response {
+  success?: boolean;
+  isError?: boolean;
+  clientMsg?: string;
+  errMsg?: string;
+  msg?: string;
+  profilePath?: string;
+}
+
 const process = {
   search: async (req: Request, res: Response): Promise<Response> => {
     const board = new Board(req);
-    const response = await board.search();
+    const response: response = await board.search();
     if (response.success) {
       logger.info(`GET /api/search 200 ${response.msg}`);
       return res.status(200).json(response);

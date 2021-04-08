@@ -20,7 +20,7 @@ const process = {
       logger.error(`GET /api/notification 400 ${response.errMsg}`);
       return res.status(400).json(response.clientMsg);
     }
-    if (response) {
+    if (response.success) {
       logger.info(`POST /api/notification 200 ${response.msg}`);
       return res.status(200).json(response);
     }
