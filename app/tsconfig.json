@@ -1,14 +1,15 @@
 {
   "compilerOptions": {
-      "module": "commonjs",
-      "outDir": "./built",
-      "allowJs": true,
-      "target": "es5"
+    "module": "commonjs",
+    "target": "ES5",
+    "outDir": "./dist"
   },
-  "include": [
-      "./src/**/*"
-  ],
-  "exclude": [
-    "node_moudles"
+  "compileOnSave": true,
+  "buildOnSave": true,
+  "include": ["./**/*"],
+  "exclude": ["node_modules"],
+  "typeRoots": [
+    "./src/types",
+    "./node_modules/@types"
   ]
 }

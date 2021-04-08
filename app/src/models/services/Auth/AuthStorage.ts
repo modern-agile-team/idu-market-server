@@ -1,31 +1,37 @@
-const db = require("redis");
-const redis = db.createClient({
+import * as redis from "redis";
+
+const db = redis.createClient({
   host: process.env.REDIS_HOST,
-  port: process.env.REDIS_PORT,
+  port: Number(process.env.REDIS_PORT),
   password: process.env.REDIS_PASSWORD,
 });
 
-redis.on("error", function (error) {
+db.on("error", function (error) {
   console.error(error);
 });
+
+interface Student {
+  id: string;
+  token: string;
+}
 
 class AuthStorage {
   static expireTime = 60 * 60 * 24;
 
-  static findOneByStudentId(id) {
+  static findOneByStudentId(id: String) {
     return new Promise((resolve, reject) => {
-      redis.get(`${id}:token`, (err, token) => {
+      db.get(`${id}:token`, (err, token) => {
         if (err) reject(err);
         else resolve(token);
       });
     });
   }
 
-  static saveToken(user) {
+  static saveToken(student: Student) {
     return new Promise((resolve, reject) => {
-      redis.set(
-        `${user.id}:token`,
-        `${user.token}`,
+      db.set(
+        `${student.id}:token`,
+        `${student.token}`,
         "EX",
         this.expireTime,
         (err) => {
@@ -36,9 +42,9 @@ class AuthStorage {
     });
   }
 
-  static deleteTokenByStudentId(id) {
+  static deleteTokenByStudentId(id: string) {
     return new Promise((resolve, reject) => {
-      redis.del(`${id}:token`, (err) => {
+      db.del(`${id}:token`, (err) => {
         if (err) reject(err);
         else resolve(true);
       });
@@ -46,4 +52,4 @@ class AuthStorage {
   }
 }
 
-module.exports = AuthStorage;
+export default AuthStorage;
