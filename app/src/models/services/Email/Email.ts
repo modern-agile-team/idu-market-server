@@ -30,7 +30,7 @@ class Email {
     this.body = req.body;
   }
 
-  async sendId(): Promise<error | response | unknown> {
+  async sendId(): Promise<error | response> {
     try {
       const client: any = this.body;
       const students = await StudentStorage.findAllByName(client.name);
@@ -41,7 +41,7 @@ class Email {
       if (!student)
         return { success: false, msg: "등록되지 않은 이메일 입니다." };
 
-      const promise = new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         try {
           const message = {
             from: process.env.MAIL_EMAIL,
@@ -61,20 +61,19 @@ class Email {
           reject(err);
         }
       });
-
-      return promise.then((res) => res);
     } catch (err) {
       return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 
-  async sendLinkForPsword(): Promise<error | response | unknown> {
+  async sendLinkForPsword(): Promise<error | response> {
     const req = this.req;
     const client: any = this.body;
     try {
       const student = new Student(req);
       const existInfo = await student.isExistIdAndEmail();
-      if (!existInfo.isExist) return existInfo;
+      if (!existInfo.isExist)
+        return { success: existInfo.isExist, msg: existInfo.msg };
 
       const studentInfo = await StudentStorage.findOneById(client.id);
       if (!studentInfo)
@@ -84,7 +83,7 @@ class Email {
       if (!("token" in tokenInfo) && "msg" in tokenInfo)
         return { success: false, msg: tokenInfo.msg };
 
-      const promise = new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         try {
           const message = {
             from: process.env.MAIL_EMAIL,
@@ -107,14 +106,12 @@ class Email {
           reject({ success: false, err: String(err) });
         }
       });
-
-      return promise.then((res) => res);
     } catch (err) {
       return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
   }
 
-  async sendNotification(): Promise<error | response | unknown> {
+  async sendNotification(): Promise<error | response> {
     try {
       const client: any = this.body;
       const student = await StudentStorage.findOneById(client.studentId);
@@ -125,7 +122,7 @@ class Email {
         };
       }
 
-      const promise = new Promise((resolve, reject) => {
+      return new Promise((resolve, reject) => {
         try {
           const message = {
             from: process.env.MAIL_EMAIL,
@@ -147,8 +144,6 @@ class Email {
           reject(err);
         }
       });
-
-      return promise.then((res) => res);
     } catch (err) {
       return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
