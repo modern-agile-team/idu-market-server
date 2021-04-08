@@ -2,13 +2,8 @@ import { Request, Response, NextFunction } from "express";
 
 import Auth from "../models/services/Auth/Auth";
 
-interface response {
-  success: boolean;
-  msg: string;
-}
-
 // 로그인 된 유저들만 서비스 이용을 허가하는 미들웨어
-const logined = async (
+export const logined = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -45,7 +40,7 @@ const logined = async (
 };
 
 // 로그인이 안된 유저들만 서비스 이용을 허가하는 미들웨어
-const notLogined = async (
+export const notLogined = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -73,5 +68,3 @@ const notLogined = async (
     }
   }
 };
-
-export default { logined, notLogined };
