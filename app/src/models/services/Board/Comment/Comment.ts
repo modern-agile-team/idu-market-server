@@ -2,6 +2,7 @@ import { Request } from "express";
 import CommentStorage from "./CommentStorage";
 import Error from "../../../utils/Error";
 import { RowDataPacket } from "mysql2";
+import { params, query } from "../../../../config/types";
 
 interface response {
   success: boolean;
@@ -11,9 +12,9 @@ interface response {
   findBuyer?: buyer;
   createdComments?: comment;
   createdReply?: comment;
-  updatedComment? : updatedComment | undefined;
-  updatedReply? : updatedComment | undefined;
-  isDelete? : number;
+  updatedComment?: updatedComment | undefined;
+  updatedReply?: updatedComment | undefined;
+  isDelete?: number;
 }
 
 interface updatedComment {
@@ -25,17 +26,17 @@ interface buyer {
 }
 
 interface comment {
-    studentId: string;
-    studentName: string;
-    nickname: string;
-    num: number;
-    content: string;
-    groupNum: number;
-    depth: number;
-    replyFlag: number;
-    hiddenFlag: number;
-    inDate: string;
-    updateDate: string;
+  studentId: string;
+  studentName: string;
+  nickname: string;
+  num: number;
+  content: string;
+  groupNum: number;
+  depth: number;
+  replyFlag: number;
+  hiddenFlag: number;
+  inDate: string;
+  updateDate: string;
 }
 
 interface error {
@@ -46,17 +47,17 @@ interface error {
 
 class Comment {
   body: any;
-  params: any;
-  query: any;
+  params: params;
+  query: query;
 
-  constructor(readonly req : Request) {
+  constructor(readonly req: Request) {
     this.body = req.body;
     this.params = req.params;
   }
 
-  async createByBoardNum() : Promise<response | error> {
+  async createByBoardNum(): Promise<response | error> {
     const body = this.body;
-    const boardNum : number = this.params.num;
+    const boardNum: number = parseInt(this.params.num as string);
 
     try {
       const { isCreate, num } = await CommentStorage.createByBoardNum(
@@ -65,13 +66,17 @@ class Comment {
       );
 
       if (isCreate) {
-        const comments : RowDataPacket[] = await CommentStorage.findOneByNum(num);
-        const comment : comment[] = Object.values(
+        const comments: RowDataPacket[] = await CommentStorage.findOneByNum(
+          num
+        );
+        const comment: comment[] = Object.values(
           JSON.parse(JSON.stringify(comments))
         );
-        const createdComments : comment = comment[0];
+        const createdComments: comment = comment[0];
 
-        const isUpdate = await CommentStorage.updateGroupNum(createdComments.num);
+        const isUpdate = await CommentStorage.updateGroupNum(
+          createdComments.num
+        );
 
         if (isUpdate) {
           createdComments.groupNum = createdComments.num;
@@ -89,10 +94,10 @@ class Comment {
     }
   }
 
-  async createReplyByGroupNum() : Promise<response | error> {
-    const body : any = this.body;
-    const boardNum : number = this.params.num;
-    const groupNum : number = this.params.groupNum;
+  async createReplyByGroupNum(): Promise<response | error> {
+    const body: any = this.body;
+    const boardNum: number = parseInt(this.params.num as string);
+    const groupNum: number = parseInt(this.params.groupNum as string);
 
     try {
       const { isCreate, num } = await CommentStorage.createReplyByGroupNum(
@@ -110,7 +115,7 @@ class Comment {
           const reply: comment[] = Object.values(
             JSON.parse(JSON.stringify(replies))
           );
-          const createdReply : comment = reply[0];
+          const createdReply: comment = reply[0];
           return { success: true, msg: "답글 생성 성공", createdReply };
         }
       }
@@ -120,18 +125,21 @@ class Comment {
     }
   }
 
-  async updateByNum() : Promise<response | error> {
-    const commentNum = this.params.commentNum;
+  async updateByNum(): Promise<response | error> {
+    const commentNum: number = parseInt(this.params.commentNum);
     const body = this.body;
     try {
-      const isUpdate : number = await CommentStorage.updateByNum(body, commentNum);
+      const isUpdate: number = await CommentStorage.updateByNum(
+        body,
+        commentNum
+      );
 
       if (isUpdate === 1) {
         const comments = await CommentStorage.findOneByNum(commentNum);
-        const comment : comment[] = Object.values(
+        const comment: comment[] = Object.values(
           JSON.parse(JSON.stringify(comments))
         );
-        const updatedComment : comment = comment[0];
+        const updatedComment: comment = comment[0];
 
         return {
           success: true,
@@ -150,17 +158,19 @@ class Comment {
     }
   }
 
-  async deleteCommentByNum() : Promise<response | error>  {
-    const num : number = this.params.commentNum;
-    const studentId : string = this.body.studentId;
+  async deleteCommentByNum(): Promise<response | error> {
+    const num: number = parseInt(this.params.commentNum as string);
+    const studentId: string = this.body.studentId;
 
     try {
       const replyFlag = await CommentStorage.findReplyFlag(num);
-      let isDelete : number = 0;
+      let isDelete = 0;
 
       if (replyFlag === 1) {
         // 답글이 있으면 숨김 처리
-        const isUpdateHidden : boolean = await CommentStorage.updatehiddenFlag(num);
+        const isUpdateHidden: boolean = await CommentStorage.updatehiddenFlag(
+          num
+        );
         if (isUpdateHidden) {
           return {
             success: true,
@@ -190,18 +200,23 @@ class Comment {
     }
   }
 
-  async deleteReplyByNum() : Promise<response | error> {
-    const num : number = this.params.commentNum;
-    const studentId : string = this.body.studentId;
+  async deleteReplyByNum(): Promise<response | error> {
+    const num: number = parseInt(this.params.commentNum as string);
+    const studentId: string = this.body.studentId;
 
-    const groupNum : number = await CommentStorage.findOneGroupNum(num);
+    const groupNum: number = await CommentStorage.findOneGroupNum(num);
     try {
-      const isDelete : number = await CommentStorage.deleteReplyByNum(num, studentId);
-      const replyFlag : number = await CommentStorage.updateReplyFlag(groupNum);
+      const isDelete: number = await CommentStorage.deleteReplyByNum(
+        num,
+        studentId
+      );
+      const replyFlag: number = await CommentStorage.updateReplyFlag(groupNum);
       if (replyFlag === 1) {
-        const hiddenFlag : number = await CommentStorage.findOneHiddenFlag(groupNum);
+        const hiddenFlag: number = await CommentStorage.findOneHiddenFlag(
+          groupNum
+        );
         if (hiddenFlag === 1) {
-          const isDeleteHidden : boolean = await CommentStorage.deleteHiddenComment(
+          const isDeleteHidden: boolean = await CommentStorage.deleteHiddenComment(
             groupNum
           );
           if (isDeleteHidden) {
@@ -231,14 +246,14 @@ class Comment {
     }
   }
 
-  async findStudentIdByNum() : Promise<response | error> {
-    const boardNum : number = this.params.num;
+  async findStudentIdByNum(): Promise<response | error> {
+    const boardNum: number = parseInt(this.params.num as string);
     try {
-      const buyers : RowDataPacket[] = await CommentStorage.findStudentIdByNum(boardNum);
-      const buyer : buyer[] = Object.values(
-        JSON.parse(JSON.stringify(buyers))
+      const buyers: RowDataPacket[] = await CommentStorage.findStudentIdByNum(
+        boardNum
       );
-      const findBuyer : buyer = buyer[0];
+      const buyer: buyer[] = Object.values(JSON.parse(JSON.stringify(buyers)));
+      const findBuyer: buyer = buyer[0];
 
       return { success: true, msg: "comments조회 완료 되었습니다.", findBuyer };
     } catch (err) {
