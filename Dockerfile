@@ -1,5 +1,5 @@
 FROM node:14
-MAINTAINER 박우림 <woorimprog@gmil.com>
+MAINTAINER 박우림 <woorimprog@gmail.com>
 
 # 앱 디렉터리 생성
 RUN mkdir /idu-market-server
@@ -18,11 +18,16 @@ RUN npm install --unsafe-perm=true --allow-root
 # 노드 서버 가동을 위해 필요한 파일들 복사
 COPY ./app/bin ./bin/
 COPY ./app/src ./src/
-COPY ./app/app.js ./
+COPY ./app/app.ts ./
+COPY ./app/tsconfig.json ./
 
 # pm2 설치
 RUN npm install -g pm2
 
+# TypeScript 빌드
+RUN npm install -g typescript
+RUN tsc
+
 # 노드 서버 가동
 EXPOSE 9800
-CMD ["pm2-runtime", "start", "./bin/www.js"]
+CMD ["pm2-runtime", "start", "./dist/bin/www.js"]
