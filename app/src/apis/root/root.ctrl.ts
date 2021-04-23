@@ -10,11 +10,29 @@ interface response {
   msg: string;
 }
 
+interface iStudent {
+  id?: string;
+  major_no?: number;
+  name?: string;
+  nickname?: string;
+  email?: string;
+  psword?: string;
+  salt?: string;
+  profile_path?: string;
+  admin_flag?: string;
+  in_date?: string;
+  err?: string;
+  iat?: number;
+  exp?: number;
+}
+
 const auth = {
   resAuthorizedStudentInfo: (req: Request, res: Response) => {
     // 인증 미들웨어를 통과했으므로 인증된 사용자이다.
     // 따라서 유저 정보를 응답한다.
-    const auth = req.auth;
+    const auth: iStudent = req.auth;
+    delete auth.iat;
+    delete auth.exp;
 
     return res.status(200).json({
       success: true,
