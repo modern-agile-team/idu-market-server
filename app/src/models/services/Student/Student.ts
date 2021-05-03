@@ -44,7 +44,7 @@ class Student {
     const client: any = this.body;
 
     try {
-      let student = await StudentStorage.findOneById(client.id);
+      const student = await StudentStorage.findOneById(client.id);
 
       if (student) {
         client.psword = await Cryptor.encryptBySalt(
@@ -123,7 +123,7 @@ class Student {
     if (students.length === 0) {
       return { saveable: true, msg: "회원가입이 가능합니다." };
     } else {
-      for (let student of students) {
+      for (const student of students) {
         if (student.id === client.id) {
           return { saveable: false, msg: "이미 존재하는 아이디 입니다." };
         } else if (student.email === client.email) {
