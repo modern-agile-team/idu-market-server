@@ -16,6 +16,13 @@ interface response {
   boards?: boards[];
   board?: board;
   comments?: comments[];
+  images?: Image[];
+}
+
+interface Image {
+  upload?: boolean;
+  boardNum?: number;
+  board?: string;
 }
 
 interface boards {
@@ -163,6 +170,7 @@ class Board {
       const board = await BoardStorage.findOneByNum(num);
       const comments = await CommentStorage.findAllByBoardNum(num);
       const isWatchList = await BoardStorage.isWatchList(studentId, num);
+      const images = await BoardStorage.findAllByImage(num);
 
       if (categoryNum === board.categoryNum) {
         return {
@@ -172,6 +180,7 @@ class Board {
           comments,
           isWatchList,
           categoryName,
+          images,
         };
       }
       return { success: false, msg: "게시판 상세 조회 실패" };
