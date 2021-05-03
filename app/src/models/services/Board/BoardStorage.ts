@@ -35,11 +35,13 @@ interface board {
   inDate: number;
   updateDate: string;
   categoryNum?: number;
+  images?: string;
 }
 
 interface Image {
-  upload: boolean;
-  boardNum: number;
+  upload?: boolean;
+  boardNum?: number;
+  board?: string;
 }
 
 class BoardStroage {
@@ -73,6 +75,20 @@ class BoardStroage {
           if (err) reject(err);
           else resolve({ upload: true, boardNum: boards.insertId });
         });
+      });
+    });
+  }
+
+  static findAllByImage(num: number): Promise<Image[]> {
+    return new Promise((resolve, reject) => {
+      const query = "SELECT url FROM images WHERE board_no = ?";
+      db.query(query, [num], (err, boards: RowDataPacket[]) => {
+        console.log(boards);
+        const board: Image[] = Object.values(
+          JSON.parse(JSON.stringify(boards))
+        );
+        if (err) reject(err);
+        else resolve(board);
       });
     });
   }

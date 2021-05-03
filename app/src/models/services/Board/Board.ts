@@ -195,9 +195,16 @@ class Board {
     try {
       const board = await BoardStorage.findOneByNum(num);
       if (!board) return { success: false, msg: "존재하지 않는 게시판입니다." };
+      const isDeleteImage = await BoardStorage.deleteImage(num);
+      const image = await BoardStorage.findAllByImage(num);
+      let upload = {};
+      if (isDeleteImage || !image.length)
+        if (body.images.length)
+          upload = await BoardStorage.createImages(num, body);
+        else upload = {};
 
       const { success, boardNum } = await BoardStorage.updateByNum(body, num);
-      if (success) {
+      if (success && upload) {
         return {
           success: true,
           msg: "게시판 수정에 성공하셨습니다.",
