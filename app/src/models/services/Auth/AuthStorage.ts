@@ -18,7 +18,7 @@ interface Student {
 class AuthStorage {
   static expireTime = 60 * 60 * 24;
 
-  static findOneByStudentId(id: String) {
+  static findOneByStudentId(id: string) {
     return new Promise((resolve, reject) => {
       db.get(`${id}:token`, (err, token) => {
         if (err) reject(err);
