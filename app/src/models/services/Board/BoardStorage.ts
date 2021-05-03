@@ -198,6 +198,16 @@ class BoardStroage {
     });
   }
 
+  static deleteImage(num: number): Promise<boolean> {
+    return new Promise((resolve, reject) => {
+      const query = "DELETE FROM images where board_no = ?";
+      db.query(query, [num], (err) => {
+        if (err) reject(err);
+        else resolve(true);
+      });
+    });
+  }
+
   static findAllByIncludedTitleAndCategory(
     title: string,
     categoryNum: number

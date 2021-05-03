@@ -108,8 +108,12 @@ class Board {
     board.price = String.makePrice(board.price);
 
     try {
+      let upload = {};
+
       const { success, num } = await BoardStorage.create(categoryNum, board);
-      const { upload } = await BoardStorage.createImages(num, board);
+      if (board.images.length) {
+        upload = await BoardStorage.createImages(num, board);
+      }
 
       if (success && upload) {
         return { success: true, msg: "게시판 생성에 성공하셨습니다.", num };
@@ -236,8 +240,10 @@ class Board {
     const num: number = parseInt(this.params.num);
 
     try {
+      const isDeleteImage = await BoardStorage.deleteImage(num);
       const isDelete = await BoardStorage.delete(num);
-      if (isDelete) {
+
+      if (isDelete && isDeleteImage) {
         return { success: true, msg: "게시판 삭제 성공" };
       }
       return { success: false, msg: "게시판 삭제 실패" };
