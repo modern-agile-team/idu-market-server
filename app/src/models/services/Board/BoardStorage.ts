@@ -1,4 +1,5 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { url } from "node:inspector";
 import db from "../../../config/db";
 
 interface Board {
@@ -81,14 +82,15 @@ class BoardStroage {
 
   static findAllByImage(num: number): Promise<Image[]> {
     return new Promise((resolve, reject) => {
+      const images = [];
       const query = "SELECT url FROM images WHERE board_no = ?";
       db.query(query, [num], (err, boards: RowDataPacket[]) => {
-        console.log(boards);
         const board: Image[] = Object.values(
           JSON.parse(JSON.stringify(boards))
         );
+        for (const obj of board) images.push(obj["url"]);
         if (err) reject(err);
-        else resolve(board);
+        else resolve(images);
       });
     });
   }

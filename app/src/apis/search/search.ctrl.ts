@@ -1,4 +1,3 @@
-import { responseMarkerType } from "aws-sdk/clients/iam";
 import { Request, Response } from "express";
 
 import logger from "../../config/logger";
