@@ -129,7 +129,7 @@ class Student {
         } else if (student.email === client.email) {
           return { saveable: false, msg: "이미 가입된 이메일 입니다." };
         } else if (student.nickname === client.nickname)
-          return { saveable: false, msg: "이미 사용되고 있는 이름 입니다." };
+          return { saveable: false, msg: "이미 사용되고 있는 별명 입니다." };
       }
     }
 

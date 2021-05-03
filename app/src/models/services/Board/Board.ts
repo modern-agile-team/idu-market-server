@@ -38,12 +38,12 @@ interface board {
   profilePath: string;
   nickname: string;
   studentName: string;
-  title: string
-  content: string
-  hit: number
+  title: string;
+  content: string;
+  hit: number;
   price: string;
   status: number;
-  inDate: number
+  inDate: number;
   updateDate: string;
   categoryNum?: number;
 }
@@ -69,24 +69,24 @@ interface error {
 }
 
 interface Category {
-  [key: string] : string | undefined;
+  [key: string]: string | undefined;
 }
 
 class Board {
   body: any;
   params: params;
   query: query;
-  
-  constructor(readonly req : Request) {
+
+  constructor(readonly req: Request) {
     this.body = req.body;
     this.params = req.params;
     this.query = req.query;
   }
 
-  async createByCategoryName() : Promise<response | error> {
+  async createByCategoryName(): Promise<response | error> {
     const board = this.body;
-    const categoryName : keyof Category = this.params.categoryName;
-    const categoryNum : number = Category[categoryName];
+    const categoryName: keyof Category = this.params.categoryName;
+    const categoryNum: number = Category[categoryName];
 
     if (categoryNum === undefined)
       return { success: false, msg: "요청하신 경로가 잘못되었습니다." };
@@ -108,8 +108,14 @@ class Board {
     board.price = String.makePrice(board.price);
 
     try {
+      let upload = {};
+
       const { success, num } = await BoardStorage.create(categoryNum, board);
-      if (success) {
+      if (board.images.length) {
+        upload = await BoardStorage.createImages(num, board);
+      }
+
+      if (success && upload) {
         return { success: true, msg: "게시판 생성에 성공하셨습니다.", num };
       }
       return {
@@ -121,11 +127,10 @@ class Board {
     }
   }
 
-  async findAllByCategoryNum() : Promise<response | error> {
-    const categoryName : keyof Category = this.params.categoryName;
-    const categoryNum : number = Category[categoryName];
-    const lastNum: string = this.query.lastNum as string;
-    const num = parseInt(lastNum);
+  async findAllByCategoryNum(): Promise<response | error> {
+    const categoryName: keyof Category = this.params.categoryName;
+    const categoryNum: number = Category[categoryName];
+    const lastNum: number = parseInt(this.query.lastNum as string);
 
     if (categoryNum === undefined) {
       return { success: false, msg: "존재하지 않는 게시판입니다." };
@@ -134,7 +139,7 @@ class Board {
     try {
       const boards = await BoardStorage.findAllByCategoryNum(
         categoryNum,
-        num
+        lastNum
       );
 
       if (boards) {
@@ -145,11 +150,11 @@ class Board {
     }
   }
 
-  async findOneByNum() : Promise<response | error> {
-    const num : number = parseInt(this.params.num);
-    const categoryName : keyof Category = this.params.categoryName;
-    const categoryNum : number = Category[categoryName];
-    const studentId : string = this.params.studentId;
+  async findOneByNum(): Promise<response | error> {
+    const num: number = parseInt(this.params.num);
+    const categoryName: keyof Category = this.params.categoryName;
+    const categoryNum: number = Category[categoryName];
+    const studentId: string = this.params.studentId;
 
     if (categoryNum === undefined)
       return { success: false, msg: "존재하지 않는 게시판입니다." };
@@ -157,10 +162,7 @@ class Board {
     try {
       const board = await BoardStorage.findOneByNum(num);
       const comments = await CommentStorage.findAllByBoardNum(num);
-      const isWatchList = await BoardStorage.isWatchList(
-        studentId,
-        num
-      );
+      const isWatchList = await BoardStorage.isWatchList(studentId, num);
 
       if (categoryNum === board.categoryNum) {
         return {
@@ -178,9 +180,9 @@ class Board {
     }
   }
 
-  async updateByNum() : Promise<response | error> {
-    const num : number = parseInt(this.params.num);
-    const body : any = this.body;
+  async updateByNum(): Promise<response | error> {
+    const num: number = parseInt(this.params.num);
+    const body: any = this.body;
 
     if (body.price < 0 || body.price.toString().length >= 8) {
       return {
@@ -193,9 +195,16 @@ class Board {
     try {
       const board = await BoardStorage.findOneByNum(num);
       if (!board) return { success: false, msg: "존재하지 않는 게시판입니다." };
+      const isDeleteImage = await BoardStorage.deleteImage(num);
+      const image = await BoardStorage.findAllByImage(num);
+      let upload = {};
+      if (isDeleteImage || !image.length)
+        if (body.images.length)
+          upload = await BoardStorage.createImages(num, body);
+        else upload = {};
 
       const { success, boardNum } = await BoardStorage.updateByNum(body, num);
-      if (success) {
+      if (success && upload) {
         return {
           success: true,
           msg: "게시판 수정에 성공하셨습니다.",
@@ -211,9 +220,9 @@ class Board {
     }
   }
 
-  async updateOnlyHit() : Promise<response | error> {
-    const categoryNum : number = Category[this.params.categoryName];
-    const num : number = parseInt(this.params.num);
+  async updateOnlyHit(): Promise<response | error> {
+    const categoryNum: number = Category[this.params.categoryName];
+    const num: number = parseInt(this.params.num);
 
     if (categoryNum === undefined)
       return { success: false, msg: "존재하지 않는 게시판입니다." };
@@ -234,12 +243,14 @@ class Board {
     }
   }
 
-  async deleteByNum() : Promise<response | error> {
-    const num : number = parseInt(this.params.num);
+  async deleteByNum(): Promise<response | error> {
+    const num: number = parseInt(this.params.num);
 
     try {
+      const isDeleteImage = await BoardStorage.deleteImage(num);
       const isDelete = await BoardStorage.delete(num);
-      if (isDelete) {
+
+      if (isDelete && isDeleteImage) {
         return { success: true, msg: "게시판 삭제 성공" };
       }
       return { success: false, msg: "게시판 삭제 실패" };
@@ -248,7 +259,7 @@ class Board {
     }
   }
 
-  async search() : Promise<response | error> {
+  async search(): Promise<response | error> {
     const categoryNum = Category[this.query.categoryName as string];
     const title: string = this.query.content as string;
 
@@ -274,7 +285,7 @@ class Board {
     }
   }
 
-  async updateOnlyStatus() : Promise<response | error> {
+  async updateOnlyStatus(): Promise<response | error> {
     const num = this.params.num;
     const body = this.body;
     const number: number = parseInt(num);
@@ -295,4 +306,3 @@ class Board {
 }
 
 export default Board;
-
