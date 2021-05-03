@@ -109,7 +109,9 @@ class Board {
 
     try {
       const { success, num } = await BoardStorage.create(categoryNum, board);
-      if (success) {
+      const { upload } = await BoardStorage.createImages(num, board);
+
+      if (success && upload) {
         return { success: true, msg: "게시판 생성에 성공하셨습니다.", num };
       }
       return {

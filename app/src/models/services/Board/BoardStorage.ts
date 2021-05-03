@@ -37,6 +37,11 @@ interface board {
   categoryNum?: number;
 }
 
+interface Image {
+  upload: boolean;
+  boardNum: number;
+}
+
 class BoardStroage {
   static create(num: number, board: any): Promise<Board> {
     return new Promise((resolve, reject) => {
@@ -57,6 +62,18 @@ class BoardStroage {
           else resolve({ success: true, num: boards.insertId });
         }
       );
+    });
+  }
+
+  static createImages(num: number, board: any): Promise<Image> {
+    return new Promise((resolve, reject) => {
+      board.images.forEach((image) => {
+        const query = "INSERT INTO images (board_no, url) VALUES (?,?)";
+        db.query(query, [num, image], (err, boards: ResultSetHeader) => {
+          if (err) reject(err);
+          else resolve({ upload: true, boardNum: boards.insertId });
+        });
+      });
     });
   }
 
