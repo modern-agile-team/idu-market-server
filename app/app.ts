@@ -11,7 +11,8 @@ interface corsOption {
 }
 
 const app: express.Application = express();
-const domains: string[] = [process.env.S3_ORIGIN, process.env.IDU_ORIGIN];
+
+const domains: string[] = [process.env.AWS_ORIGIN, process.env.IDU_ORIGIN];
 const corsOption: corsOption = {
   origin: (origin: string , callback : Function) => {
     const isTrue: Boolean = domains.includes(origin);
