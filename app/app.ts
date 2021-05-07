@@ -6,20 +6,20 @@ import * as morgan from "morgan";
 import logger from "./src/config/logger";
 
 interface corsOption {
-  origin: any,
-  credentials: boolean,
+  origin: any;
+  credentials: boolean;
 }
 
 const app: express.Application = express();
 
 const domains: string[] = [process.env.AWS_ORIGIN, process.env.IDU_ORIGIN];
 const corsOption: corsOption = {
-  origin: (origin: string , callback : Function) => {
-    const isTrue: Boolean = domains.includes(origin);
+  origin: (origin: string, callback: any) => {
+    const isTrue: boolean = domains.includes(origin);
     callback(null, isTrue);
   },
-  credentials: true
-}
+  credentials: true,
+};
 dotenv.config();
 
 app.set("views", "./src/views");
@@ -31,7 +31,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsOption));
 app.use(
-  morgan("tiny", { stream: { write: (message) => logger.info(message) } })
+  morgan("tiny", {
+    stream: {
+      write: (message) => logger.info(message),
+    },
+  })
 );
 
 import view from "./src/apis/view";
