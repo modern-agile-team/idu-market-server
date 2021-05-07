@@ -8,6 +8,8 @@ import Error from "../../models/utils/Error";
 interface response {
   success: boolean;
   msg: string;
+  jwt?: string;
+  id?: string;
 }
 
 interface iStudent {
