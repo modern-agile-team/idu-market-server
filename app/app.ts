@@ -11,7 +11,7 @@ interface corsOption {
 }
 
 const app: express.Application = express();
-const domains: string[] = ['http://idu-market.shop', 'https://wooahan-agile.s3.ap-northeast-2.amazonaws.com'];
+const domains: string[] = [process.env.S3_ORIGIN, process.env.IDU_ORIGIN];
 const corsOption: corsOption = {
   origin: (origin: string , callback : Function) => {
     const isTrue: Boolean = domains.includes(origin);
