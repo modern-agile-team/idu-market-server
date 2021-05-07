@@ -3,10 +3,23 @@ import * as cookieParser from "cookie-parser";
 import * as dotenv from "dotenv";
 import * as cors from "cors";
 import * as morgan from "morgan";
-
 import logger from "./src/config/logger";
 
+interface corsOption {
+  origin: any,
+  credentials: boolean,
+}
+
 const app: express.Application = express();
+
+const domains: string[] = [process.env.AWS_ORIGIN, process.env.IDU_ORIGIN];
+const corsOption: corsOption = {
+  origin: (origin: string , callback : Function) => {
+    const isTrue: Boolean = domains.includes(origin);
+    callback(null, isTrue);
+  },
+  credentials: true
+}
 dotenv.config();
 
 app.set("views", "./src/views");
@@ -16,7 +29,7 @@ app.use(express.static(`${__dirname}/src/public`));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(corsOption));
 app.use(
   morgan("tiny", { stream: { write: (message) => logger.info(message) } })
 );
