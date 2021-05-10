@@ -17,6 +17,7 @@ interface response {
   board?: board;
   comments?: comments[];
   images?: Image[];
+  hit?: number;
 }
 
 interface Image {
@@ -241,7 +242,8 @@ class Board {
       if (!board) return { success: false, msg: "존재하지 않는 게시판입니다." };
 
       const isUpdate = await BoardStorage.updateOnlyHitByNum(num);
-      if (isUpdate) return { success: true, msg: "조회수가 1 증가하였습니다." };
+      const hit = await BoardStorage.getHit(num);
+      if (isUpdate) return { success: true, msg: "조회수가 1 증가하였습니다.", hit };
 
       return {
         success: false,

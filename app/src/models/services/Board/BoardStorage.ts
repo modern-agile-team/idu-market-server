@@ -194,6 +194,16 @@ class BoardStroage {
       });
     });
   }
+  
+  static getHit(num: number): Promise<number> {
+    return new Promise((resolve, reject) => {
+      const query = "SELECT hit FROM boards WHERE no = ?;";
+      db.query(query, [num], (err, boards: RowDataPacket[]) => {
+        if (err) reject(err);
+        else resolve(boards[0].hit);
+      });
+    });
+  }
 
   static updateOnlyStatusByNum(board: any, num: number): Promise<boolean> {
     return new Promise((resolve, reject) => {
