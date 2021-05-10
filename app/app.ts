@@ -12,6 +12,17 @@ interface corsOption {
 
 const app: express.Application = express();
 
+const corsOptionsDelegate = (req, callback) => {
+  const allowList = [process.env.IDU_ORIGIN, process.env.AWS_ORIGIN];
+  let corsOption;
+  if (allowList.indexOf(req.header('Origin')) !== -1) {
+    corsOption = { origin: true }
+  } else {
+    corsOption = { origin: false }
+  }
+  callback(null, corsOption)
+}
+
 dotenv.config();
 
 app.set("views", "./src/views");
@@ -21,7 +32,7 @@ app.use(express.static(`${__dirname}/src/public`));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(corsOptionsDelegate));
 app.use(
   morgan("tiny", {
     stream: {
