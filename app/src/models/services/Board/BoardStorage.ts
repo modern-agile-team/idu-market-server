@@ -2,7 +2,7 @@ import { ResultSetHeader, RowDataPacket } from "mysql2";
 import db from "../../../config/db";
 
 interface Board {
-  success: boolean;
+  success?: boolean;
   num?: number;
   boardNum?: number;
 }
@@ -194,7 +194,7 @@ class BoardStroage {
       });
     });
   }
-  
+
   static getHit(num: number): Promise<number> {
     return new Promise((resolve, reject) => {
       const query = "SELECT hit FROM boards WHERE no = ?;";
