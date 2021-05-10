@@ -6,16 +6,16 @@ import * as morgan from "morgan";
 import logger from "./src/config/logger";
 
 interface corsOption {
-  origin: any,
-  credentials: boolean,
+  origin: any;
+  credentials: boolean;
 }
 
 const app: express.Application = express();
 
-const domains: string[] = [process.env.AWS_ORIGIN, process.env.IDU_ORIGIN];
+const domains: string[] = ["http://localhost:6000"];
 const corsOption: corsOption = {
-  origin: (origin: string , callback : Function) => {
-    const isTrue: Boolean = domains.includes(origin);
+  origin: (origin: string , callback) => {
+    const isTrue: boolean = domains.includes(origin)
     callback(null, isTrue);
   },
   credentials: true
