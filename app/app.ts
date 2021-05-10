@@ -5,6 +5,11 @@ import * as cors from "cors";
 import * as morgan from "morgan";
 import logger from "./src/config/logger";
 
+interface corsOption {
+  origin: any;
+  credentials: boolean;
+}
+
 const app: express.Application = express();
 
 dotenv.config();
@@ -18,7 +23,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
 app.use(
-  morgan("tiny", { stream: { write: (message) => logger.info(message) } })
+  morgan("tiny", {
+    stream: {
+      write: (message) => logger.info(message),
+    },
+  })
 );
 
 import view from "./src/apis/view";
