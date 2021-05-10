@@ -1,5 +1,4 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import { url } from "node:inspector";
 import db from "../../../config/db";
 
 interface Board {
