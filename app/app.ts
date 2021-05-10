@@ -3,10 +3,10 @@ import * as cookieParser from "cookie-parser";
 import * as dotenv from "dotenv";
 import * as cors from "cors";
 import * as morgan from "morgan";
-
 import logger from "./src/config/logger";
 
 const app: express.Application = express();
+
 dotenv.config();
 
 app.set("views", "./src/views");
