@@ -14,12 +14,17 @@ const app: express.Application = express();
 
 const domains: string[] = ["http://localhost:6000"];
 const corsOption: corsOption = {
+<<<<<<< HEAD
   origin: (origin: string , callback) => {
     const isTrue: boolean = domains.includes(origin)
+=======
+  origin: (origin: string, callback: any) => {
+    const isTrue: boolean = domains.includes(origin);
+>>>>>>> 1e397fe8f57a226b60807c9bb6d8b68cef05c1bd
     callback(null, isTrue);
   },
-  credentials: true
-}
+  credentials: true,
+};
 dotenv.config();
 
 app.set("views", "./src/views");
@@ -31,7 +36,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsOption));
 app.use(
-  morgan("tiny", { stream: { write: (message) => logger.info(message) } })
+  morgan("tiny", {
+    stream: {
+      write: (message) => logger.info(message),
+    },
+  })
 );
 
 import view from "./src/apis/view";

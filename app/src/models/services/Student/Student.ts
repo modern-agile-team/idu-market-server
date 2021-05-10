@@ -10,6 +10,7 @@ interface response {
   success: boolean;
   msg: string;
   jwt?: string;
+  id?: string;
 }
 
 interface error {
@@ -54,7 +55,13 @@ class Student {
 
         if (student.id === client.id && student.psword === client.psword) {
           const jwt = await Auth.createJWT(student);
-          return { success: true, msg: "로그인에 성공하셨습니다.", jwt };
+          const id: string = client.id;
+          return {
+            success: true,
+            msg: "로그인에 성공하셨습니다.",
+            jwt,
+            id,
+          };
         }
         return { success: false, msg: "잘못된 비밀번호입니다." };
       }
