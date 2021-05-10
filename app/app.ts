@@ -12,18 +12,18 @@ interface corsOption {
 
 const app: express.Application = express();
 
+dotenv.config();
+
 const corsOptionsDelegate = (req, callback) => {
   const allowList = [process.env.IDU_ORIGIN, process.env.AWS_ORIGIN];
   let corsOption;
   if (allowList.indexOf(req.header('Origin')) !== -1) {
-    corsOption = { origin: true }
+    corsOption = { origin: true, allowedHeaders: req.header('Origin') }
   } else {
     corsOption = { origin: false }
   }
   callback(null, corsOption)
 }
-
-dotenv.config();
 
 app.set("views", "./src/views");
 app.set("view engine", "ejs");
