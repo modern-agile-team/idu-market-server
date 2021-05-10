@@ -2,7 +2,7 @@ import { ResultSetHeader, RowDataPacket } from "mysql2";
 import db from "../../../config/db";
 
 interface Board {
-  success: boolean;
+  success?: boolean;
   num?: number;
   boardNum?: number;
 }
@@ -191,6 +191,16 @@ class BoardStroage {
       db.query(query, [num], (err) => {
         if (err) reject(err);
         else resolve(true);
+      });
+    });
+  }
+
+  static getHit(num: number): Promise<number> {
+    return new Promise((resolve, reject) => {
+      const query = "SELECT hit FROM boards WHERE no = ?;";
+      db.query(query, [num], (err, boards: RowDataPacket[]) => {
+        if (err) reject(err);
+        else resolve(boards[0].hit);
       });
     });
   }
