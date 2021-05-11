@@ -6,6 +6,10 @@ interface Comment {
   num: number;
 }
 
+interface buyer {
+  nickname: string;
+}
+
 interface comments {
   studentId: string;
   studentName: string;
@@ -232,7 +236,7 @@ class CommentStorage {
     });
   }
 
-  static findStudentIdByNum(boardNum: number): Promise<RowDataPacket[]> {
+  static findStudentIdByNum(boardNum: number): Promise<buyer[]> {
     return new Promise((resolve, reject) => {
       const sql = `SELECT DISTINCT nickname 
       FROM comments cm
@@ -240,7 +244,11 @@ class CommentStorage {
       ON st.id = cm.student_id
       WHERE board_no = ? AND cm.hidden_flag = 0;`;
 
-      db.query(sql, boardNum, (err, buyers: RowDataPacket[]) => {
+      db.query(sql, [boardNum], (err, students: RowDataPacket[]) => {
+        const buyers: buyer[] = Object.values(
+          JSON.parse(JSON.stringify(students))
+        );
+
         if (err) reject(err);
         else resolve(buyers);
       });

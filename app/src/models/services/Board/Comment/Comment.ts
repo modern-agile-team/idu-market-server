@@ -9,7 +9,7 @@ interface response {
   msg: string;
   deletedCommentNum?: number;
   deletedReplyNum?: number;
-  findBuyer?: buyer;
+  buyers?: buyer[];
   createdComments?: comment;
   createdReply?: comment;
   updatedComment?: updatedComment | undefined;
@@ -249,13 +249,9 @@ class Comment {
   async findStudentIdByNum(): Promise<response | error> {
     const boardNum: number = parseInt(this.params.num as string);
     try {
-      const buyers: RowDataPacket[] = await CommentStorage.findStudentIdByNum(
-        boardNum
-      );
-      const buyer: buyer[] = Object.values(JSON.parse(JSON.stringify(buyers)));
-      const findBuyer: buyer = buyer[0];
+      const buyers: buyer[] = await CommentStorage.findStudentIdByNum(boardNum);
 
-      return { success: true, msg: "comments조회 완료 되었습니다.", findBuyer };
+      return { success: true, msg: "comments조회 완료 되었습니다.", buyers };
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
