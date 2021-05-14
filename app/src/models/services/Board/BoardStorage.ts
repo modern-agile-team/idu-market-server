@@ -1,4 +1,3 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
 import mariadb from "../../../config/mariadb";
 
 interface Board {
