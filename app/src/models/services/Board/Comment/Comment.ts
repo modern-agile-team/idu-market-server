@@ -66,9 +66,7 @@ class Comment {
       );
 
       if (isCreate) {
-        const comments: RowDataPacket[] = await CommentStorage.findOneByNum(
-          num
-        );
+        const comments = await CommentStorage.findOneByNum(num);
         const comment: comment[] = Object.values(
           JSON.parse(JSON.stringify(comments))
         );
@@ -141,12 +139,22 @@ class Comment {
         );
         const updatedComment: comment = comment[0];
 
-        return {
+        const response = {
           success: true,
-          msg: "댓글 수정 성공",
-          updatedComment: updatedComment.depth ? undefined : updatedComment, // depth가 1이면 답글이므로 undefined를 반환하여 해당 키가 응답되지 않도록 한다.
-          updatedReply: updatedComment.depth ? updatedComment : undefined, // depth가 0이면 댓글이므로 undefined를 반환하여 해당 키가 응답되지 않도록 한다.
+          msg: "",
+          updatedReply: undefined,
+          updatedComment: undefined,
         };
+
+        if (updatedComment.depth) {
+          response.msg = "답글 수정 성공";
+          response.updatedReply = updatedComment;
+        } else {
+          response.msg = "댓글 수정 성공";
+          response.updatedComment = updatedComment;
+        }
+
+        return response;
       }
       return {
         success: false,

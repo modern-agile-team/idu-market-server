@@ -1,5 +1,4 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
-import db from "../../../../config/db";
+import mariadb from "../../../../config/mariadb";
 
 interface Comment {
   isCreate: boolean;
@@ -25,48 +24,65 @@ interface comments {
 }
 
 class CommentStorage {
-  static createByBoardNum(comment: any, boardNum: number): Promise<Comment> {
-    return new Promise((resolve, reject) => {
+  static async createByBoardNum(
+    comment: any,
+    boardNum: number
+  ): Promise<Comment> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = `INSERT INTO comments (student_id, board_no, content, group_no, depth)
        VALUES (?, ?, ?, 0, 0);`;
 
-      db.query(
-        query,
-        [comment.studentId, boardNum, comment.content, comment.depth],
-        (err, createdInfo: ResultSetHeader) => {
-          if (err) reject(err);
-          resolve({ isCreate: true, num: createdInfo.insertId });
-        }
-      );
-    });
+      const createdInfo = await conn.query(query, [
+        comment.studentId,
+        boardNum,
+        comment.content,
+        comment.depth,
+      ]);
+
+      return { isCreate: true, num: createdInfo.insertId };
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static createReplyByGroupNum(
+  static async createReplyByGroupNum(
     reply: any,
     boardNum: number,
     groupNum: number
   ): Promise<Comment> {
-    return new Promise((resolve, rejcet) => {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = `INSERT INTO comments (student_id, board_no, content, group_no, depth, reply_flag) 
       VALUES (?, ?, ?, ?, 1, 0);`;
 
-      db.query(
-        query,
-        [reply.studentId, boardNum, reply.content, groupNum],
-        (err, replyInfo: ResultSetHeader) => {
-          if (err) rejcet(err);
-          resolve({ isCreate: true, num: replyInfo.insertId });
-        }
-      );
-    });
+      const replyInfo = await conn.query(query, [
+        reply.studentId,
+        boardNum,
+        reply.content,
+        groupNum,
+      ]);
+
+      return { isCreate: true, num: replyInfo.insertId };
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findAllByBoardNum(boardNum: number): Promise<comments[]> {
-    return new Promise((resolve, reject) => {
+  static async findAllByBoardNum(boardNum: number): Promise<comments[]> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = `SELECT st.id AS studentId, st.name AS studentName, st.nickname, st.admin_flag as isAuth, st.profile_path AS profilePath, cmt.no AS num, cmt.content, cmt.group_no AS groupNum, 
       cmt.depth, cmt.reply_flag AS replyFlag, cmt.hidden_flag AS hiddenFlag, 
       date_format(cmt.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(cmt.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
-      FROM comments cmt
+      FROM comments AS cmt
       JOIN students AS st
       ON cmt.student_id = st.id
       LEFT JOIN boards AS bo
@@ -74,18 +90,22 @@ class CommentStorage {
       WHERE cmt.board_no = ?
       ORDER BY groupNum, inDate;`;
 
-      db.query(query, [boardNum], (err, comments: RowDataPacket[]) => {
-        const comment: comments[] = Object.values(
-          JSON.parse(JSON.stringify(comments))
-        );
-        if (err) reject(err);
-        resolve(comment);
-      });
-    });
+      const comments = await conn.query(query, [boardNum]);
+      const comment: comments[] = Object.values(
+        JSON.parse(JSON.stringify(comments))
+      );
+      return comment;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findOneByNum(num: number): Promise<RowDataPacket[]> {
-    return new Promise((resolve, reject) => {
+  static async findOneByNum(num: number): Promise<comments> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = `SELECT st.id AS studentId, st.name AS studentName, st.nickname, st.admin_flag as isAuth, st.profile_path AS profilePath, cmt.no AS num, cmt.content, cmt.group_no AS groupNum,
       cmt.depth, cmt.reply_flag AS replyFlag, cmt.hidden_flag AS hiddenFlag,
       date_format(cmt.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(cmt.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
@@ -94,165 +114,222 @@ class CommentStorage {
       ON cmt.student_id = st.id
       WHERE cmt.no = ?;`;
 
-      db.query(query, [num], (err, comments: RowDataPacket[]) => {
-        if (err) reject(err);
-        resolve(comments);
-      });
-    });
+      const comments = await conn.query(query, [num]);
+
+      return comments;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findReplyFlag(num: number): Promise<number> {
-    return new Promise((resolve, reject) => {
+  static async findReplyFlag(num: number): Promise<number> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query =
         "SELECT reply_flag AS replyFlag FROM comments WHERE no = ?;";
 
-      db.query(query, [num], (err, replyFlag: RowDataPacket[]) => {
-        if (err) reject(err);
-        else resolve(replyFlag[0].replyFlag);
-      });
-    });
+      const replyFlag = await conn.query(query, [num]);
+
+      return replyFlag[0].replyFlag;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findOneGroupNum(num: number): Promise<number> {
-    return new Promise((resolve, reject) => {
+  static async findOneGroupNum(num: number): Promise<number> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = "SELECT group_no AS groupNum FROM comments WHERE no = ?;";
 
-      db.query(query, [num], (err, comment: RowDataPacket[]) => {
-        if (err) reject(err);
-        else resolve(comment[0].groupNum);
-      });
-    });
+      const comment = await conn.query(query, [num]);
+      return comment[0].groupNum;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findOneHiddenFlag(num: number): Promise<number> {
-    return new Promise((resolve, reject) => {
+  static async findOneHiddenFlag(num: number): Promise<number> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query =
         "SELECT hidden_flag AS hiddenFlag FROM comments WHERE no = ?;";
 
-      db.query(query, [num], (err, comment: RowDataPacket[]) => {
-        if (err) reject(err);
-        else resolve(comment[0].hiddenFlag);
-      });
-    });
+      const comment = await conn.query(query, [num]);
+      return comment[0].hiddenFlag;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static updateReplyFlagOfCommentByGroupNum(
+  static async updateReplyFlagOfCommentByGroupNum(
     commentNum: number
   ): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = `UPDATE comments SET reply_flag = 1
       WHERE no = ?;`;
 
-      db.query(query, [commentNum], (err) => {
-        if (err) reject(err);
-        resolve(true);
-      });
-    });
+      await conn.query(query, [commentNum]);
+      return true;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static updateGroupNum(commentNum: number): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+  static async updateGroupNum(commentNum: number): Promise<boolean> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = "UPDATE comments SET group_no = ? WHERE no = ?";
 
-      db.query(query, [commentNum, commentNum], (err) => {
-        if (err) reject(err);
-        else resolve(true);
-      });
-    });
+      await conn.query(query, [commentNum, commentNum]);
+      return true;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static updateByNum(comment: any, num: number): Promise<number> {
-    return new Promise((resolve, reject) => {
+  static async updateByNum(comment: any, num: number): Promise<number> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query =
         "UPDATE comments SET content = ? WHERE no = ? AND student_id = ?;";
 
-      db.query(
-        query,
-        [comment.content, num, comment.studentId],
-        (err, updatedInfo: ResultSetHeader) => {
-          if (err) reject(err);
-          else resolve(updatedInfo.affectedRows);
-        }
-      );
-    });
+      const updatedInfo = await conn.query(query, [
+        comment.content,
+        num,
+        comment.studentId,
+      ]);
+      return updatedInfo.affectedRows;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static updatehiddenFlag(num: number): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+  static async updatehiddenFlag(num: number): Promise<boolean> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = "UPDATE comments SET hidden_flag = 1 WHERE no = ?;";
 
-      db.query(query, [num], (err) => {
-        if (err) reject(err);
-        else resolve(true);
-      });
-    });
+      await conn.query(query, [num]);
+      return true;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static updateReplyFlag(groupNum: number): Promise<number> {
-    return new Promise((resolve, reject) => {
+  static async updateReplyFlag(groupNum: number): Promise<number> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = `UPDATE comments SET reply_flag = 0 WHERE no = ? AND
             (SELECT count(group_no) FROM (SELECT group_no FROM comments AS group_no WHERE group_no = ?) AS count) = 1;`;
 
-      db.query(query, [groupNum, groupNum], (err, rows: ResultSetHeader) => {
-        if (err) reject(err);
-        else resolve(rows.affectedRows);
-      });
-    });
+      const rows = await conn.query(query, [groupNum, groupNum]);
+      return rows.affectedRows;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static deleteCommentByNum(num: number, studentId: string): Promise<number> {
-    return new Promise((resolve, rejcet) => {
+  static async deleteCommentByNum(
+    num: number,
+    studentId: string
+  ): Promise<number> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query =
         "DELETE FROM comments WHERE no = ? AND reply_flag = 0 AND depth = 0 AND student_id = ?";
 
-      db.query(query, [num, studentId], (err, row: ResultSetHeader) => {
-        if (err) rejcet(err);
-        else resolve(row.affectedRows);
-      });
-    });
+      const rows = await conn.query(query, [num, studentId]);
+      return rows.affectedRows;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static deleteReplyByNum(num: number, studentId: string): Promise<number> {
-    return new Promise((resolve, reject) => {
+  static async deleteReplyByNum(
+    num: number,
+    studentId: string
+  ): Promise<number> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query =
         "DELETE FROM comments WHERE no = ? AND depth = 1 AND student_id = ?";
 
-      db.query(query, [num, studentId], (err, row: ResultSetHeader) => {
-        if (err) reject(err);
-        else resolve(row.affectedRows);
-      });
-    });
+      const rows = await conn.query(query, [num, studentId]);
+      return rows.affectedRows;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static deleteHiddenComment(num: number): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+  static async deleteHiddenComment(num: number): Promise<boolean> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query =
         "DELETE FROM comments WHERE no = ? AND hidden_flag = 1 AND reply_flag = 0;";
 
-      db.query(query, [num], (err) => {
-        if (err) reject(err);
-        else resolve(true);
-      });
-    });
+      await conn.query(query, [num]);
+      return true;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findStudentIdByNum(boardNum: number): Promise<buyer[]> {
-    return new Promise((resolve, reject) => {
-      const sql = `SELECT DISTINCT nickname 
+  static async findStudentIdByNum(boardNum: number): Promise<buyer[]> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const query = `SELECT DISTINCT nickname 
       FROM comments cm
       JOIN students st
       ON st.id = cm.student_id
       WHERE board_no = ? AND cm.hidden_flag = 0;`;
 
-      db.query(sql, [boardNum], (err, students: RowDataPacket[]) => {
-        const buyers: buyer[] = Object.values(
-          JSON.parse(JSON.stringify(students))
-        );
-
-        if (err) reject(err);
-        else resolve(buyers);
-      });
-    });
+      const students = await conn.query(query, [boardNum]);
+      const buyers: buyer[] = Object.values(
+        JSON.parse(JSON.stringify(students))
+      );
+      return buyers;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 }
 
