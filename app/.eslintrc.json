@@ -15,7 +15,8 @@
           "endOfLine": "auto"
         }
       ],
-      "no-useless-catch": 0
+      "no-useless-catch": 0,
+      "no-unused-declaration": true
     },
     "extends": ["plugin:@typescript-eslint/recommended", "plugin:prettier/recommended"]
   }
