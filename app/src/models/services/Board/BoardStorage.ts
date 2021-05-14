@@ -1,5 +1,5 @@
 import { ResultSetHeader, RowDataPacket } from "mysql2";
-import db from "../../../config/db";
+import mariadb from "../../../config/mariadb";
 
 interface Board {
   success?: boolean;
@@ -45,12 +45,13 @@ interface Image {
 }
 
 class BoardStroage {
-  static create(num: number, board: any): Promise<Board> {
-    return new Promise((resolve, reject) => {
-      const query =
-        "INSERT INTO boards (student_id, category_no, title, content, thumbnail, price) VALUES (?, ?, ?, ?, ?, ?);";
-      db.query(
-        query,
+  static async create(num: number, board: any): Promise<Board> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+
+      const boards = await conn.query(
+        "INSERT INTO boards (student_id, category_no, title, content, thumbnail, price) VALUES (?, ?, ?, ?, ?, ?);",
         [
           board.studentId,
           num,
@@ -58,46 +59,63 @@ class BoardStroage {
           board.content,
           board.thumbnail,
           board.price,
-        ],
-        (err, boards: ResultSetHeader) => {
-          if (err) reject(err);
-          else resolve({ success: true, num: boards.insertId });
-        }
+        ]
       );
-    });
+
+      return { success: true, num: boards.insertId };
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static createImages(num: number, board: any): Promise<Image> {
-    return new Promise((resolve, reject) => {
-      board.images.forEach((image) => {
-        const query = "INSERT INTO images (board_no, url) VALUES (?,?)";
-        db.query(query, [num, image], (err, boards: ResultSetHeader) => {
-          if (err) reject(err);
-          else resolve({ upload: true, boardNum: boards.insertId });
-        });
-      });
-    });
+  static async createImages(num: number, board: any): Promise<boolean> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+
+      for (let image of board.images) {
+        await conn.query("INSERT INTO images (board_no, url) VALUES (?,?);", [
+          num,
+          image,
+        ]);
+      }
+
+      return true;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findAllByImage(num: number): Promise<Image[]> {
-    return new Promise((resolve, reject) => {
+  static async findAllByImage(num: number): Promise<Image[]> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const images = [];
       const query = "SELECT url FROM images WHERE board_no = ?";
-      db.query(query, [num], (err, boards: RowDataPacket[]) => {
-        const board: Image[] = Object.values(
-          JSON.parse(JSON.stringify(boards))
-        );
-        for (const obj of board) images.push(obj["url"]);
-        if (err) reject(err);
-        else resolve(images);
-      });
-    });
+      const boards = await conn.query(query, [num]);
+
+      const board: Image[] = Object.values(JSON.parse(JSON.stringify(boards)));
+      for (const obj of board) {
+        images.push(obj["url"]);
+      }
+
+      return images;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findAllByCategoryNum(
+  static async findAllByCategoryNum(
     categoryNum: number,
     lastNum: number
   ): Promise<boards[]> {
+    console.log(categoryNum, lastNum);
     let where = "";
     let limit = "";
     // 아래 if 문으로 Market API와 Board API를 구분짓게 된다.
@@ -110,7 +128,9 @@ class BoardStroage {
       }
     }
 
-    return new Promise((resolve, reject) => {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = `SELECT bo.no AS num, st.id AS studentId, st.nickname AS nickname, st.admin_flag as isAuth, st.profile_path AS profilePath, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
       COUNT(cmt.content) AS commentCount
@@ -124,22 +144,21 @@ class BoardStroage {
       ORDER BY num desc
       ${limit};`;
 
-      db.query(
-        query,
-        [categoryNum, lastNum],
-        (err, boards: RowDataPacket[]) => {
-          const board: boards[] = Object.values(
-            JSON.parse(JSON.stringify(boards))
-          );
-          if (err) reject(err);
-          else resolve(board);
-        }
-      );
-    });
+      const boards = await conn.query(query, [categoryNum, lastNum]);
+
+      const board: boards[] = Object.values(JSON.parse(JSON.stringify(boards)));
+      return board;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findOneByNum(num: number): Promise<board> {
-    return new Promise((resolve, reject) => {
+  static async findOneByNum(num: number): Promise<board> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.name AS studentName, st.nickname, st.admin_flag as isAuth, st.profile_path AS profilePath, bo.title AS title, bo.content, bo.hit AS hit, bo.price AS price, bo.status AS status,
       bo.category_no AS categoryNum, date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(bo.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
       FROM boards AS bo
@@ -147,99 +166,140 @@ class BoardStroage {
       ON bo.student_id = st.id
       WHERE bo.no = ?`;
 
-      db.query(query, [num], (err, boards: RowDataPacket[]) => {
-        const board: board[] = Object.values(
-          JSON.parse(JSON.stringify(boards))
-        );
-        if (err) reject(err);
-        else resolve(board[0]);
-      });
-    });
+      const boards = await conn.query(query, [num]);
+      const board: board[] = Object.values(JSON.parse(JSON.stringify(boards)));
+      return board[0];
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static isWatchList(studentId: string, num: number): Promise<number> {
-    return new Promise((resolve, reject) => {
-      const query = `SELECT * FROM boards bo
-      JOIN watch_lists wl
+  static async isWatchList(studentId: string, num: number): Promise<number> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const query = `SELECT wl.no FROM boards AS bo
+      JOIN watch_lists AS wl
       ON bo.no = wl.board_no
       WHERE wl.student_id = ? and bo.no = ?;`;
-      db.query(query, [studentId, num], (err, watchList: RowDataPacket[]) => {
-        if (err) reject(err);
-        else resolve(watchList.length);
-      });
-    });
+
+      const watchList = await conn.query(query, [studentId, num]);
+      return watchList.length;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static updateByNum(board: any, num: number): Promise<Board> {
-    return new Promise((resolve, reject) => {
+  static async updateByNum(board: any, num: number): Promise<Board> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query =
         "UPDATE boards SET title = ?, content = ?, price = ? where no = ?;";
-      db.query(
-        query,
-        [board.title, board.content, board.price, num],
-        (err, boards: ResultSetHeader) => {
-          if (err) reject(err);
-          else resolve({ success: true, num: boards.insertId });
-        }
-      );
-    });
+
+      const boards = await conn.query(query, [
+        board.title,
+        board.content,
+        board.price,
+        num,
+      ]);
+      return { success: true, num: boards.insertId };
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static updateOnlyHitByNum(num: number): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+  static async updateOnlyHitByNum(num: number): Promise<boolean> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = "UPDATE boards SET hit = hit + 1 WHERE no = ?;";
-      db.query(query, [num], (err) => {
-        if (err) reject(err);
-        else resolve(true);
-      });
-    });
+
+      const boards = await conn.query(query, [num]);
+      return true;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static getHit(num: number): Promise<number> {
-    return new Promise((resolve, reject) => {
+  static async getHit(num: number): Promise<number> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = "SELECT hit FROM boards WHERE no = ?;";
-      db.query(query, [num], (err, boards: RowDataPacket[]) => {
-        if (err) reject(err);
-        else resolve(boards[0].hit);
-      });
-    });
+
+      const boards = await conn.query(query, [num]);
+      return boards[0].hit;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static updateOnlyStatusByNum(board: any, num: number): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+  static async updateOnlyStatusByNum(
+    board: any,
+    num: number
+  ): Promise<boolean> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = "UPDATE boards SET status = ? WHERE no = ?;";
-      db.query(query, [board.status, num], (err) => {
-        if (err) reject(err);
-        else resolve(true);
-      });
-    });
+
+      await conn.query(query, [board.status, num]);
+      return true;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static delete(num: number): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+  static async delete(num: number): Promise<boolean> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = "DELETE FROM boards where no = ?";
-      db.query(query, [num], (err) => {
-        if (err) reject(err);
-        else resolve(true);
-      });
-    });
+
+      await conn.query(query, [num]);
+      return true;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static deleteImage(num: number): Promise<boolean> {
-    return new Promise((resolve, reject) => {
+  static async deleteImage(num: number): Promise<boolean> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = "DELETE FROM images where board_no = ?";
-      db.query(query, [num], (err) => {
-        if (err) reject(err);
-        else resolve(true);
-      });
-    });
+
+      await conn.query(query, [num]);
+      return true;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findAllByIncludedTitleAndCategory(
+  static async findAllByIncludedTitleAndCategory(
     title: string,
     categoryNum: number
-  ): Promise<RowDataPacket[]> {
-    return new Promise((resolve, reject) => {
+  ): Promise<boards> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.profile_path AS profilePath, st.nickname, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
       COUNT(cmt.content) AS commentCount
@@ -252,11 +312,13 @@ class BoardStroage {
       GROUP BY num
       ORDER BY num desc;`;
 
-      db.query(query, [title, categoryNum], (err, boards: RowDataPacket[]) => {
-        if (err) reject(err);
-        else resolve(boards);
-      });
-    });
+      const boards = await conn.query(query, [title, categoryNum]);
+      return boards;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 }
 
