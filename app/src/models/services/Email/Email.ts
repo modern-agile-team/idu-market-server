@@ -41,6 +41,16 @@ class Email {
       if (!student)
         return { success: false, msg: "등록되지 않은 이메일 입니다." };
 
+      const useableStudent = students.find(
+        (origin) => origin.id === student.id
+      );
+      if (!useableStudent)
+        return {
+          success: false,
+          msg:
+            "이름 혹은 이메일이 본인의 정보가 맞는지 다시 한 번 확인해 주십시오.",
+        };
+
       return new Promise((resolve, reject) => {
         try {
           const message = {
@@ -71,13 +81,22 @@ class Email {
     const client: any = this.body;
     try {
       const student = new Student(req);
-      const existInfo = await student.isExistIdAndEmail();
-      if (!existInfo.isExist)
-        return { success: existInfo.isExist, msg: existInfo.msg };
-
-      const studentInfo = await StudentStorage.findOneById(client.id);
-      if (!studentInfo)
+      const studentInfoById = await StudentStorage.findOneById(client.id);
+      if (!studentInfoById)
         return { success: false, msg: "등록되지 않은 아이디 입니다." };
+
+      const studentInfoByEmail = await StudentStorage.findOneByEmail(
+        client.email
+      );
+      if (!studentInfoByEmail)
+        return { success: false, msg: "등록되지 않은 이메일 입니다." };
+
+      if (studentInfoById.id !== studentInfoByEmail.id)
+        return {
+          success: false,
+          msg:
+            "아이디 혹은 이메일이 본인의 정보가 맞는지 다시 한 번 확인해 주십시오.",
+        };
 
       const tokenInfo = await Auth.createToken(client.id);
       if (!("token" in tokenInfo) && "msg" in tokenInfo)

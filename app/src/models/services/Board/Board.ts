@@ -116,14 +116,12 @@ class Board {
     board.price = String.makePrice(board.price);
 
     try {
-      let upload = {};
-
       const { success, num } = await BoardStorage.create(categoryNum, board);
       if (board.images.length) {
-        upload = await BoardStorage.createImages(num, board);
+        await BoardStorage.createImages(num, board);
       }
 
-      if (success && upload) {
+      if (success) {
         return { success: true, msg: "게시판 생성에 성공하셨습니다.", num };
       }
       return {
@@ -138,7 +136,8 @@ class Board {
   async findAllByCategoryNum(): Promise<response | error> {
     const categoryName: keyof Category = this.params.categoryName;
     const categoryNum: number = Category[categoryName];
-    const lastNum: number = parseInt(this.query.lastNum as string);
+    const lastNum: number =
+      this.query.lastNum === undefined ? 0 : Number(this.query.lastNum);
 
     if (categoryNum === undefined) {
       return { success: false, msg: "존재하지 않는 게시판입니다." };
@@ -169,22 +168,22 @@ class Board {
 
     try {
       const board = await BoardStorage.findOneByNum(num);
+      if (categoryNum !== board.categoryNum) {
+        return { success: false, msg: "게시판 상세 조회 실패" };
+      }
       const comments = await CommentStorage.findAllByBoardNum(num);
       const isWatchList = await BoardStorage.isWatchList(studentId, num);
       const images = await BoardStorage.findAllByImage(num);
 
-      if (categoryNum === board.categoryNum) {
-        return {
-          success: true,
-          msg: "게시판 상세 조회 성공",
-          board,
-          comments,
-          isWatchList,
-          categoryName,
-          images,
-        };
-      }
-      return { success: false, msg: "게시판 상세 조회 실패" };
+      return {
+        success: true,
+        msg: "게시판 상세 조회 성공",
+        board,
+        comments,
+        isWatchList,
+        categoryName,
+        images,
+      };
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
@@ -243,7 +242,8 @@ class Board {
 
       const isUpdate = await BoardStorage.updateOnlyHitByNum(num);
       const hit = await BoardStorage.getHit(num);
-      if (isUpdate) return { success: true, msg: "조회수가 1 증가하였습니다.", hit };
+      if (isUpdate)
+        return { success: true, msg: "조회수가 1 증가하였습니다.", hit };
 
       return {
         success: false,

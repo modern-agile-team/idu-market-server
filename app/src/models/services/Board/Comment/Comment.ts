@@ -1,7 +1,7 @@
 import { Request } from "express";
 import CommentStorage from "./CommentStorage";
+
 import Error from "../../../utils/Error";
-import { RowDataPacket } from "mysql2";
 import { params, query } from "../../../../config/types";
 
 interface response {
@@ -66,9 +66,7 @@ class Comment {
       );
 
       if (isCreate) {
-        const comments: RowDataPacket[] = await CommentStorage.findOneByNum(
-          num
-        );
+        const comments = await CommentStorage.findOneByNum(num);
         const comment: comment[] = Object.values(
           JSON.parse(JSON.stringify(comments))
         );
@@ -125,6 +123,21 @@ class Comment {
     }
   }
 
+  async findStudentId(): Promise<response | error> {
+    const boardNum: number = parseInt(this.params.num as string);
+    try {
+      const buyers: buyer[] = await CommentStorage.findOneByBoardNum(boardNum);
+
+      return {
+        success: true,
+        msg: "구매 희망자 조회에 성공하셨습니다.",
+        buyers,
+      };
+    } catch (err) {
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
+    }
+  }
+
   async updateByNum(): Promise<response | error> {
     const commentNum: number = parseInt(this.params.commentNum);
     const body = this.body;
@@ -141,12 +154,22 @@ class Comment {
         );
         const updatedComment: comment = comment[0];
 
-        return {
+        const response = {
           success: true,
-          msg: "댓글 수정 성공",
-          updatedComment: updatedComment.depth ? undefined : updatedComment, // depth가 1이면 답글이므로 undefined를 반환하여 해당 키가 응답되지 않도록 한다.
-          updatedReply: updatedComment.depth ? updatedComment : undefined, // depth가 0이면 댓글이므로 undefined를 반환하여 해당 키가 응답되지 않도록 한다.
+          msg: "",
+          updatedReply: undefined,
+          updatedComment: undefined,
         };
+
+        if (updatedComment.depth) {
+          response.msg = "답글 수정 성공";
+          response.updatedReply = updatedComment;
+        } else {
+          response.msg = "댓글 수정 성공";
+          response.updatedComment = updatedComment;
+        }
+
+        return response;
       }
       return {
         success: false,
@@ -241,17 +264,6 @@ class Comment {
         msg:
           "댓글을 삭제하려면 depth가 0이어야 합니다. 답글을 삭제하려는 것이 맞다면 답글 번호가 올바른지 확인해 주십시오.",
       };
-    } catch (err) {
-      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
-    }
-  }
-
-  async findStudentIdByNum(): Promise<response | error> {
-    const boardNum: number = parseInt(this.params.num as string);
-    try {
-      const buyers: buyer[] = await CommentStorage.findStudentIdByNum(boardNum);
-
-      return { success: true, msg: "comments조회 완료 되었습니다.", buyers };
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }

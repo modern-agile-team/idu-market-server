@@ -43,12 +43,15 @@ class SaleList {
       if (saleLists.length !== 0)
         return {
           success: true,
-          msg: "판매내역 조회 완료되었습니다.",
+          msg: "판매내역 조회가 완료되었습니다.",
           saleLists: saleLists,
         };
       return { success: false, msg: "판매내역이 존재하지않습니다." };
     } catch (err) {
-      return Error.ctrl("서버측 문제", err);
+      return Error.ctrl(
+        "알 수 없는 에러입니다. 서버 개발자에게 문의해주세요.",
+        err
+      );
     }
   }
 }
