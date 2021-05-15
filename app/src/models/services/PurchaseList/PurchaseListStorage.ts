@@ -17,7 +17,6 @@ interface purchaseList {
 }
 
 class PurchaseListStorage {
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
   static async findAllById(id: string): Promise<purchaseList[]> {
     let conn;
     try {
@@ -28,13 +27,13 @@ class PurchaseListStorage {
       (SELECT nickname FROM students st where bo.student_id = st.id) AS sellerName,
       (SELECT profile_path FROM students st where bo.student_id = st.id) AS profilePath
           FROM purchase_lists pu 
-          JOIN boards bo
+          JOIN boards AS bo
           ON bo.no = pu.board_no 
-          JOIN categories cat
+          JOIN categories AS cat
           ON bo.category_no = cat.no
-          JOIN students st
+          JOIN students AS st
           ON st.id = pu.student_id
-          LEFT JOIN comments cmt
+          LEFT JOIN comments AS cmt
           ON cmt.board_no = bo.no
           WHERE pu.student_id = ?
           GROUP BY pu.no
@@ -64,12 +63,10 @@ class PurchaseListStorage {
         WHERE board_no=? AND student_id=?`;
 
       const purchaseList = await conn.query(query, [boardNum, studentId]);
-      console.log(purchaseList);
 
       const purchaseLists: purchaseList[] = Object.values(
         JSON.parse(JSON.stringify(purchaseList))
       );
-      console.log(purchaseLists);
       return purchaseLists[0];
     } catch (err) {
       throw err;
