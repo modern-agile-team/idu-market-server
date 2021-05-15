@@ -102,7 +102,7 @@ const process = {
     res: Response
   ): Promise<Response> => {
     const comment = new Comment(req);
-    const response: response = await comment.findStudentIdByNum();
+    const response: response = await comment.findStudentId();
     if (response.success) {
       logger.info(
         `GET /api/boards/categoryName/num/comments 200 ${response.msg}`
