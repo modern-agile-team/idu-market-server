@@ -123,6 +123,21 @@ class Comment {
     }
   }
 
+  async findStudentId(): Promise<response | error> {
+    const boardNum: number = parseInt(this.params.num as string);
+    try {
+      const buyers: buyer[] = await CommentStorage.findOneByBoardNum(boardNum);
+
+      return {
+        success: true,
+        msg: "구매 희망자 조회에 성공하셨습니다.",
+        buyers,
+      };
+    } catch (err) {
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
+    }
+  }
+
   async updateByNum(): Promise<response | error> {
     const commentNum: number = parseInt(this.params.commentNum);
     const body = this.body;
@@ -248,21 +263,6 @@ class Comment {
         success: false,
         msg:
           "댓글을 삭제하려면 depth가 0이어야 합니다. 답글을 삭제하려는 것이 맞다면 답글 번호가 올바른지 확인해 주십시오.",
-      };
-    } catch (err) {
-      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
-    }
-  }
-
-  async findOneByNum(): Promise<response | error> {
-    const boardNum: number = parseInt(this.params.num as string);
-    try {
-      const buyers: buyer[] = await CommentStorage.findOneByBoardNum(boardNum);
-
-      return {
-        success: true,
-        msg: "구매 희망자 조회에 성공하셨습니다.",
-        buyers,
       };
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
