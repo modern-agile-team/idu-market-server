@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request } from "express";
 import { params } from "../../../config/types";
 import Error from "../../utils/Error";
@@ -56,17 +55,26 @@ class PurchaseList {
 
   async create(): Promise<error | response> {
     const client = this.body;
+
     try {
-      const isExist = await PurchaseListStorage.isExist(client);
-      if (isExist.length === 0) {
-        const student = await PurchaseListStorage.findNicknameById(client);
-        const response = await PurchaseListStorage.create(student, client);
-        if (response)
+      const purchaseList = await PurchaseListStorage.findOneByBoardNumberAndStudentId(
+        client.boardNum,
+        client.studentId
+      );
+
+      if (!purchaseList) {
+        // 구매목록에 추가되지 않은 것만 추가한다.
+        const createdId = await PurchaseListStorage.create(
+          client.studentId,
+          client.boardNum
+        );
+
+        if (createdId)
           return { success: true, msg: "구매목록에 저장되었습니다" };
       }
       return { success: false, msg: "이미 구매목록에 저장이 되었습니다." };
     } catch (err) {
-      return Error.ctrl("존재하지 않는 게시판 혹은 이름입니다.", err);
+      return Error.ctrl("게시판 혹은 학생 아이디가 존재하지 않습니다.", err);
     }
   }
 }
