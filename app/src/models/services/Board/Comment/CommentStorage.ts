@@ -310,13 +310,13 @@ class CommentStorage {
     }
   }
 
-  static async findStudentIdByNum(boardNum: number): Promise<buyer[]> {
+  static async findOneByBoardNum(boardNum: number): Promise<buyer[]> {
     let conn;
     try {
       conn = await mariadb.getConnection();
-      const query = `SELECT DISTINCT nickname 
-      FROM comments cm
-      JOIN students st
+      const query = `SELECT DISTINCT st.nickname, st.id 
+      FROM comments AS cm
+      JOIN students AS st
       ON st.id = cm.student_id
       WHERE board_no = ? AND cm.hidden_flag = 0;`;
 

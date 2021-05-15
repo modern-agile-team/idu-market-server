@@ -1,7 +1,7 @@
 import { Request } from "express";
 import CommentStorage from "./CommentStorage";
+
 import Error from "../../../utils/Error";
-import { RowDataPacket } from "mysql2";
 import { params, query } from "../../../../config/types";
 
 interface response {
@@ -254,12 +254,16 @@ class Comment {
     }
   }
 
-  async findStudentIdByNum(): Promise<response | error> {
+  async findOneByNum(): Promise<response | error> {
     const boardNum: number = parseInt(this.params.num as string);
     try {
-      const buyers: buyer[] = await CommentStorage.findStudentIdByNum(boardNum);
+      const buyers: buyer[] = await CommentStorage.findOneByBoardNum(boardNum);
 
-      return { success: true, msg: "comments조회 완료 되었습니다.", buyers };
+      return {
+        success: true,
+        msg: "구매 희망자 조회에 성공하셨습니다.",
+        buyers,
+      };
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }
