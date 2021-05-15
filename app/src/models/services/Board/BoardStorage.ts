@@ -114,7 +114,6 @@ class BoardStroage {
     categoryNum: number,
     lastNum: number
   ): Promise<boards[]> {
-    console.log(categoryNum, lastNum);
     let where = "";
     let limit = "";
     // 아래 if 문으로 Market API와 Board API를 구분짓게 된다.
