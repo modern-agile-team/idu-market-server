@@ -5,25 +5,20 @@ import * as cors from "cors";
 import * as morgan from "morgan";
 import logger from "./src/config/logger";
 
-interface corsOption {
-  origin: any;
-  credentials: boolean;
-}
-
 const app: express.Application = express();
 
 dotenv.config();
 
-const corsOptionsDelegate = (req, callback) => {
-  const allowList = [process.env.IDU_ORIGIN, process.env.AWS_ORIGIN];
-  let corsOption;
-  if (allowList.indexOf(req.header('Origin')) !== -1) {
-    corsOption = { origin: true, allowedHeaders: req.header('Origin') }
-  } else {
-    corsOption = { origin: false }
-  }
-  callback(null, corsOption)
-}
+// const corsOptionsDelegate = (req, callback) => {
+//   const allowList: string[] = ['http://localhost'];
+//   let corsOption;
+//   if (allowList.indexOf(req.header('Origin')) !== -1) {
+//     corsOption = { origin: true } 
+//   } else {
+//     corsOption = { origin: false }
+//   }
+//   callback(null, corsOption)
+// }
 
 app.set("views", "./src/views");
 app.set("view engine", "ejs");
@@ -32,7 +27,7 @@ app.use(express.static(`${__dirname}/src/public`));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(cors(corsOptionsDelegate));
+app.use(cors());
 app.use(
   morgan("tiny", {
     stream: {
