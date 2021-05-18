@@ -86,7 +86,7 @@ class ProfileStorage {
       const rows = await conn.query(query, [
         user.email,
         user.nickname,
-        user.major,
+        user.majorNum,
         studentId,
       ]);
       return rows.affectedRows;
