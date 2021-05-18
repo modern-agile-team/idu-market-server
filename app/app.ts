@@ -15,10 +15,18 @@ const app: express.Application = express();
 dotenv.config();
 
 const corsOptionsDelegate = (req, callback) => {
-  const allowList = [process.env.IDU_ORIGIN, process.env.AWS_ORIGIN];
+  const allowList = [
+    "http://idu-market.shop",
+    "https://idu-market.shop",
+    "http://127.0.0.1",
+    "http://127.0.0.1:3000",
+    "http://idu-market.shop:3000",
+    "https://idu-market.shop:3000",
+    process.env.AWS_ORIGIN,
+  ];
   let corsOption;
   if (allowList.indexOf(req.header("Origin")) !== -1) {
-    corsOption = { origin: true, allowedHeaders: req.header("Origin") };
+    corsOption = { origin: true };
   } else {
     corsOption = { origin: false };
   }
