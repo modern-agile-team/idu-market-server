@@ -45,9 +45,9 @@ const process = {
     return res.status(409).json(response);
   },
 
-  update: async (req: Request, res: Response): Promise<Response> => {
+  create: async (req: Request, res: Response): Promise<Response> => {
     const watchList = new WatchList(req);
-    const response: response = await watchList.update();
+    const response: response = await watchList.create();
     if (response.isError) {
       logger.error(`POST /api/sale-list/studentId 500 ${response.errMsg}`);
       return res.status(500).json(response.clientMsg);
