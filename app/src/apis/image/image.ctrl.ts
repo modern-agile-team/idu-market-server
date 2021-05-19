@@ -7,9 +7,11 @@ const process = {
     const images = req.files as Express.MulterS3.File[];
 
     try {
-      const path: string[] = images.map(
-        (img: Express.MulterS3.File) => img.location
-      );
+      const path: string[] = images.map((img: Express.MulterS3.File) => {
+        let imagePath = img.location;
+        imagePath = imagePath.replace(/\/board\//, "/resizing-board/");
+        return imagePath;
+      });
 
       logger.info(`POST /api/image 200 업로드 성공`);
       return res.status(200).json({
@@ -34,10 +36,11 @@ const process = {
       rest.forEach((img: string) => {
         const cutUrl: string[] = img.split("/");
         const length: number = cutUrl.length;
-        const key = `${cutUrl[length - 2]}/${cutUrl[length - 1]}`;
-        keys.push(key);
+        const resizeImageKey = `${cutUrl[length - 2]}/${cutUrl[length - 1]}`;
+        const key = `board/${cutUrl[length - 1]}`;
+        keys.push(resizeImageKey, key);
       });
-
+      console.log(keys);
       const response = await deleteImage(keys);
       if (response) {
         logger.info(`POST /api/image/remove 200 삭제 성공`);
