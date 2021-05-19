@@ -39,24 +39,14 @@ export const deleteImage = async (
       Quiet: false,
     },
   };
-  // const resizeImage = {
-  //   Bucket: "resize-wooahan-agile",
-  //   Delete: {
-  //     Objects: objectKeys,
-  //     Quiet: false,
-  //   },
-  // };
+
   try {
     const result = await s3
       .deleteObjects(original, (err) => {
         if (err) throw err;
       })
       .promise();
-    // const delResize = await s3
-    //   .deleteObjects(resizeImage, (err) => {
-    //     if (err) throw err;
-    //   })
-    //   .promise();
+
     return result;
   } catch (err) {
     return err;
