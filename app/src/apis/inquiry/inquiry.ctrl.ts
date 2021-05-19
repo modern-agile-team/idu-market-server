@@ -3,6 +3,7 @@ import logger from "../../config/logger";
 import Error from "../../models/utils/Error";
 
 import Email from "../../models/services/Email/Email";
+import InquiryStorage from "../../models/services/Inquiry/InquiryStorage";
 
 interface response {
   success: boolean;
@@ -17,8 +18,9 @@ const inquiry = {
     try {
       const email = new Email(req);
       const response = (await email.sendEmailForInquiry()) as response;
+      const isStore: boolean = await InquiryStorage.create(req.body);
 
-      if (response.success) {
+      if (response.success && isStore) {
         logger.info(`POST /api/inquiry 201 ${response.msg}`);
         return res.status(201).json(response);
       }
