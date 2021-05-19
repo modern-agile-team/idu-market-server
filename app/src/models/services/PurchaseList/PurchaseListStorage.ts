@@ -21,7 +21,7 @@ class PurchaseListStorage {
     let conn;
     try {
       conn = await mariadb.getConnection();
-      const query = `SELECT bo.no AS num, pu.student_id AS buyerId, st.nickname AS buyerName, bo.thumbnail, bo.title, bo.hit, 
+      const query = `SELECT bo.no AS boardNum, pu.student_id AS buyerId, st.nickname AS buyerName, bo.thumbnail, bo.title, bo.hit, 
       bo.price, cat.name AS categoryName, COUNT(cmt.content) AS commentCount
       ,date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, bo.student_id AS sellerId,
       (SELECT nickname FROM students st where bo.student_id = st.id) AS sellerName,
