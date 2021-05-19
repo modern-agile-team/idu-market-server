@@ -18,9 +18,9 @@ const inquiry = {
     try {
       const email = new Email(req);
       const response = (await email.sendEmailForInquiry()) as response;
-      const isStore: boolean = await InquiryStorage.create(req.body);
+      const isSave: boolean = await InquiryStorage.create(req.body);
 
-      if (response.success && isStore) {
+      if (response.success && isSave) {
         logger.info(`POST /api/inquiry 201 ${response.msg}`);
         return res.status(201).json(response);
       }
