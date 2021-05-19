@@ -19,8 +19,8 @@ class InquiryStorage {
         body.content,
       ]);
 
-      if (inquiry.affectedRows === 1) return true;
-      return false;
+      if (inquiry.affectedRows === 0) return false;
+      return true;
     } catch (err) {
       throw err;
     } finally {
