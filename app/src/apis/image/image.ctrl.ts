@@ -40,7 +40,7 @@ const process = {
         const key = `board/${cutUrl[length - 1]}`;
         keys.push(resizeImageKey, key);
       });
-      console.log(keys);
+
       const response = await deleteImage(keys);
       if (response) {
         logger.info(`POST /api/image/remove 200 삭제 성공`);
