@@ -2,7 +2,7 @@ import { bool } from "aws-sdk/clients/signer";
 import mariadb from "../../../config/mariadb";
 
 interface request {
-  num?: number;
+  notiCategoryNum?: number;
   senderNickname?: string;
   recipientNickname?: string;
   url?: string;
@@ -24,7 +24,7 @@ class NotificationStorage {
         VALUES (?, ?, ?, ?, (SELECT email FROM students WHERE nickname = '${req.recipientNickname}'), ?);`,
         [
           boardNum,
-          req.num,
+          req.notiCategoryNum,
           req.senderNickname,
           req.recipientNickname,
           req.url
