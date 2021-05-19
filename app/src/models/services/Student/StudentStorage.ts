@@ -53,13 +53,38 @@ class StudentStorage {
     }
   }
 
-  static async findOneByNickname(nickname: string): Promise<Student> {
+  static async findOneExeptMeByEmail(
+    studentId: string,
+    email: string
+  ): Promise<Student> {
     let conn;
     try {
       conn = await mariadb.getConnection();
-      const query = "SELECT * FROM students WHERE nickname=?;";
+      const query = "SELECT * FROM students WHERE id!=? AND email=?;";
 
-      const results = await conn.query(query, [nickname]);
+      const results = await conn.query(query, [studentId, email]);
+
+      const students: Student[] = Object.values(
+        JSON.parse(JSON.stringify(results))
+      );
+      return students[0];
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
+  }
+
+  static async findOneExeptMeByNickname(
+    studentId: string,
+    nickname: string
+  ): Promise<Student> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const query = "SELECT * FROM students WHERE id!=? AND nickname=?;";
+
+      const results = await conn.query(query, [studentId, nickname]);
 
       const students: Student[] = Object.values(
         JSON.parse(JSON.stringify(results))

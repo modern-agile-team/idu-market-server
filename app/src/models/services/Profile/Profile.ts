@@ -71,11 +71,15 @@ class Profile {
     const studentId = this.params.studentId;
 
     try {
-      const isExistEmail = await StudentStorage.findOneByEmail(user.email);
+      const isExistEmail = await StudentStorage.findOneExeptMeByEmail(
+        studentId,
+        user.email
+      );
       if (isExistEmail)
         return { success: false, msg: "이미 존재하는 이메일입니다." };
 
-      const isExistNickname = await StudentStorage.findOneByNickname(
+      const isExistNickname = await StudentStorage.findOneExeptMeByNickname(
+        studentId,
         user.nickname
       );
       if (isExistNickname)
