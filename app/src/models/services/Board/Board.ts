@@ -137,7 +137,7 @@ class Board {
     const categoryName: keyof Category = this.params.categoryName;
     const categoryNum: number = Category[categoryName];
     const lastNum: number =
-      this.query.lastNum === undefined ? 0 : Number(this.query.lastNum);
+      this.query.lastNum === undefined ? -1 : Number(this.query.lastNum);
 
     if (categoryNum === undefined) {
       return { success: false, msg: "존재하지 않는 게시판입니다." };
