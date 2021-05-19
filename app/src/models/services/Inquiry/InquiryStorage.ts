@@ -11,7 +11,7 @@ class InquiryStorage {
     let conn;
     try {
       conn = await mariadb.getConnection();
-      const query = `INSERT INTO inquirys(student_id, title, content) VALUES (?, ?, ?)`;
+      const query = `INSERT INTO inquiries(student_id, title, content) VALUES (?, ?, ?)`;
 
       const inquiry = await conn.query(query, [
         body.studentId,
@@ -19,7 +19,7 @@ class InquiryStorage {
         body.content,
       ]);
 
-      if (inquiry.insertId) return true;
+      if (inquiry.affectedRows === 1) return true;
       return false;
     } catch (err) {
       throw err;
