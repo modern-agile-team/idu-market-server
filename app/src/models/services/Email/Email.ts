@@ -49,8 +49,7 @@ class Email {
       if (!useableStudent)
         return {
           success: false,
-          msg:
-            "이름 혹은 이메일이 본인의 정보가 맞는지 다시 한 번 확인해 주십시오.",
+          msg: "이름 혹은 이메일이 본인의 정보가 맞는지 다시 한 번 확인해 주십시오.",
         };
 
       return new Promise((resolve, reject) => {
@@ -96,8 +95,7 @@ class Email {
       if (studentInfoById.id !== studentInfoByEmail.id)
         return {
           success: false,
-          msg:
-            "아이디 혹은 이메일이 본인의 정보가 맞는지 다시 한 번 확인해 주십시오.",
+          msg: "아이디 혹은 이메일이 본인의 정보가 맞는지 다시 한 번 확인해 주십시오.",
         };
 
       const tokenInfo = await Auth.createToken(client.id);
@@ -203,7 +201,6 @@ class Email {
     } catch (err) {
       return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
-  
   }
 }
 

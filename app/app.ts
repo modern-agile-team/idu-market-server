@@ -54,6 +54,7 @@ import purchase from "./src/apis/purchase-list";
 import watchlist from "./src/apis/watch-list";
 import profile from "./src/apis/profile";
 import image from "./src/apis/image";
+import inquiry from "./src/apis/inquiry";
 
 app.use("/", view);
 app.use("/api/", root);
@@ -65,5 +66,6 @@ app.use("/api/purchase-list", purchase);
 app.use("/api/watchlist", watchlist);
 app.use("/api/students", profile);
 app.use("/api/image", image);
+app.use("/api/inquiry", inquiry);
 
 export default app;

@@ -19,7 +19,7 @@ class SaleListStorage {
     let conn;
     try {
       conn = await mariadb.getConnection();
-      const query = `SELECT bo.no AS num, bo.student_id AS sellerId, st.nickname AS sellerName, st.profile_path AS profilePath, 
+      const query = `SELECT bo.no AS boardNum, bo.student_id AS sellerId, st.nickname AS sellerName, st.profile_path AS profilePath, 
         bo.thumbnail, bo.title, bo.hit, 
         bo.price, cat.name AS categoryName, COUNT(cmt.content) AS commentCount
         ,date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate
