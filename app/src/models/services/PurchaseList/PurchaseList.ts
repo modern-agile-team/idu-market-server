@@ -2,6 +2,7 @@ import { Request } from "express";
 import { params } from "../../../config/types";
 import Error from "../../utils/Error";
 import PurchaseListStorage from "./PurchaseListStorage";
+import Notification from "../Notification/Notification";
 
 interface error {
   isError: boolean;
@@ -13,6 +14,7 @@ interface response {
   success: boolean;
   msg: string;
   purchaseList?: purchaseList[];
+  alarm?: response | error;
 }
 
 interface purchaseList {
@@ -34,7 +36,9 @@ interface purchaseList {
 class PurchaseList {
   params: params;
   body: any;
+
   constructor(readonly req: Request) {
+    this.req = req;
     this.body = req.body;
     this.params = req.params;
   }
@@ -55,7 +59,8 @@ class PurchaseList {
 
   async create(): Promise<error | response> {
     const client = this.body;
-
+    const notification = new Notification(this.req);
+    
     try {
       const purchaseList = await PurchaseListStorage.findOneByBoardNumberAndStudentId(
         client.boardNum,
@@ -68,9 +73,10 @@ class PurchaseList {
           client.studentId,
           client.boardNum
         );
+        const alarm : response | error = await notification.createByBoardNum();
 
         if (createdId)
-          return { success: true, msg: "구매목록에 저장되었습니다" };
+          return { success: true, msg: "구매목록에 저장되었습니다", alarm };
       }
       return { success: false, msg: "이미 구매목록에 저장이 되었습니다." };
     } catch (err) {

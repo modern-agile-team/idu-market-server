@@ -42,7 +42,7 @@ const process = {
     }
     logger.info(`POST api/notifications/boardNum 400 ${response.msg}`);
     return res.status(400).json(response);
-  }
+  },
 };
 
 export default {

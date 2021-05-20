@@ -2,10 +2,13 @@ import { Request } from "express";
 import Error from "../../utils/Error";
 import { params } from "../../../config/types";
 import NotificationStorage from "./NotificationStorage";
+import Email from "../Email/Email";
 
 interface response {
   success: boolean;
   msg: string;
+  notifications?: notifications[];
+  sendEmail?: response | error;
 }
 
 interface error {
@@ -14,9 +17,17 @@ interface error {
   clientMsg: string;
 }
 
+interface notifications {
+  senderNickname: string;
+  notiCategoryNum: number;
+  inDate: string;
+  readFlag: number;
+  boardTitle: string;
+}
+
 class Notification {
-  body: any;
-  params: params;
+  private body: any;
+  private params: params;
 
   constructor(readonly req: Request) {
     this.body = req.body;
@@ -25,13 +36,17 @@ class Notification {
 
   async createByBoardNum() : Promise<response | error> {
     const notification = this.body;
-    const boardNum = Number(this.params.boardNum);
+    const boardNum = Number(this.params.num);
+    const purchaseBoardNum = this.body.boardNum;
+    const email = new Email(this.body);
 
     try {
-      const { success, num } = await NotificationStorage.create(boardNum, notification);
-      
+      const { success } = await NotificationStorage.create(boardNum, notification, purchaseBoardNum);
+
       if (success) {
-        return { success: true, msg: "알림 생성 완료" }
+        const sendEmail: response | error = await email.sendAlarm(boardNum ? boardNum : purchaseBoardNum);
+        
+        return { success: true, msg: "알림 생성 완료", sendEmail }
       }
       return {
         success: false,
