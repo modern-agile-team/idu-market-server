@@ -90,6 +90,33 @@ class NotificationStorage {
       conn?.release();
     }
   }
+
+  static async findAllbyNickname(req: request): Promise<notification[]> {
+    let conn;
+
+    try {
+      conn = await mariadb.getConnection();
+
+      const notifications = await conn.query(
+        `SELECT no.sender_nickname AS senderNickname, no.noti_category_no AS notiCategoryNum, bo.title AS boardTitle, no.read_flag AS readFlag,
+        date_format(no.in_date, '%Y-%m-%d %H:%i:%s') AS inDate 
+        FROM notifications no
+        JOIN boards bo
+        ON bo.no = no.board_no
+        WHERE recipient_nickname = ?;`,
+        [
+          req.recipientNickname,
+        ]
+      );
+
+      const notification: notification[] = Object.values(JSON.parse(JSON.stringify(notifications)));
+      return notification;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
+  }
 }
 
 

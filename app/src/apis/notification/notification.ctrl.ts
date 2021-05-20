@@ -43,6 +43,21 @@ const process = {
     logger.info(`POST api/notifications/boardNum 400 ${response.msg}`);
     return res.status(400).json(response);
   },
+
+  find: async (req: Request, res: Response): Promise<Response> => {
+    const notification = new Notification(req);
+    const response: response = await notification.findAllbyNickname();
+    if (response.success) {
+      logger.info(`GET api/notifications/studentId 200 ${response.msg}`);
+      return res.status(201).json(response);
+    }
+    if (response.isError) {
+      logger.error(`GET api/notifications/studentId 500 ${response.errMsg}`);
+      return res.status(500).json(response.clientMsg);
+    }
+    logger.info(`GET api/notifications/studentId 400 ${response.msg}`);
+    return res.status(400).json(response);
+  },
 };
 
 export default {

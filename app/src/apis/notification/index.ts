@@ -6,4 +6,5 @@ const router: express.Router = express.Router();
 router.post("/", ctrl.process.notify);
 router.post("/:boardNum", ctrl.process.create);
 
+router.get("/:studentId", ctrl.process.find);
 export default router;

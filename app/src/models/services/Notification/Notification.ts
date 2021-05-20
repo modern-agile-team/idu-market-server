@@ -56,6 +56,24 @@ class Notification {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요", err);
     }
   }
+
+  async findAllbyNickname() : Promise<response | error> {
+    const nickname = this.body;
+
+    try {
+      const notifications = await NotificationStorage.findAllbyNickname(nickname);
+
+      if (notifications) {
+        return { success : true, msg: "알림 조회 성공", notifications }
+      }
+      return {
+        success: false,
+        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주세요"
+      };
+    } catch (err) {
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요", err);
+    }
+  }
 }
 
 export default Notification;
