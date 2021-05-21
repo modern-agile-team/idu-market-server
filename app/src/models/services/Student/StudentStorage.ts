@@ -12,6 +12,7 @@ interface Student {
   admin_flag?: string;
   in_date?: string;
   err?: string;
+  categoryName?: string;
 }
 
 class StudentStorage {
@@ -19,7 +20,8 @@ class StudentStorage {
     let conn;
     try {
       conn = await mariadb.getConnection();
-      const query = "SELECT * FROM students WHERE id=?;";
+      const query = `SELECT st.id, st.name, st.email, st.nickname, majors.name as categoryName 
+         FROM students as st JOIN majors ON st.major_no = majors.no WHERE st.id= ?`;
 
       const results = await conn.query(query, [id]);
 

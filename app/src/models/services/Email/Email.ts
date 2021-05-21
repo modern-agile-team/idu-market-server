@@ -184,7 +184,7 @@ class Email {
             to: process.env.MAIL_EMAIL,
             subject: `${student.name}님의 문의사항이 도착했습니다`,
             html: `<p>[idu-market] <b>${student.name}</b>님에게 문의사항이 달렸습니다.</p>
-            <p><b>${student.name}</b>님의 닉네임은 ${student.nickname}, 학과는 ${student.major_no}, 이메일은 ${student.email}.</p>
+            <p><b>${student.name}</b>님의 닉네임은 ${student.nickname}, 학과는 ${student.categoryName}, 이메일은 ${student.email}.</p>
             <p>문의사항 제목: ${client.title}</p> 
             <p>문의사항: ${client.content}</p>`,
           };
