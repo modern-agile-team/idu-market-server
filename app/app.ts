@@ -5,11 +5,6 @@ import * as cors from "cors";
 import * as morgan from "morgan";
 import logger from "./src/config/logger";
 
-interface corsOption {
-  origin: any;
-  credentials: boolean;
-}
-
 const app: express.Application = express();
 
 dotenv.config();

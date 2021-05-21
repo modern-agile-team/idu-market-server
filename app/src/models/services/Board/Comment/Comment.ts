@@ -3,6 +3,7 @@ import CommentStorage from "./CommentStorage";
 
 import Error from "../../../utils/Error";
 import { params, query } from "../../../../config/types";
+import Notification from "../../Notification/Notification";
 
 interface response {
   success: boolean;
@@ -15,6 +16,7 @@ interface response {
   updatedComment?: updatedComment | undefined;
   updatedReply?: updatedComment | undefined;
   isDelete?: number;
+  alarm?: response | error;
 }
 
 interface updatedComment {
@@ -51,6 +53,7 @@ class Comment {
   query: query;
 
   constructor(readonly req: Request) {
+    this.req = req;
     this.body = req.body;
     this.params = req.params;
   }
@@ -58,6 +61,7 @@ class Comment {
   async createByBoardNum(): Promise<response | error> {
     const body = this.body;
     const boardNum: number = parseInt(this.params.num as string);
+    const notification = new Notification(this.req);
 
     try {
       const { isCreate, num } = await CommentStorage.createByBoardNum(
@@ -75,10 +79,11 @@ class Comment {
         const isUpdate = await CommentStorage.updateGroupNum(
           createdComments.num
         );
-
+        const alarm : response | error = await notification.createByBoardNum();
+        
         if (isUpdate) {
           createdComments.groupNum = createdComments.num;
-          return { success: true, msg: "댓글 생성 성공", createdComments };
+          return { success: true, msg: "댓글 생성 성공", createdComments, alarm };
         }
         return {
           success: false,
@@ -96,6 +101,7 @@ class Comment {
     const body: any = this.body;
     const boardNum: number = parseInt(this.params.num as string);
     const groupNum: number = parseInt(this.params.groupNum as string);
+    const notification = new Notification(this.req);
 
     try {
       const { isCreate, num } = await CommentStorage.createReplyByGroupNum(
@@ -114,7 +120,8 @@ class Comment {
             JSON.parse(JSON.stringify(replies))
           );
           const createdReply: comment = reply[0];
-          return { success: true, msg: "답글 생성 성공", createdReply };
+          const alarm : response | error = await notification.createByBoardNum();
+          return { success: true, msg: "답글 생성 성공", createdReply, alarm };
         }
       }
       return { success: false, msg: "답글 생성 실패" };
