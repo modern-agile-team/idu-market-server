@@ -18,6 +18,7 @@ interface error {
 }
 
 interface notifications {
+  num: number;
   senderNickname: string;
   notiCategoryNum: number;
   inDate: string;

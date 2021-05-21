@@ -63,7 +63,7 @@ const process = {
     const notification = new Notification(req);
     const response: response = await notification.updateReadFlag();
     if (response.success) {
-      logger.info(`PATCH api/notifications/studentId 200 ${response.msg}`);
+      logger.info(`PATCH api/notifications/studentId 201 ${response.msg}`);
       return res.status(201).json(response);
     }
     if (response.isError) {

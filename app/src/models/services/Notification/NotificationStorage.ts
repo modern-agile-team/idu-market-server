@@ -12,6 +12,7 @@ interface response {
 }
 
 interface notification {
+  num: number;
   senderNickname: string;
   notiCategoryNum: number;
   inDate: string;
@@ -98,7 +99,7 @@ class NotificationStorage {
       conn = await mariadb.getConnection();
 
       const notifications = await conn.query(
-        `SELECT no.sender_nickname AS senderNickname, no.noti_category_no AS notiCategoryNum, bo.title AS boardTitle, no.read_flag AS readFlag,
+        `SELECT no.no AS notificationNum, no.sender_nickname AS senderNickname, no.noti_category_no AS notiCategoryNum, bo.title AS boardTitle, no.read_flag AS readFlag,
         date_format(no.in_date, '%Y-%m-%d %H:%i:%s') AS inDate 
         FROM notifications no
         JOIN boards bo
@@ -111,6 +112,7 @@ class NotificationStorage {
       );
 
       const notification: notification[] = Object.values(JSON.parse(JSON.stringify(notifications)));
+      console.log(notification);
       return notification;
     } catch (err) {
       throw err;
