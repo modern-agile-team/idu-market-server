@@ -103,7 +103,8 @@ class NotificationStorage {
         FROM notifications no
         JOIN boards bo
         ON bo.no = no.board_no
-        WHERE recipient_nickname = ?;`,
+        WHERE recipient_nickname = ?
+        ORDER BY inDate DESC;`,
         [
           req.recipientNickname,
         ]
