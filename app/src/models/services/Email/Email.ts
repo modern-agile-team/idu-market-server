@@ -168,6 +168,44 @@ class Email {
     }
   }
 
+  async sendEmailForInquiry(): Promise<error | response> {
+    try {
+      const client: any = this.body;
+      const student = await StudentStorage.findOneById(client.studentId);
+      if (!student) {
+        return {
+          success: false,
+          msg: "존재하지 않는 아이디입니다. 메일 전송에 실패하셨습니다.",
+        };
+      }
+
+      return new Promise((resolve, reject) => {
+        try {
+          const message = {
+            from: process.env.MAIL_EMAIL,
+            to: process.env.MAIL_EMAIL,
+            subject: `${student.name}님의 문의사항이 도착했습니다`,
+            html: `<p>[idu-market] <b>${student.name}</b>님에게 문의사항이 달렸습니다.</p>
+            <p><b>${student.name}</b>님의 닉네임은 ${student.nickname}, 학과는 ${student.categoryName}, 이메일은 ${student.email}.</p>
+            <p>문의사항 제목: ${client.title}</p> 
+            <p>문의사항: ${client.content}</p>`,
+          };
+          const transporter = nodemailer.createTransport(mailOption);
+
+          transporter.sendMail(message);
+          resolve({
+            success: true,
+            msg: `메일이 전송되었습니다.`,
+          });
+        } catch (err) {
+          reject(err);
+        }
+      });
+    } catch (err) {
+      return Error.ctrl("서버 개발자에게 문의해주십시오", err);
+    }
+  }
+
   async sendAlarm(boardNum : number) : Promise<error | response> {
     try{
       const client: any = this.req;
