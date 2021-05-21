@@ -58,6 +58,21 @@ const process = {
     logger.info(`GET api/notifications/studentId 400 ${response.msg}`);
     return res.status(400).json(response);
   },
+
+  update: async (req: Request, res: Response): Promise<Response> => {
+    const notification = new Notification(req);
+    const response: response = await notification.updateReadFlag();
+    if (response.success) {
+      logger.info(`PATCH api/notifications/studentId 200 ${response.msg}`);
+      return res.status(201).json(response);
+    }
+    if (response.isError) {
+      logger.error(`PATCH api/notifications/studentId 500 ${response.errMsg}`);
+      return res.status(500).json(response.clientMsg);
+    }
+    logger.info(`PATCH api/notifications/studentId 400 ${response.msg}`);
+    return res.status(400).json(response);
+  },
 };
 
 export default {

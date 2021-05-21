@@ -118,6 +118,27 @@ class NotificationStorage {
       conn?.release();
     }
   }
+
+  static async updateReadFlag(notificationNum: number) : Promise<number> {
+    let conn;
+    console.log(notificationNum);
+    try {
+      conn = await mariadb.getConnection();
+
+      const updateInfo = await conn.query(
+        "UPDATE notifications SET read_flag = 1 WHERE no = ?;",
+        [
+          notificationNum
+        ]
+      );
+
+      return updateInfo.affectedRows; 
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
+  }
 }
 
 

@@ -74,6 +74,27 @@ class Notification {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요", err);
     }
   }
+
+  async updateReadFlag() : Promise<response | error> {
+    const notificationNum = this.body.notificationNum;
+
+    try {
+      const isUpdateReadFlag = await NotificationStorage.updateReadFlag(notificationNum);
+
+      if (isUpdateReadFlag) {
+        return {
+          success: true,
+          msg: "알람 읽음",
+        };
+      }
+      return {
+        success: false,
+        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주세요"
+      };
+    } catch (err) {
+      return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요", err);
+    }
+  }
 }
 
 export default Notification;
