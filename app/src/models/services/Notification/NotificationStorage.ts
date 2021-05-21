@@ -38,8 +38,8 @@ class NotificationStorage {
           req.url
         ]
       );
-
-      if (notification.affetedRows) {
+      
+      if (notification.affectedRows) {
         return { success: true }
       }
       return { success : false };
