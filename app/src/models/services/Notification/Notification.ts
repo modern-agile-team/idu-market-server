@@ -37,10 +37,10 @@ class Notification {
 
   async createByBoardNum() : Promise<response | error> {
     const notification = this.body;
-    const boardNum = Number(this.params.num);
+    const boardNum = Number(this.params.boardNum);
     const purchaseBoardNum = this.body.boardNum;
     const email = new Email(this.body);
-
+ 
     try {
       const { success } = await NotificationStorage.create(boardNum, notification, purchaseBoardNum);
 
