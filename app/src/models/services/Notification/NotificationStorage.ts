@@ -113,8 +113,6 @@ class NotificationStorage {
         JSON.parse(JSON.stringify(notifications))
       );
 
-
-
       return notification;
     } catch (err) {
       throw err;
