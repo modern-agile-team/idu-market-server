@@ -79,16 +79,20 @@ class Comment {
         const isUpdate = await CommentStorage.updateGroupNum(
           createdComments.num
         );
-        const alarm : response | error = await notification.createByBoardNum();
-        
+        const alarm: response | error = await notification.createByBoardNum();
+
         if (isUpdate) {
           createdComments.groupNum = createdComments.num;
-          return { success: true, msg: "댓글 생성 성공", createdComments, alarm };
+          return {
+            success: true,
+            msg: "댓글 생성 성공",
+            createdComments,
+            alarm,
+          };
         }
         return {
           success: false,
-          msg:
-            "댓글 Group Number 업데이트 실패. 서버 개발자에게 문의 바랍니다.",
+          msg: "댓글 Group Number 업데이트 실패. 서버 개발자에게 문의 바랍니다.",
         };
       }
       return { success: false, msg: "댓글 생성 실패" };
@@ -110,9 +114,8 @@ class Comment {
         groupNum
       );
       if (isCreate) {
-        const isUpdateReplyFlag = await CommentStorage.updateReplyFlagOfCommentByGroupNum(
-          groupNum
-        );
+        const isUpdateReplyFlag =
+          await CommentStorage.updateReplyFlagOfCommentByGroupNum(groupNum);
 
         if (isUpdateReplyFlag) {
           const replies = await CommentStorage.findOneByNum(num);
@@ -120,7 +123,7 @@ class Comment {
             JSON.parse(JSON.stringify(replies))
           );
           const createdReply: comment = reply[0];
-          const alarm : response | error = await notification.createByBoardNum();
+          const alarm: response | error = await notification.createByBoardNum();
           return { success: true, msg: "답글 생성 성공", createdReply, alarm };
         }
       }
@@ -149,16 +152,14 @@ class Comment {
     const commentNum: number = parseInt(this.params.commentNum);
     const body = this.body;
     try {
-      const isUpdate: number = await CommentStorage.updateByNum(
+      const isUpdate: boolean = await CommentStorage.updateByNum(
         body,
         commentNum
       );
 
-      if (isUpdate === 1) {
-        const comments = await CommentStorage.findOneByNum(commentNum);
-        const comment: comment[] = Object.values(
-          JSON.parse(JSON.stringify(comments))
-        );
+      if (isUpdate) {
+        const comment = await CommentStorage.findOneByNum(commentNum);
+
         const updatedComment: comment = comment[0];
 
         const response = {
@@ -180,8 +181,7 @@ class Comment {
       }
       return {
         success: false,
-        msg:
-          "댓글을 수정한 studentId와 수정될 commentNum이 올바른지 확인하십시오.",
+        msg: "댓글을 수정한 studentId와 수정될 commentNum이 올바른지 확인하십시오.",
       };
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
@@ -194,7 +194,7 @@ class Comment {
 
     try {
       const replyFlag = await CommentStorage.findReplyFlag(num);
-      let isDelete = 0;
+      let isDelete = false;
 
       if (replyFlag === 1) {
         // 답글이 있으면 숨김 처리
@@ -213,7 +213,7 @@ class Comment {
         isDelete = await CommentStorage.deleteCommentByNum(num, studentId);
       }
 
-      if (isDelete === 1) {
+      if (isDelete) {
         return {
           success: true,
           msg: "댓글 삭제 성공",
@@ -222,8 +222,7 @@ class Comment {
       }
       return {
         success: false,
-        msg:
-          "답글을 삭제하려면 depth가 1이어야 합니다. 댓글을 삭제하려는 것이 맞다면 댓글 번호가 올바른지 확인해 주십시오.",
+        msg: "답글을 삭제하려면 depth가 1이어야 합니다. 댓글을 삭제하려는 것이 맞다면 댓글 번호가 올바른지 확인해 주십시오.",
       };
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
@@ -236,19 +235,18 @@ class Comment {
 
     const groupNum: number = await CommentStorage.findOneGroupNum(num);
     try {
-      const isDelete: number = await CommentStorage.deleteReplyByNum(
+      const isDelete: boolean = await CommentStorage.deleteReplyByNum(
         num,
         studentId
       );
-      const replyFlag: number = await CommentStorage.updateReplyFlag(groupNum);
-      if (replyFlag === 1) {
+      const replyFlag: boolean = await CommentStorage.updateReplyFlag(groupNum);
+      if (replyFlag) {
         const hiddenFlag: number = await CommentStorage.findOneHiddenFlag(
           groupNum
         );
         if (hiddenFlag === 1) {
-          const isDeleteHidden: boolean = await CommentStorage.deleteHiddenComment(
-            groupNum
-          );
+          const isDeleteHidden: boolean =
+            await CommentStorage.deleteHiddenComment(groupNum);
           if (isDeleteHidden) {
             return {
               success: true,
@@ -259,7 +257,7 @@ class Comment {
           }
         }
       }
-      if (isDelete === 1) {
+      if (isDelete) {
         return {
           success: true,
           msg: "답글 삭제 성공",
@@ -268,8 +266,7 @@ class Comment {
       }
       return {
         success: false,
-        msg:
-          "댓글을 삭제하려면 depth가 0이어야 합니다. 답글을 삭제하려는 것이 맞다면 답글 번호가 올바른지 확인해 주십시오.",
+        msg: "댓글을 삭제하려면 depth가 0이어야 합니다. 답글을 삭제하려는 것이 맞다면 답글 번호가 올바른지 확인해 주십시오.",
       };
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);

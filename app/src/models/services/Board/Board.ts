@@ -61,13 +61,14 @@ interface comments {
   studentName: string;
   profilePath: string;
   nickname: string;
-  commentNum: number;
-  commentContent: string;
-  commentGroupNum: number;
-  commentDepth: number;
-  commentReplyFlag: number;
-  commentHiddenFlag: number;
-  commentInDate: string;
+  num: number;
+  content: string;
+  groupNum: number;
+  depth: number;
+  replyFlag: number;
+  hiddenFlag: number;
+  inDate: string;
+  updateDate: string;
 }
 
 interface error {
