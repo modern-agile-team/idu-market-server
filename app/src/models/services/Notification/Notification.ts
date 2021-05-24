@@ -37,7 +37,7 @@ class Notification {
 
   async createByBoardNum() : Promise<response | error> {
     const notification = this.body;
-    const boardNum = Number(this.params.boardNum);
+    const boardNum = Number(this.params.num);
     const purchaseBoardNum = this.body.boardNum;
     const email = new Email(this.body);
  
@@ -84,6 +84,7 @@ class Notification {
 
       if (isUpdateReadFlag) {
         return {
+          
           success: true,
           msg: "알람 읽음",
         };
