@@ -42,7 +42,7 @@ class NotificationStorage {
           req.url,
         ]
       );
-      console.log(1);
+
       if (notification.affectedRows) {
         return { success: true };
       }
@@ -113,6 +113,8 @@ class NotificationStorage {
         JSON.parse(JSON.stringify(notifications))
       );
 
+
+
       return notification;
     } catch (err) {
       throw err;
@@ -123,7 +125,7 @@ class NotificationStorage {
 
   static async updateReadFlag(notificationNum: number): Promise<number> {
     let conn;
-    console.log(notificationNum);
+
     try {
       conn = await mariadb.getConnection();
 
