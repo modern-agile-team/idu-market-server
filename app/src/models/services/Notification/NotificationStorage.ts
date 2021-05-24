@@ -21,7 +21,11 @@ interface notification {
 }
 
 class NotificationStorage {
-  static async create(boardNum: number, req: request, purchaseBoardNum?: number): Promise<response> {
+  static async create(
+    boardNum: number,
+    req: request,
+    purchaseBoardNum?: number
+  ): Promise<response> {
     let conn;
 
     try {
@@ -35,14 +39,14 @@ class NotificationStorage {
           req.notiCategoryNum,
           req.senderNickname,
           req.recipientNickname,
-          req.url
+          req.url,
         ]
       );
-      
+      console.log(1);
       if (notification.affectedRows) {
-        return { success: true }
+        return { success: true };
       }
-      return { success : false };
+      return { success: false };
     } catch (err) {
       throw err;
     } finally {
@@ -58,9 +62,7 @@ class NotificationStorage {
 
       const response = await conn.query(
         `SELECT email FROM students WHERE nickname = ?;`,
-        [
-          req.recipientNickname,
-        ]
+        [req.recipientNickname]
       );
 
       return response[0].email;
@@ -68,10 +70,10 @@ class NotificationStorage {
       throw err;
     } finally {
       conn?.release();
-    } 
+    }
   }
 
-  static async findOneByBoardNum(boardNum: number) : Promise<string> {
+  static async findOneByBoardNum(boardNum: number): Promise<string> {
     let conn;
 
     try {
@@ -79,10 +81,8 @@ class NotificationStorage {
 
       const response = await conn.query(
         `SELECT title FROM boards WHERE no = ?`,
-        [
-          boardNum
-        ]
-      )
+        [boardNum]
+      );
 
       return response[0].title;
     } catch (err) {
@@ -106,12 +106,12 @@ class NotificationStorage {
         ON bo.no = no.board_no
         WHERE recipient_nickname = ?
         ORDER BY inDate DESC;`,
-        [
-          req.recipientNickname,
-        ]
+        [req.recipientNickname]
       );
 
-      const notification: notification[] = Object.values(JSON.parse(JSON.stringify(notifications)));
+      const notification: notification[] = Object.values(
+        JSON.parse(JSON.stringify(notifications))
+      );
       console.log(notification);
       return notification;
     } catch (err) {
@@ -121,7 +121,7 @@ class NotificationStorage {
     }
   }
 
-  static async updateReadFlag(notificationNum: number) : Promise<number> {
+  static async updateReadFlag(notificationNum: number): Promise<number> {
     let conn;
     console.log(notificationNum);
     try {
@@ -129,12 +129,10 @@ class NotificationStorage {
 
       const updateInfo = await conn.query(
         "UPDATE notifications SET read_flag = 1 WHERE no = ?;",
-        [
-          notificationNum
-        ]
+        [notificationNum]
       );
 
-      return updateInfo.affectedRows; 
+      return updateInfo.affectedRows;
     } catch (err) {
       throw err;
     } finally {
@@ -142,6 +140,5 @@ class NotificationStorage {
     }
   }
 }
-
 
 export default NotificationStorage;
