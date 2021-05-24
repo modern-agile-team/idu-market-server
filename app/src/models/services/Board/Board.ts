@@ -276,13 +276,9 @@ class Board {
     const title: string = this.query.content as string;
 
     try {
-      const boardsSearch = await BoardStorage.findAllByIncludedTitleAndCategory(
+      const boards = await BoardStorage.findAllByIncludedTitleAndCategory(
         title,
         categoryNum
-      );
-
-      const boards: boards[] = Object.values(
-        JSON.parse(JSON.stringify(boardsSearch))
       );
 
       const response = {

@@ -219,8 +219,9 @@ class BoardStroage {
       conn = await mariadb.getConnection();
       const query = "UPDATE boards SET hit = hit + 1 WHERE no = ?;";
 
-      const boards = await conn.query(query, [num]);
-      return true;
+      const isupdateHitByNum = await conn.query(query, [num]);
+      if (isupdateHitByNum.affectedRows) return true;
+      return false;
     } catch (err) {
       throw err;
     } finally {
@@ -252,8 +253,9 @@ class BoardStroage {
       conn = await mariadb.getConnection();
       const query = "UPDATE boards SET status = ? WHERE no = ?;";
 
-      await conn.query(query, [board.status, num]);
-      return true;
+      const isupdateStatusByNum = await conn.query(query, [board.status, num]);
+      if (isupdateStatusByNum.affectedRows) return true;
+      return false;
     } catch (err) {
       throw err;
     } finally {
@@ -267,8 +269,9 @@ class BoardStroage {
       conn = await mariadb.getConnection();
       const query = "DELETE FROM boards where no = ?";
 
-      await conn.query(query, [num]);
-      return true;
+      const isDelete = await conn.query(query, [num]);
+      if (isDelete.affectedRows) return true;
+      return false;
     } catch (err) {
       throw err;
     } finally {
@@ -282,8 +285,9 @@ class BoardStroage {
       conn = await mariadb.getConnection();
       const query = "DELETE FROM images where board_no = ?";
 
-      await conn.query(query, [num]);
-      return true;
+      const isDeleteImage = await conn.query(query, [num]);
+      if (isDeleteImage.affectedRows > 0) return true;
+      return false;
     } catch (err) {
       throw err;
     } finally {
@@ -294,7 +298,7 @@ class BoardStroage {
   static async findAllByIncludedTitleAndCategory(
     title: string,
     categoryNum: number
-  ): Promise<boards> {
+  ): Promise<boards[]> {
     let conn;
     try {
       conn = await mariadb.getConnection();
@@ -310,7 +314,10 @@ class BoardStroage {
       GROUP BY num
       ORDER BY num desc;`;
 
-      const boards = await conn.query(query, [title, categoryNum]);
+      const boardsSearch = await conn.query(query, [title, categoryNum]);
+      const boards: boards[] = Object.values(
+        JSON.parse(JSON.stringify(boardsSearch))
+      );
       return boards;
     } catch (err) {
       throw err;
