@@ -92,7 +92,7 @@ class NotificationStorage {
     }
   }
 
-  static async findAllbyNickname(req: request): Promise<notification[]> {
+  static async findAllbyNickname(studentId: string): Promise<notification[]> {
     let conn;
 
     try {
@@ -104,15 +104,15 @@ class NotificationStorage {
         FROM notifications no
         JOIN boards bo
         ON bo.no = no.board_no
-        WHERE recipient_nickname = ?
+        WHERE bo.student_id = ?
         ORDER BY inDate DESC;`,
-        [req.recipientNickname]
+        [studentId]
       );
 
       const notification: notification[] = Object.values(
         JSON.parse(JSON.stringify(notifications))
       );
-      console.log(notification);
+
       return notification;
     } catch (err) {
       throw err;

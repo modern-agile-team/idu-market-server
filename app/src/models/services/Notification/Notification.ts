@@ -9,6 +9,7 @@ interface response {
   msg: string;
   notifications?: notifications[];
   sendEmail?: response | error;
+  readFlag?: number;
 }
 
 interface error {
@@ -37,11 +38,14 @@ class Notification {
 
   async createByBoardNum(): Promise<response | error> {
     const notification = this.body;
-    const boardNum = Number(this.params.boardNum);
+    const boardNum = Number(this.params.num);
     const purchaseBoardNum = this.body.boardNum;
     const email = new Email(this.body);
 
     try {
+      if (notification.recipientNickname === notification.senderNickname) {
+        return { success: false, msg: "동일한 사람에게는 알람이 생성되지 않습니다."}
+      }
       const { success } = await NotificationStorage.create(
         boardNum,
         notification,
@@ -65,11 +69,11 @@ class Notification {
   }
 
   async findAllbyNickname(): Promise<response | error> {
-    const nickname = this.body;
+    const studentId = this.params.studentId;
 
     try {
       const notifications = await NotificationStorage.findAllbyNickname(
-        nickname
+        studentId
       );
 
       if (notifications) {
@@ -96,6 +100,7 @@ class Notification {
         return {
           success: true,
           msg: "알람 읽음",
+          readFlag: isUpdateReadFlag,
         };
       }
       return {
