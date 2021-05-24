@@ -35,52 +35,62 @@ class Notification {
     this.params = req.params;
   }
 
-  async createByBoardNum() : Promise<response | error> {
+  async createByBoardNum(): Promise<response | error> {
     const notification = this.body;
     const boardNum = Number(this.params.boardNum);
     const purchaseBoardNum = this.body.boardNum;
     const email = new Email(this.body);
- 
+
     try {
-      const { success } = await NotificationStorage.create(boardNum, notification, purchaseBoardNum);
+      const { success } = await NotificationStorage.create(
+        boardNum,
+        notification,
+        purchaseBoardNum
+      );
 
       if (success) {
-        const sendEmail: response | error = await email.sendAlarm(boardNum ? boardNum : purchaseBoardNum);
-        
-        return { success: true, msg: "알림 생성 완료", sendEmail }
+        const sendEmail: response | error = await email.sendAlarm(
+          boardNum ? boardNum : purchaseBoardNum
+        );
+
+        return { success: true, msg: "알림 생성 완료", sendEmail };
       }
       return {
         success: false,
-        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주세요"
+        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주세요",
       };
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요", err);
     }
   }
 
-  async findAllbyNickname() : Promise<response | error> {
+  async findAllbyNickname(): Promise<response | error> {
     const nickname = this.body;
 
     try {
-      const notifications = await NotificationStorage.findAllbyNickname(nickname);
+      const notifications = await NotificationStorage.findAllbyNickname(
+        nickname
+      );
 
       if (notifications) {
-        return { success : true, msg: "알림 조회 성공", notifications }
+        return { success: true, msg: "알림 조회 성공", notifications };
       }
       return {
         success: false,
-        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주세요"
+        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주세요",
       };
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요", err);
     }
   }
 
-  async updateReadFlag() : Promise<response | error> {
+  async updateReadFlag(): Promise<response | error> {
     const notificationNum = this.body.notificationNum;
 
     try {
-      const isUpdateReadFlag = await NotificationStorage.updateReadFlag(notificationNum);
+      const isUpdateReadFlag = await NotificationStorage.updateReadFlag(
+        notificationNum
+      );
 
       if (isUpdateReadFlag) {
         return {
@@ -90,7 +100,7 @@ class Notification {
       }
       return {
         success: false,
-        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주세요"
+        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주세요",
       };
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요", err);
