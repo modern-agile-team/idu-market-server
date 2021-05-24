@@ -11,13 +11,9 @@ dotenv.config();
 
 const corsOptionsDelegate = (req, callback) => {
   const allowList = [
-    "http://idu-market.shop",
-    "https://idu-market.shop",
-    "http://127.0.0.1",
-    "http://127.0.0.1:3000",
-    "http://idu-market.shop:3000",
-    "https://idu-market.shop:3000",
+    process.env.IDU_ORIGIN,
     process.env.AWS_ORIGIN,
+    process.env.IDU_W3_ORIGIN
   ];
   let corsOption;
   if (allowList.indexOf(req.header("Origin")) !== -1) {
@@ -35,7 +31,7 @@ app.use(express.static(`${__dirname}/src/public`));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors());
+app.use(cors(corsOptionsDelegate));
 app.use(
   morgan("tiny", {
     stream: {
