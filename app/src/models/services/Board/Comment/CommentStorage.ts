@@ -14,13 +14,14 @@ interface comments {
   studentName: string;
   profilePath: string;
   nickname: string;
-  commentNum: number;
-  commentContent: string;
-  commentGroupNum: number;
-  commentDepth: number;
-  commentReplyFlag: number;
-  commentHiddenFlag: number;
-  commentInDate: string;
+  num: number;
+  content: string;
+  groupNum: number;
+  depth: number;
+  replyFlag: number;
+  hiddenFlag: number;
+  inDate: string;
+  updateDate: string;
 }
 
 class CommentStorage {
@@ -102,7 +103,7 @@ class CommentStorage {
     }
   }
 
-  static async findOneByNum(num: number): Promise<comments> {
+  static async findOneByNum(num: number): Promise<comments[]> {
     let conn;
     try {
       conn = await mariadb.getConnection();
@@ -115,8 +116,11 @@ class CommentStorage {
       WHERE cmt.no = ?;`;
 
       const comments = await conn.query(query, [num]);
+      const comment: comments[] = Object.values(
+        JSON.parse(JSON.stringify(comments))
+      );
 
-      return comments;
+      return comment;
     } catch (err) {
       throw err;
     } finally {
@@ -181,8 +185,10 @@ class CommentStorage {
       const query = `UPDATE comments SET reply_flag = 1
       WHERE no = ?;`;
 
-      await conn.query(query, [commentNum]);
-      return true;
+      const isUpdateReplyFlag = await conn.query(query, [commentNum]);
+
+      if (isUpdateReplyFlag.affectedRows) return true;
+      return false;
     } catch (err) {
       throw err;
     } finally {
@@ -196,8 +202,12 @@ class CommentStorage {
       conn = await mariadb.getConnection();
       const query = "UPDATE comments SET group_no = ? WHERE no = ?";
 
-      await conn.query(query, [commentNum, commentNum]);
-      return true;
+      const isUpdateGroupNum = await conn.query(query, [
+        commentNum,
+        commentNum,
+      ]);
+      if (isUpdateGroupNum.affectedRows) return true;
+      return false;
     } catch (err) {
       throw err;
     } finally {
@@ -205,7 +215,7 @@ class CommentStorage {
     }
   }
 
-  static async updateByNum(comment: any, num: number): Promise<number> {
+  static async updateByNum(comment: any, num: number): Promise<boolean> {
     let conn;
     try {
       conn = await mariadb.getConnection();
@@ -217,7 +227,9 @@ class CommentStorage {
         num,
         comment.studentId,
       ]);
-      return updatedInfo.affectedRows;
+
+      if (updatedInfo.affectedRows) return true;
+      return false;
     } catch (err) {
       throw err;
     } finally {
@@ -231,8 +243,9 @@ class CommentStorage {
       conn = await mariadb.getConnection();
       const query = "UPDATE comments SET hidden_flag = 1 WHERE no = ?;";
 
-      await conn.query(query, [num]);
-      return true;
+      const isUpdateHiddenFlag = await conn.query(query, [num]);
+      if (isUpdateHiddenFlag.affectRows) return true;
+      return false;
     } catch (err) {
       throw err;
     } finally {
@@ -240,7 +253,7 @@ class CommentStorage {
     }
   }
 
-  static async updateReplyFlag(groupNum: number): Promise<number> {
+  static async updateReplyFlag(groupNum: number): Promise<boolean> {
     let conn;
     try {
       conn = await mariadb.getConnection();
@@ -248,7 +261,8 @@ class CommentStorage {
             (SELECT count(group_no) FROM (SELECT group_no FROM comments AS group_no WHERE group_no = ?) AS count) = 1;`;
 
       const rows = await conn.query(query, [groupNum, groupNum]);
-      return rows.affectedRows;
+      if (rows.affectedRows) return true;
+      return false;
     } catch (err) {
       throw err;
     } finally {
@@ -259,7 +273,7 @@ class CommentStorage {
   static async deleteCommentByNum(
     num: number,
     studentId: string
-  ): Promise<number> {
+  ): Promise<boolean> {
     let conn;
     try {
       conn = await mariadb.getConnection();
@@ -267,7 +281,8 @@ class CommentStorage {
         "DELETE FROM comments WHERE no = ? AND reply_flag = 0 AND depth = 0 AND student_id = ?";
 
       const rows = await conn.query(query, [num, studentId]);
-      return rows.affectedRows;
+      if (rows.affectedRows) return true;
+      return false;
     } catch (err) {
       throw err;
     } finally {
@@ -278,7 +293,7 @@ class CommentStorage {
   static async deleteReplyByNum(
     num: number,
     studentId: string
-  ): Promise<number> {
+  ): Promise<boolean> {
     let conn;
     try {
       conn = await mariadb.getConnection();
@@ -286,7 +301,8 @@ class CommentStorage {
         "DELETE FROM comments WHERE no = ? AND depth = 1 AND student_id = ?";
 
       const rows = await conn.query(query, [num, studentId]);
-      return rows.affectedRows;
+      if (rows.affectedRows) return true;
+      return false;
     } catch (err) {
       throw err;
     } finally {
@@ -301,8 +317,9 @@ class CommentStorage {
       const query =
         "DELETE FROM comments WHERE no = ? AND hidden_flag = 1 AND reply_flag = 0;";
 
-      await conn.query(query, [num]);
-      return true;
+      const isdeleteHiddenComment = await conn.query(query, [num]);
+      if (isdeleteHiddenComment) return true;
+      return false;
     } catch (err) {
       throw err;
     } finally {

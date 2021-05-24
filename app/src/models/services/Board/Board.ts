@@ -61,13 +61,14 @@ interface comments {
   studentName: string;
   profilePath: string;
   nickname: string;
-  commentNum: number;
-  commentContent: string;
-  commentGroupNum: number;
-  commentDepth: number;
-  commentReplyFlag: number;
-  commentHiddenFlag: number;
-  commentInDate: string;
+  num: number;
+  content: string;
+  groupNum: number;
+  depth: number;
+  replyFlag: number;
+  hiddenFlag: number;
+  inDate: string;
+  updateDate: string;
 }
 
 interface error {
@@ -172,7 +173,6 @@ class Board {
         return { success: false, msg: "게시판 상세 조회 실패" };
       }
       const comments = await CommentStorage.findAllByBoardNum(num);
-      console.log(comments);
       const isWatchList = await BoardStorage.isWatchList(studentId, num);
       const images = await BoardStorage.findAllByImage(num);
 
