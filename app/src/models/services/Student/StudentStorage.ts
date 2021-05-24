@@ -174,9 +174,9 @@ class StudentStorage {
     let conn;
     try {
       conn = await mariadb.getConnection();
-      const query = "UPDATE students SET psword=? WHERE id=?;";
+      const query = "UPDATE students SET psword=?, salt = ? WHERE id=?;";
 
-      const result = await conn.query(query, [client.newPsword, client.id]);
+      const result = await conn.query(query, [client.newPsword, client.newSalt, client.id]);
       return result;
     } catch (err) {
       throw err;
