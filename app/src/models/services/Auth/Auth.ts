@@ -42,6 +42,7 @@ class Auth {
   static async createJWT(student: Student): Promise<string> {
     const payload = {
       id: student.id,
+      nickname: student.nickname,
       email: student.email,
       name: student.name,
       profilePath: student.profile_path,

@@ -82,7 +82,7 @@ class PurchaseListStorage {
       const query = `INSERT INTO purchase_lists(board_no, student_id) VALUES(?, ?)`;
 
       const result = await conn.query(query, [boardNum, studentId]);
-      return result.insertId;
+      return result.affectedRows;
     } catch (err) {
       throw err;
     } finally {
