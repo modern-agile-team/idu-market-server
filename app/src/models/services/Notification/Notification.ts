@@ -69,11 +69,11 @@ class Notification {
   }
 
   async findAllbyNickname(): Promise<response | error> {
-    const nickname = this.body;
+    const studentId = this.params.studentId;
 
     try {
       const notifications = await NotificationStorage.findAllbyNickname(
-        nickname
+        studentId
       );
 
       if (notifications) {

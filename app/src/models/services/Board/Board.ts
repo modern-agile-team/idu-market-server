@@ -172,6 +172,7 @@ class Board {
         return { success: false, msg: "게시판 상세 조회 실패" };
       }
       const comments = await CommentStorage.findAllByBoardNum(num);
+      console.log(comments);
       const isWatchList = await BoardStorage.isWatchList(studentId, num);
       const images = await BoardStorage.findAllByImage(num);
 
