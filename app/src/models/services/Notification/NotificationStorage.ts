@@ -105,7 +105,8 @@ class NotificationStorage {
         JOIN boards bo
         ON bo.no = no.board_no
         WHERE bo.student_id = ?
-        ORDER BY inDate DESC;`,
+        ORDER BY inDate DESC
+        LIMIT 20;`,
         [studentId]
       );
 
