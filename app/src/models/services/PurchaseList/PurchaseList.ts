@@ -3,6 +3,7 @@ import { params } from "../../../config/types";
 import Error from "../../utils/Error";
 import PurchaseListStorage from "./PurchaseListStorage";
 import Notification from "../Notification/Notification";
+import BoardStorage from "../Board/BoardStorage";
 
 interface error {
   isError: boolean;
@@ -60,12 +61,16 @@ class PurchaseList {
   async create(): Promise<error | response> {
     const client = this.body;
     const notification = new Notification(this.req);
-    
+    const board = {
+      status: 3,
+    };
+
     try {
-      const purchaseList = await PurchaseListStorage.findOneByBoardNumberAndStudentId(
-        client.boardNum,
-        client.studentId
-      );
+      const purchaseList =
+        await PurchaseListStorage.findOneByBoardNumberAndStudentId(
+          client.boardNum,
+          client.studentId
+        );
 
       if (!purchaseList) {
         // 구매목록에 추가되지 않은 것만 추가한다.
@@ -73,10 +78,20 @@ class PurchaseList {
           client.studentId,
           client.boardNum
         );
-        const alarm : response | error = await notification.createByBoardNum();
+        const alarm: response | error = await notification.createByBoardNum();
 
-        if (createdId)
-          return { success: true, msg: "구매목록에 저장되었습니다", alarm };
+        if (createdId === 1) {
+          const updateStatus = await BoardStorage.updateOnlyStatusByNum(
+            board,
+            client.boardNum
+          );
+          if (updateStatus)
+            return { success: true, msg: "구매목록에 저장되었습니다", alarm };
+          return {
+            success: false,
+            msg: "구매목록에는 저장되었지만 status가 변경되지 않았습니다. 문의주세요",
+          };
+        }
       }
       return { success: false, msg: "이미 구매목록에 저장이 되었습니다." };
     } catch (err) {
