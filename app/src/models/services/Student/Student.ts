@@ -46,7 +46,7 @@ class Student {
 
     try {
       const student = await StudentStorage.findOneById(client.id);
-
+    
       if (student) {
         client.psword = await Cryptor.encryptBySalt(
           client.psword,
@@ -100,7 +100,12 @@ class Student {
       if (!authInfo.useable)
         return { success: authInfo.useable, msg: authInfo.msg };
 
+      const { hash, salt } = await Cryptor.encrypt(client.newPsword);
+      client.newPsword = hash;
+      client.newSalt = salt;
+
       const isReset = await StudentStorage.resetPassword(client);
+      
       if (isReset) {
         const isDeleteToken = await AuthStorage.deleteTokenByStudentId(
           client.id
