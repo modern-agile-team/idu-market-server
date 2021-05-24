@@ -52,7 +52,7 @@ class Student {
           client.psword,
           student.salt || ""
         );
-        console.log(client.psword);
+
         if (student.id === client.id && student.psword === client.psword) {
           const jwt = await Auth.createJWT(student);
           const id: string = client.id;
