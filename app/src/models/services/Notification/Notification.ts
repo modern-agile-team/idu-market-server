@@ -9,6 +9,7 @@ interface response {
   msg: string;
   notifications?: notifications[];
   sendEmail?: response | error;
+  readFlag?: number;
 }
 
 interface error {
@@ -99,6 +100,7 @@ class Notification {
         return {
           success: true,
           msg: "알람 읽음",
+          readFlag: isUpdateReadFlag,
         };
       }
       return {
