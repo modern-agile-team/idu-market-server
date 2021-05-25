@@ -100,14 +100,16 @@ class NotificationStorage {
 
       const notifications = await conn.query(
         `SELECT no.no AS notificationNum, no.sender_nickname AS senderNickname, no.noti_category_no AS notiCategoryNum, bo.title AS boardTitle,
-        no.read_flag AS readFlag, no.url, date_format(no.in_date, '%Y-%m-%d %H:%i:%s') AS inDate 
+        no.read_flag AS readFlag, no.url, date_format(no.in_date, '%Y-%m-%d %H:%i:%s') AS inDate
         FROM notifications no
         JOIN boards bo
         ON bo.no = no.board_no
-        WHERE bo.student_id = ?
+        LEFT JOIN purchase_lists pu
+        ON pu.board_no = bo.no
+        WHERE bo.student_id=? or pu.student_id=?
         ORDER BY inDate DESC
         LIMIT 20;`,
-        [studentId]
+        [studentId, studentId]
       );
 
       const notification: notification[] = Object.values(

@@ -44,7 +44,10 @@ class Notification {
 
     try {
       if (notification.recipientNickname === notification.senderNickname) {
-        return { success: false, msg: "동일한 사람에게는 알람이 생성되지 않습니다."}
+        return {
+          success: false,
+          msg: "동일한 사람에게는 알람이 생성되지 않습니다.",
+        };
       }
       const { success } = await NotificationStorage.create(
         boardNum,
