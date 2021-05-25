@@ -80,7 +80,7 @@ class CommentStorage {
     let conn;
     try {
       conn = await mariadb.getConnection();
-      const query = `SELECT st.id AS studentId, st.name AS studentName, st.nickname, st.admin_flag as isAuth, st.profile_path AS profilePath, cmt.no AS num, cmt.content, cmt.group_no AS groupNum, 
+      const query = `SELECT st.id AS studentId, st.name AS studentName, st.nickname, st.admin_flag as isAdmin, st.profile_path AS profilePath, cmt.no AS num, cmt.content, cmt.group_no AS groupNum, 
       cmt.depth, cmt.reply_flag AS replyFlag, cmt.hidden_flag AS hiddenFlag, 
       date_format(cmt.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(cmt.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
       FROM comments AS cmt
@@ -107,8 +107,8 @@ class CommentStorage {
     let conn;
     try {
       conn = await mariadb.getConnection();
-      const query = `SELECT st.id AS studentId, st.name AS studentName, st.nickname, st.admin_flag as isAuth, st.profile_path AS profilePath, cmt.no AS num, cmt.content, cmt.group_no AS groupNum,
-      cmt.depth, cmt.reply_flag AS replyFlag, cmt.hidden_flag AS hiddenFlag,
+      const query = `SELECT st.id AS studentId, st.name AS studentName, st.nickname, st.admin_flag as isAdmin, st.profile_path AS profilePath, cmt.no AS num, cmt.content, cmt.group_no AS groupNum,
+      cmt.depth, cmt.reply_flag AS replyFlag, cmt.hidden_flag AS hiddenFlag, st.admin_flag AS isAdmin,
       date_format(cmt.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(cmt.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
       FROM comments AS cmt
       JOIN students AS st
