@@ -13,7 +13,7 @@ const corsOptionsDelegate = (req, callback) => {
   const allowList = [
     process.env.IDU_ORIGIN,
     process.env.AWS_ORIGIN,
-    process.env.IDU_W3_ORIGIN
+    process.env.IDU_W3_ORIGIN,
   ];
   let corsOption;
   if (allowList.indexOf(req.header("Origin")) !== -1) {
@@ -31,7 +31,7 @@ app.use(express.static(`${__dirname}/src/public`));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(cors(corsOptionsDelegate));
+app.use(cors());
 app.use(
   morgan("tiny", {
     stream: {
