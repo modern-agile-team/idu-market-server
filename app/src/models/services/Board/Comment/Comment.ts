@@ -70,10 +70,8 @@ class Comment {
       );
 
       if (isCreate) {
-        const comments = await CommentStorage.findOneByNum(num);
-        const comment: comment[] = Object.values(
-          JSON.parse(JSON.stringify(comments))
-        );
+        const comment = await CommentStorage.findOneByNum(num);
+
         const createdComments: comment = comment[0];
 
         const isUpdate = await CommentStorage.updateGroupNum(

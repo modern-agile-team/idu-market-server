@@ -129,7 +129,7 @@ class BoardStroage {
     let conn;
     try {
       conn = await mariadb.getConnection();
-      const query = `SELECT bo.no AS num, st.id AS studentId, st.nickname AS nickname, st.admin_flag as isAuth, st.profile_path AS profilePath, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
+      const query = `SELECT bo.no AS num, st.id AS studentId, st.nickname AS nickname, st.admin_flag as isAdmin, st.profile_path AS profilePath, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
       date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
       COUNT(cmt.content) AS commentCount
       FROM boards AS bo
@@ -157,7 +157,7 @@ class BoardStroage {
     let conn;
     try {
       conn = await mariadb.getConnection();
-      const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.name AS studentName, st.nickname, st.admin_flag as isAuth, st.profile_path AS profilePath, bo.title AS title, bo.content, bo.hit AS hit, bo.price AS price, bo.status AS status,
+      const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.name AS studentName, st.nickname, st.admin_flag as isAdmin, st.profile_path AS profilePath, bo.title AS title, bo.content, bo.hit AS hit, bo.price AS price, bo.status AS status,
       bo.category_no AS categoryNum, date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate, date_format(bo.update_date, '%Y-%m-%d %H:%i:%s') AS updateDate
       FROM boards AS bo
       JOIN students AS st
@@ -303,7 +303,7 @@ class BoardStroage {
     try {
       conn = await mariadb.getConnection();
       const query = `SELECT bo.no AS num, bo.student_id AS studentId, st.profile_path AS profilePath, st.nickname, bo.thumbnail, bo.title, bo.hit, bo.price, bo.status,
-      date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
+      st.admin_flag as isAdmin, date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate,
       COUNT(cmt.content) AS commentCount
       FROM boards AS bo
       JOIN students AS st
