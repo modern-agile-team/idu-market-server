@@ -4,6 +4,7 @@ import CommentStorage from "./CommentStorage";
 import Error from "../../../utils/Error";
 import { params, query } from "../../../../config/types";
 import Notification from "../../Notification/Notification";
+import NotificationStorage from "../../Notification/NotificationStorage";
 
 interface response {
   success: boolean;
@@ -77,15 +78,29 @@ class Comment {
         const isUpdate = await CommentStorage.updateGroupNum(
           createdComments.num
         );
-        const alarm: response | error = await notification.createByBoardNum();
+
+        // 여러명의 알림 수신자들에게 모두 전송하기 위해 반복문 순회
+        body.recipientNicknames.forEach(async (recipientNickname) => {
+          if (recipientNickname !== body.senderNickname) {
+            // 수신자와 발신자가 다를 경우에만 알림 생성
+            const title: string = await NotificationStorage.findTitleByBoardNum(
+              boardNum
+            );
+
+            await notification.createByTitleAndNickname(
+              title,
+              recipientNickname
+            );
+          }
+        });
 
         if (isUpdate) {
           createdComments.groupNum = createdComments.num;
+          createdComments.groupNum = createdComments.num;
           return {
             success: true,
-            msg: "댓글 생성 성공",
+            msg: "댓글이 생성되었습니다.",
             createdComments,
-            alarm,
           };
         }
         return {
@@ -121,11 +136,29 @@ class Comment {
             JSON.parse(JSON.stringify(replies))
           );
           const createdReply: comment = reply[0];
-          const alarm: response | error = await notification.createByBoardNum();
-          return { success: true, msg: "답글 생성 성공", createdReply, alarm };
+
+          // 여러명의 알림 수신자들에게 모두 전송하기 위해 반복문 순회
+          body.recipientNicknames.forEach(async (recipientNickname) => {
+            // 수신자와 발신자가 다를 경우에만 알림 생성
+            if (recipientNickname !== body.senderNickname) {
+              const title: string =
+                await NotificationStorage.findTitleByBoardNum(boardNum);
+
+              await notification.createByTitleAndNickname(
+                title,
+                recipientNickname
+              );
+            }
+          });
+
+          return {
+            success: true,
+            msg: "답글 생성에 성공하셨습니다.",
+            createdReply,
+          };
         }
       }
-      return { success: false, msg: "답글 생성 실패" };
+      return { success: false, msg: "답글 생성에 실패하셨습니다." };
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
     }

@@ -4,6 +4,7 @@ import Error from "../../utils/Error";
 import PurchaseListStorage from "./PurchaseListStorage";
 import Notification from "../Notification/Notification";
 import BoardStorage from "../Board/BoardStorage";
+import NotificationStorage from "../Notification/NotificationStorage";
 
 interface error {
   isError: boolean;
@@ -78,15 +79,29 @@ class PurchaseList {
           client.studentId,
           client.boardNum
         );
-        const alarm: response | error = await notification.createByBoardNum();
+
+        // 여러명의 알림 수신자들에게 모두 전송하기 위해 반복문 순회
+        client.recipientNicknames.forEach(async (recipientNickname) => {
+          // 수신자와 발신자가 다를 경우에만 알림 생성
+          if (recipientNickname !== client.senderNickname) {
+            const title: string = await NotificationStorage.findTitleByBoardNum(
+              client.boardNum
+            );
+            await notification.createByTitleAndNickname(
+              title,
+              recipientNickname
+            );
+          }
+        });
 
         if (createdId === 1) {
           const updateStatus = await BoardStorage.updateOnlyStatusByNum(
             board,
             client.boardNum
           );
-          if (updateStatus)
-            return { success: true, msg: "구매목록에 저장되었습니다", alarm };
+          if (updateStatus) {
+            return { success: true, msg: "구매목록에 저장되었습니다" };
+          }
           return {
             success: false,
             msg: "구매목록에는 저장되었지만 status가 변경되지 않았습니다. 문의주세요",

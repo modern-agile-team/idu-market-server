@@ -24,8 +24,9 @@ class NotificationStorage {
   static async create(
     boardNum: number,
     req: request,
-    purchaseBoardNum?: number
-  ): Promise<response> {
+    purchaseBoardNum?: number,
+    recipientNickname?: string
+  ): Promise<Boolean> {
     let conn;
 
     try {
@@ -33,20 +34,18 @@ class NotificationStorage {
 
       const notification = await conn.query(
         `INSERT INTO notifications (board_no, noti_category_no, sender_nickname, recipient_nickname, email, url) 
-        VALUES (?, ?, ?, ?, (SELECT email FROM students WHERE nickname = '${req.recipientNickname}'), ?);`,
+        VALUES (?, ?, ?, ?, (SELECT email FROM students WHERE nickname=?), ?);`,
         [
           boardNum ? boardNum : purchaseBoardNum,
           req.notiCategoryNum,
           req.senderNickname,
-          req.recipientNickname,
+          recipientNickname,
+          recipientNickname,
           req.url,
         ]
       );
 
-      if (notification.affectedRows) {
-        return { success: true };
-      }
-      return { success: false };
+      return Boolean(notification.affectedRows);
     } catch (err) {
       throw err;
     } finally {
@@ -54,7 +53,7 @@ class NotificationStorage {
     }
   }
 
-  static async findOneByNickname(req: request): Promise<string> {
+  static async findEmailByNickname(recipientNickname: string): Promise<string> {
     let conn;
 
     try {
@@ -62,7 +61,7 @@ class NotificationStorage {
 
       const response = await conn.query(
         `SELECT email FROM students WHERE nickname = ?;`,
-        [req.recipientNickname]
+        [recipientNickname]
       );
 
       return response[0].email;
@@ -73,7 +72,7 @@ class NotificationStorage {
     }
   }
 
-  static async findOneByBoardNum(boardNum: number): Promise<string> {
+  static async findTitleByBoardNum(boardNum: number): Promise<string> {
     let conn;
 
     try {
@@ -101,14 +100,14 @@ class NotificationStorage {
       const notifications = await conn.query(
         `SELECT no.no AS notificationNum, no.sender_nickname AS senderNickname, no.noti_category_no AS notiCategoryNum, bo.title AS boardTitle,
         no.read_flag AS readFlag, no.url, date_format(no.in_date, '%Y-%m-%d %H:%i:%s') AS inDate
-        FROM notifications no
-        JOIN boards bo
+        FROM notifications AS no
+        JOIN boards AS bo
         ON bo.no = no.board_no
-        LEFT JOIN purchase_lists pu
+        LEFT JOIN purchase_lists AS pu
         ON pu.board_no = bo.no
-        WHERE bo.student_id=? or pu.student_id=?
+        WHERE no.recipient_nickname=(SELECT nickname FROM students WHERE id=?) or pu.student_id=? 
         ORDER BY inDate DESC
-        LIMIT 20;`,
+        LIMIT 20`,
         [studentId, studentId]
       );
 

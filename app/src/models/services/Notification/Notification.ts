@@ -36,36 +36,35 @@ class Notification {
     this.params = req.params;
   }
 
-  async createByBoardNum(): Promise<response | error> {
+  async createByTitleAndNickname(
+    title: string,
+    recipientNickname: string
+  ): Promise<Boolean | error> {
     const notification = this.body;
     const boardNum = Number(this.params.num);
-    const purchaseBoardNum = this.body.boardNum;
-    const email = new Email(this.body);
+    const purchaseBoardNum = notification.boardNum;
+    const email = new Email(notification);
 
     try {
-      if (notification.recipientNickname === notification.senderNickname) {
-        return {
-          success: false,
-          msg: "동일한 사람에게는 알람이 생성되지 않습니다.",
-        };
-      }
-      const { success } = await NotificationStorage.create(
+      const isCreateNotification = await NotificationStorage.create(
         boardNum,
         notification,
-        purchaseBoardNum
+        purchaseBoardNum,
+        recipientNickname
       );
 
-      if (success) {
-        const sendEmail: response | error = await email.sendAlarm(
-          boardNum ? boardNum : purchaseBoardNum
-        );
+      if (isCreateNotification) {
+        const emailAddress: string =
+          await NotificationStorage.findEmailByNickname(recipientNickname);
 
-        return { success: true, msg: "알림 생성 완료", sendEmail };
+        const sendedInfo = await email.sendAlarm(
+          emailAddress,
+          title,
+          recipientNickname
+        );
+        if ("success" in sendedInfo) return sendedInfo.success;
       }
-      return {
-        success: false,
-        msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주세요",
-      };
+      return false;
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요", err);
     }

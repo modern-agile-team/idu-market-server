@@ -14,6 +14,7 @@ const CHANGE_PSWORD_URL: string = process.env.CHANGE_PASSWORD_URL || "";
 interface response {
   success: boolean;
   msg: string;
+  receiver?: string;
 }
 
 interface error {
@@ -21,7 +22,6 @@ interface error {
   errMsg: string;
   clientMsg: string;
 }
-
 
 class Email {
   private req: Request;
@@ -168,12 +168,13 @@ class Email {
     }
   }
 
-  async sendAlarm(boardNum : number) : Promise<error | response> {
-    try{
+  async sendAlarm(
+    email: string,
+    title: string,
+    recipientNickname: string
+  ): Promise<error | response> {
+    try {
       const client: any = this.req;
-
-      const email : string = await NotificationStorage.findOneByNickname(client);
-      const title : string = await NotificationStorage.findOneByBoardNum(boardNum);
 
       return new Promise((resolve, reject) => {
         try {
@@ -182,17 +183,21 @@ class Email {
             to: email,
             subject: ``,
             html: `<p><a href=${client.url}>링크를 클릭해서 확인할 수 있습니다</a></p>`,
-          }
-          if (client.notiCategoryNum === 0) message.subject = `[idu-market] ${client.senderNickname}님이 ${title}에 댓글을 다셨습니다.`;
-          if (client.notiCategoryNum === 1) message.subject = `[idu-market] ${client.recipientNickname}님의 댓글에 답글이 달렸습니다.`;
-          if (client.notiCategoryNum === 2) message.subject = `[idu-market] ${title} 구매 완료되었습니다.`;
+          };
+          if (client.notiCategoryNum === 0)
+            message.subject = `[idu-market] ${client.senderNickname}님이 ${title}에 댓글을 다셨습니다.`;
+          if (client.notiCategoryNum === 1)
+            message.subject = `[idu-market] ${recipientNickname}님의 댓글에 답글이 달렸습니다.`;
+          if (client.notiCategoryNum === 2)
+            message.subject = `[idu-market] ${title} 구매 완료되었습니다.`;
 
           const transporter = nodemailer.createTransport(mailOption);
-          
+
           transporter.sendMail(message);
           resolve({
             success: true,
-            msg: `${client.recipientNickname}님의 이메일로 알람이 발송되었습니다.`
+            msg: `${recipientNickname}님의 이메일로 알람이 발송되었습니다.`,
+            receiver: recipientNickname,
           });
         } catch (err) {
           reject(err);

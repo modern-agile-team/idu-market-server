@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 
-import Email from "../../models/services/Email/Email";
 import logger from "../../config/logger";
 import Notification from "../../models/services/Notification/Notification";
 
