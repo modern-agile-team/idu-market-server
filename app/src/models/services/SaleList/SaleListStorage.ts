@@ -30,7 +30,7 @@ class SaleListStorage {
         ON st.id = bo.student_id
         LEFT JOIN comments cmt
         ON cmt.board_no = bo.no
-        WHERE (cat.no = 1 OR cat.no = 2 OR cat.no = 3) AND bo.student_id = ?
+        WHERE (cat.no = 1 OR cat.no = 2 OR cat.no = 3 OR cat.no = 5) AND bo.student_id = ?
         GROUP BY bo.no
         ORDER BY bo.no desc`;
 
