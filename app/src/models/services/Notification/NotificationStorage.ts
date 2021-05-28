@@ -103,12 +103,10 @@ class NotificationStorage {
         FROM notifications AS no
         JOIN boards AS bo
         ON bo.no = no.board_no
-        LEFT JOIN purchase_lists AS pu
-        ON pu.board_no = bo.no
-        WHERE no.recipient_nickname=(SELECT nickname FROM students WHERE id=?) or pu.student_id=? 
+        WHERE no.recipient_nickname=(SELECT nickname FROM students WHERE id=?)
         ORDER BY inDate DESC
         LIMIT 20`,
-        [studentId, studentId]
+        [studentId]
       );
 
       const notification: notification[] = Object.values(

@@ -13,10 +13,10 @@ const process = {
           imagePath.split("/")[imagePath.split("/").length - 1];
         let folder: string =
           imagePath.split("/")[imagePath.split("/").length - 2];
-        imagePath = `https://d31w371p5vvb99.cloudfront.net/${folder}/${imageKey}?d=1024x768`;
+        imagePath = `https://d31w371p5vvb99.cloudfront.net/${folder}/${imageKey}`;
         return imagePath;
       });
-
+      //?d=1024x728
       logger.info(`POST /api/image 200 업로드 성공`);
       return res.status(200).json({
         success: true,
