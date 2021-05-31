@@ -63,11 +63,8 @@
 <br/>
 <br/>
 
-## 👨‍👨‍👧 우아한 애자일
-<h3> 
-  Wooahan Agile Logo <br /> <br /> 
-  <img src="https://user-images.githubusercontent.com/75289370/120157070-968be700-c22d-11eb-970f-9b9e9fcc7778.png" width="200px;" />
-</h3>
+## <img src="https://user-images.githubusercontent.com/75289370/120157070-968be700-c22d-11eb-970f-9b9e9fcc7778.png" width="30px;" />&nbsp; 우아한 애자일
+
 
 ### 회장
 <table>
