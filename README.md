@@ -1,5 +1,51 @@
 # idu-market
-
+<h3 align="center">  
+  FrontEnd
+</h3>
+<p align="center">  
+  <img src="https://img.shields.io/badge/HTML-white?logo=html5"/>
+  <img src= "https://img.shields.io/badge/CSS-blue?logo=css3"/>
+  <img src= "https://img.shields.io/badge/Scss-pink?logo=sass"/>
+  <img src= "https://img.shields.io/badge/React-blue?logo=react"/>
+  <img src= "https://img.shields.io/badge/Next.js-black?logo=next-dot-js&logoColor=white"/>
+  <img src= "https://img.shields.io/badge/Redux-593D88?logo=Redux&logoColor=white"/>
+  <img src= "https://img.shields.io/badge/ReduxSaga-white?logo=Redux-saga&logoColor=green"/>
+  <img src= "https://img.shields.io/badge/JavaScript-ES6-yellow?logo=javascript"/>
+  <img src= "https://img.shields.io/badge/WebPack-white?logo=webpack&logoColor=blue"/>
+</p>   
+<hr/>
+<h3 align="center">  
+ BackEnd
+</h3>
+<p align="center">  
+  <img src= "https://img.shields.io/badge/TypeScript-Ts-blue?logo=typescript"/>
+  <img src= "https://img.shields.io/badge/Node-green?logo=node-dot-js&logoColor=white"/>
+  <img src= "https://img.shields.io/badge/Express-blue?logo=express"/>
+  <img src= "https://img.shields.io/badge/Nginx-green?logo=nginx"/>
+  <img src= "https://img.shields.io/badge/MariaDB-003545?logo=mariadb&logoColor=white"/>
+  <img src= "https://img.shields.io/badge/JEST-C21325?logo=jest&logoColor=white"/>
+  <img src= "https://img.shields.io/badge/Docker-2CA5E0?logo=docker&logoColor=white"/>
+  <img src= "https://img.shields.io/badge/Redis-FF4500?logo=redis&logoColor=white"/>
+  <img src= "https://img.shields.io/badge/Jenkins-D24939?logo=Jenkins&logoColor=white"/>
+</p>  
+ <hr/>
+<h3 align="center">  
+  Cloud 
+</h3>
+<p align="center">
+  <img src="https://img.shields.io/badge/AWS-EC2-red?logo=amazon-aws" />
+  <img src= "https://img.shields.io/badge/AWS-S3-red?logo=amazon-aws"/>
+</p>
+<hr/>
+<h3 align="center">  
+  Cooperation
+</h3>
+<p align="center">
+  <img src="https://img.shields.io/badge/GitHub-100000?logo=github" />
+  <img src= "https://img.shields.io/badge/Git-FF4500?logo=git&logoColor=white"/>
+  <img src="https://img.shields.io/badge/KakaoWork-white?logo=kakao&logoColor=yellow"/>
+</p>
+<hr/>
 ## 팀원 소개
 
 ### 회장
