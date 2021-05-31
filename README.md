@@ -29,6 +29,34 @@
 </table>
 
 
+## 기술 스택
+
+
+## git flow
+
+![git flow](https://user-images.githubusercontent.com/75289370/120147819-3cd1ef80-c222-11eb-86b6-e8146cdbabbe.png)
+
+## DB ERD
+![ERD](https://user-images.githubusercontent.com/75289370/120148197-cd103480-c222-11eb-9134-b92b314c0408.png)
+
+## PR 전략
+
+1. Add : 특정 기능을 하는 코드를 구현 하였을 때 
+2. Modify : 이미 구현된 기능을 수정하는데, 기능의 향상이 이루어졌을 때
+3. Close(Closes, Closed) : 일반적인 개발 이슈를 완료 했을 때
+4. Refactor : 리팩토링을 했을 때 (기능 향상이 아니다. 중복 코드 제거, 변수 & 함수 & 폴더명 등 코드 디자인 변경)
+5. Delete : 불필요한 코드를 제거 하였을 때
+6. Fix(Fixex, Fixed) : 버그 픽스나 핫 픽스 이슈를 완료 하였을 때
+7. Merge : Branch를 merge 하였을 때
+8. Conflict : 충돌을 해겼했을 때
+
+## 실제 서비스 사진
+
+
+
+
+
+
 
 
 
