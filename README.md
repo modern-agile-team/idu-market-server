@@ -50,7 +50,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/AWS-EC2-red?logo=amazon-aws" />
   <img src= "https://img.shields.io/badge/AWS-S3-red?logo=amazon-aws"/>
-  <img src="https://img.shields.io/badge/AWS-CloudFront-red?logo=amazon-aws" />
+  <img src= "https://img.shields.io/badge/AWS-CloudFront-red?logo=amazon-aws"/>
 </p>
 
 <h3 align="center">  
@@ -96,6 +96,19 @@
 <br/>
 <br/>
 
+## 📕 기능 구현 목록
+- 기본적인 CRUD 기능 구현(Aws S3를 통한 이미지 업로드 포함)
+- 인증 기능 구현(로그인, 회원가입, 아이디/비밀번호 찾기)
+- 알림 기능 구현(거래 완료, 댓글, 대댓글에대한 홈페이지, 메일 알림)
+- 댓글(대댓글) 기능 구현
+- 프로필 구현
+- 마켓 리스트 무한 스크롤 기능 구현
+- 판매중, 예약중, 거래완료와 같은 상태를 통한 거래 진행 상황 기능 구현
+- 관심목록, 판매 목록, 구매 목록 구현
+
+<br />
+<br />
+
 ## 📄 Git Flow
 
 ![git flow](https://user-images.githubusercontent.com/75289370/120147819-3cd1ef80-c222-11eb-86b6-e8146cdbabbe.png)
@@ -111,6 +124,16 @@
 
 ## 📄 PR 전략
 ![image](https://user-images.githubusercontent.com/75289370/120154537-f59c2c80-c22a-11eb-89b1-5b9ebd5f19b0.png)
+
+<br/>
+<br/>
+
+## 📄 협업(Projects Board, PR, issue, API 명세)
+![협업1](https://user-images.githubusercontent.com/64779472/120282431-0b762400-c2f5-11eb-8155-f8029bb3f02a.PNG)
+
+<br />
+
+![협업2](https://user-images.githubusercontent.com/64779472/120282433-0dd87e00-c2f5-11eb-97b3-0c8c737c9e90.PNG)
 
 <br/>
 <br/>
