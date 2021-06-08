@@ -71,6 +71,7 @@
 <table>
   <tr>
     <td align="center"><a href="https://github.com/woorim960"><img src="https://avatars.githubusercontent.com/u/56839474?v=4" width="100px;" alt=""/><br /><sub><b>박우림</b></sub></a><br /><a href="https://github.com/woorim960" title="Packaging/porting to new platform">회장</a></td>
+    <td align="center"><a href="http://jongminfire.dev"><img src="https://avatars.githubusercontent.com/u/75289625?v=4" width="100px;" alt=""/><br /><sub><b>전순구</b></sub></a><br /><a href="https://github.com/JeonSoongu" title="Packaging/porting to new platform">부회장</a></td>
   </tr>
 </table>
 
