@@ -1,5 +1,4 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
-import db from "../../../config/db";
+import mariadb from "../../../config/mariadb";
 
 interface Student {
   id?: string;
@@ -13,140 +12,177 @@ interface Student {
   admin_flag?: string;
   in_date?: string;
   err?: string;
+  categoryName?: string;
 }
 
 class StudentStorage {
-  static findOneById(id: string): Promise<Student> {
-    return new Promise((resolve, reject) => {
-      const query = "SELECT * FROM students WHERE id=?;";
+  static async findOneById(id: string): Promise<Student> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const query = `SELECT st.id, st.name, st.email, st.nickname, st.psword, st.salt, st.profile_path, st.admin_flag, majors.name as categoryName 
+         FROM students as st 
+         JOIN majors 
+         ON st.major_no = majors.no 
+         WHERE st.id= ?`;
 
-      db.query(query, [id], (err, results: RowDataPacket[]) => {
-        if (err) reject(err);
-        else {
-          const students: Student[] = Object.values(
-            JSON.parse(JSON.stringify(results))
-          );
+      const results = await conn.query(query, [id]);
 
-          resolve(students[0]);
-        }
-      });
-    });
+      const students: Student[] = Object.values(
+        JSON.parse(JSON.stringify(results))
+      );
+      return students[0];
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findOneByEmail(email: string): Promise<Student> {
-    return new Promise((resolve, reject) => {
+  static async findOneByEmail(email: string): Promise<Student> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = "SELECT * FROM students WHERE email=?;";
 
-      db.query(query, [email], (err, results: RowDataPacket[]) => {
-        if (err) reject(err);
-        else {
-          const students: Student[] = Object.values(
-            JSON.parse(JSON.stringify(results))
-          );
+      const results = await conn.query(query, [email]);
 
-          resolve(students[0]);
-        }
-      });
-    });
+      const students: Student[] = Object.values(
+        JSON.parse(JSON.stringify(results))
+      );
+      return students[0];
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findOneByIdAndEmail(id: string, email: string): Promise<Student> {
-    return new Promise((resolve, reject) => {
-      const query = "SELECT * FROM students WHERE id=? OR email=?;";
+  static async findOneExeptMeByEmail(
+    studentId: string,
+    email: string
+  ): Promise<Student> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const query = "SELECT * FROM students WHERE id!=? AND email=?;";
 
-      db.query(query, [id, email], (err, results: RowDataPacket[]) => {
-        if (err) reject(err);
-        else {
-          const students: Student[] = Object.values(
-            JSON.parse(JSON.stringify(results))
-          );
+      const results = await conn.query(query, [studentId, email]);
 
-          resolve(students[0]);
-        }
-      });
-    });
+      const students: Student[] = Object.values(
+        JSON.parse(JSON.stringify(results))
+      );
+      return students[0];
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findAllByName(name: string): Promise<Student[]> {
-    return new Promise((resolve, reject) => {
+  static async findOneExeptMeByNickname(
+    studentId: string,
+    nickname: string
+  ): Promise<Student> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const query = "SELECT * FROM students WHERE id!=? AND nickname=?;";
+
+      const results = await conn.query(query, [studentId, nickname]);
+
+      const students: Student[] = Object.values(
+        JSON.parse(JSON.stringify(results))
+      );
+      return students[0];
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
+  }
+
+  static async findAllByName(name: string): Promise<Student[]> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = "SELECT * FROM students WHERE name=?;";
 
-      db.query(query, [name], (err, results: RowDataPacket[]) => {
-        if (err) reject(err);
-        else {
-          const students: Student[] = Object.values(
-            JSON.parse(JSON.stringify(results))
-          );
+      const results = await conn.query(query, [name]);
 
-          resolve(students);
-        }
-      });
-    });
+      const students: Student[] = Object.values(
+        JSON.parse(JSON.stringify(results))
+      );
+      return students;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findAllByIdAndEmailAndNickname(
+  static async findAllByIdAndEmailAndNickname(
     id: string,
     email: string,
     nickname: string
   ): Promise<Student[]> {
-    return new Promise((resolve, reject) => {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query =
         "SELECT * FROM students WHERE id=? OR email=? OR nickname=?;";
 
-      db.query(
-        query,
-        [id, email, nickname],
-        (err, results: RowDataPacket[]) => {
-          if (err) reject(err);
-          else {
-            const students: Student[] = Object.values(
-              JSON.parse(JSON.stringify(results))
-            );
+      const results = await conn.query(query, [id, email, nickname]);
 
-            resolve(students);
-          }
-        }
+      const students: Student[] = Object.values(
+        JSON.parse(JSON.stringify(results))
       );
-    });
+      return students;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static save(client: any): Promise<ResultSetHeader> {
-    return new Promise((resolve, reject) => {
+  static async save(client: any): Promise<Student> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query =
         "INSERT INTO students(id, major_no, name, nickname, email, psword, salt) VALUES(?, ?, ?, ?, ?, ?, ?);";
 
-      db.query(
-        query,
-        [
-          client.id,
-          client.major,
-          client.name,
-          client.nickname,
-          client.email,
-          client.psword,
-          client.salt,
-        ],
-        (err, result: ResultSetHeader) => {
-          if (err) reject(err);
-          else resolve(result);
-        }
-      );
-    });
+      const result = await conn.query(query, [
+        client.id,
+        client.major,
+        client.name,
+        client.nickname,
+        client.email,
+        client.psword,
+        client.salt,
+      ]);
+
+      return result;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static resetPassword(client: any): Promise<ResultSetHeader> {
-    return new Promise((resolve, reject) => {
-      const query = "UPDATE students SET psword=? WHERE id=?;";
+  static async resetPassword(client: any): Promise<Student> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const query = "UPDATE students SET psword=?, salt = ? WHERE id=?;";
 
-      db.query(
-        query,
-        [client.newPsword, client.id],
-        (err, result: ResultSetHeader) => {
-          if (err) reject(err);
-          else resolve(result);
-        }
-      );
-    });
+      const result = await conn.query(query, [client.newPsword, client.newSalt, client.id]);
+      return result;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 }
 

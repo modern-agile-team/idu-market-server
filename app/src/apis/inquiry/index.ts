@@ -1,8 +1,8 @@
 import { Router } from "express";
-import ctrl from "./sale-list.ctrl";
+import ctrl from "./inquiry.ctrl";
 
 const router: Router = Router();
 
-router.get("/:studentId", ctrl.read);
+router.post("/", ctrl.sendEmailForInquiry);
 
 export default router;

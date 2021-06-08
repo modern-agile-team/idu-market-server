@@ -46,7 +46,7 @@ class Student {
 
     try {
       const student = await StudentStorage.findOneById(client.id);
-
+    
       if (student) {
         client.psword = await Cryptor.encryptBySalt(
           client.psword,
@@ -100,7 +100,12 @@ class Student {
       if (!authInfo.useable)
         return { success: authInfo.useable, msg: authInfo.msg };
 
+      const { hash, salt } = await Cryptor.encrypt(client.newPsword);
+      client.newPsword = hash;
+      client.newSalt = salt;
+
       const isReset = await StudentStorage.resetPassword(client);
+      
       if (isReset) {
         const isDeleteToken = await AuthStorage.deleteTokenByStudentId(
           client.id
@@ -144,23 +149,6 @@ class Student {
       saveable: false,
       msg: "알 수 없는 에러입니다. 서버 개발자에게 문의해주십시오.",
     };
-  }
-
-  async isExistIdAndEmail(): Promise<Exist> {
-    const client: any = this.body;
-    const student = await StudentStorage.findOneByIdAndEmail(
-      client.id,
-      client.email
-    );
-
-    if (student) {
-      if (student.id !== client.id)
-        return { isExist: false, msg: "등록되지 않은 아이디 입니다." };
-      else if (student.email !== client.email)
-        return { isExist: false, msg: "등록되지 않은 이메일 입니다." };
-      else return { isExist: true, msg: "이미 등록되어 있습니다." };
-    }
-    return { isExist: false, msg: "등록되지 않은 아이디 입니다." };
   }
 }
 

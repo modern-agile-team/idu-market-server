@@ -42,6 +42,7 @@ interface updateResponse {
 class Profile {
   params: params;
   body: any;
+
   constructor(readonly req: Request) {
     this.params = req.params;
     this.body = req.body;
@@ -70,16 +71,23 @@ class Profile {
     const studentId = this.params.studentId;
 
     try {
-      try {
-        await ProfileStorage.updateEmailAndMajor(user, studentId);
-      } catch (err) {
-        return Error.ctrl("이미 가입된 이메일 입니다.", err);
-      }
-      const response = await ProfileStorage.updateNicknameAndMajor(
-        user,
-        studentId
+      const isExistEmail = await StudentStorage.findOneExeptMeByEmail(
+        studentId,
+        user.email
       );
-      if (response)
+      if (isExistEmail)
+        return { success: false, msg: "이미 존재하는 이메일입니다." };
+
+      const isExistNickname = await StudentStorage.findOneExeptMeByNickname(
+        studentId,
+        user.nickname
+      );
+      if (isExistNickname)
+        return { success: false, msg: "이미 존재하는 닉네임입니다." };
+
+      const isUpdate = await ProfileStorage.update(user, studentId);
+
+      if (isUpdate) {
         return {
           success: true,
           email: user.email,
@@ -87,12 +95,16 @@ class Profile {
           majorNum: user.majorNum,
           msg: "정상적으로 수정되었습니다.",
         };
+      }
       return {
         success: false,
-        msg: "수정 불가 서버 개발자에게 문의해주십시오",
+        msg: "업데이트에 실패하셨습니다. 서버 개발자에게 문의해주십시오.",
       };
     } catch (err) {
-      return Error.ctrl("이미 사용중인 이름입니다.", err);
+      return Error.ctrl(
+        "알 수 없는 에러입니다. 서버 개발자에게 문의해주십시오.",
+        err
+      );
     }
   }
 

@@ -1,5 +1,4 @@
-import { ResultSetHeader, RowDataPacket } from "mysql2";
-import db from "../../../config/db";
+import mariadb from "../../../config/mariadb";
 
 interface profile {
   id: string;
@@ -16,111 +15,132 @@ type body = profile;
 type findEmailAndNickname = profile;
 
 class ProfileStorage {
-  static findOneById(id: string): Promise<profile> {
-    return new Promise((resolve, reject) => {
-      const sql = `SELECT st.id, st.name, st.nickname, st.email, 
+  static async findOneById(id: string): Promise<profile> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const query = `SELECT st.id, st.name, st.nickname, st.email, 
       st.profile_path AS profilePath, majors.name AS major
       FROM students st
       JOIN majors
       ON st.major_no = majors.no
       where st.id= ?;`;
 
-      db.query(sql, [id], (err, profile: RowDataPacket[]) => {
-        if (err) reject(err);
-        const user: profile[] = Object.values(
-          JSON.parse(JSON.stringify(profile))
-        );
-        resolve(user[0]);
-      });
-    });
+      const profile = await conn.query(query, [id]);
+      const user: profile[] = Object.values(
+        JSON.parse(JSON.stringify(profile))
+      );
+      return user[0];
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static updateImage(
-    image: string,
-    studentId: string
-  ): Promise<ResultSetHeader> {
-    return new Promise((resolve, reject) => {
-      const sql = "UPDATE students st SET st.profile_path = ? WHERE st.id = ?";
+  static async updateImage(image: string, studentId: string): Promise<number> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const query =
+        "UPDATE students st SET st.profile_path = ? WHERE st.id = ?";
 
-      db.query(sql, [image, studentId], (err, data: ResultSetHeader) => {
-        if (err) reject(err);
-        resolve(data);
-      });
-    });
+      const rows = await conn.query(query, [image, studentId]);
+      return rows.affectedRows;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static updateAll(body: body, studentId: string): Promise<ResultSetHeader> {
-    return new Promise((resolve, reject) => {
-      const sql = `UPDATE students st
+  static async updateAll(body: body, studentId: string): Promise<number> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const query = `UPDATE students st
       SET st.email = ?, st.nickname = ?, st.major_no = ?
       WHERE st.id = ?;`;
 
-      db.query(
-        sql,
-        [body.email, body.nickname, body.majorNum, studentId],
-        (err, data: ResultSetHeader) => {
-          if (err) reject(err);
-          resolve(data);
-        }
-      );
-    });
+      const rows = await conn.query(query, [
+        body.email,
+        body.nickname,
+        body.majorNum,
+        studentId,
+      ]);
+      return rows.affectedRows;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static updateEmailAndMajor(
-    body: body,
-    studentId: string
-  ): Promise<ResultSetHeader> {
-    return new Promise((resolve, reject) => {
-      const sql = `UPDATE students st
-      SET st.email = ?, st.major_no = ?
-      WHERE st.id = ?`;
+  static async update(user: body, studentId: string): Promise<number> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const query =
+        "UPDATE students SET email = ?, nickname = ?, major_no = ? WHERE id = ?;";
 
-      db.query(
-        sql,
-        [body.email, body.majorNum, studentId],
-        (err, data: ResultSetHeader) => {
-          if (err) reject(err);
-          resolve(data);
-        }
-      );
-    });
+      const rows = await conn.query(query, [
+        user.email,
+        user.nickname,
+        user.majorNum,
+        studentId,
+      ]);
+      return rows.affectedRows;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static updateNicknameAndMajor(
+  static async updateNicknameAndMajor(
     body: body,
     studentId: string
-  ): Promise<ResultSetHeader> {
-    return new Promise((resolve, reject) => {
-      const sql = `UPDATE students st
+  ): Promise<number> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const query = `UPDATE students st
       SET st.nickname = ?, st.major_no = ?
       WHERE st.id = ?`;
 
-      db.query(
-        sql,
-        [body.nickname, body.majorNum, studentId],
-        (err, data: ResultSetHeader) => {
-          if (err) reject(err);
-          resolve(data);
-        }
-      );
-    });
+      const rows = await conn.query(query, [
+        body.nickname,
+        body.majorNum,
+        studentId,
+      ]);
+      return rows.affectedRows;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 
-  static findAllByEmailAndNickname(
+  static async findAllByEmailAndNickname(
     email: string,
     nickname: string
   ): Promise<findEmailAndNickname[]> {
-    return new Promise((resolve, reject) => {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
       const query = "SELECT * FROM students WHERE email=? OR nickname=?;";
 
-      db.query(query, [email, nickname], (err, user: RowDataPacket[]) => {
-        const users: findEmailAndNickname[] = Object.values(
-          JSON.parse(JSON.stringify(user))
-        );
-        if (err) reject(err);
-        else resolve(users);
-      });
-    });
+      const user = await conn.query(query, [email, nickname]);
+
+      const users: findEmailAndNickname[] = Object.values(
+        JSON.parse(JSON.stringify(user))
+      );
+      return users;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
   }
 }
 

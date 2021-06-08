@@ -1,18 +1,34 @@
 import { transports, createLogger, format } from "winston";
-const { combine, timestamp, printf, colorize, simple } = format;
+const { combine, printf, colorize, simple } = format;
 import "winston-daily-rotate-file";
+import * as fecha from "fecha";
+const moment = require("moment");
 
 const printFormat = printf(({ timestamp, level, message }) => {
   return `${timestamp} ${level} : ${message}`;
 });
 
+const timestamp = format((info: any, opts: any = {}) => {
+  if (opts.format) {
+    info.timestamp =
+      typeof opts.format === "function"
+        ? opts.format()
+        : fecha.format(moment(), opts.format);
+  }
+
+  if (!info.timestamp) {
+    info.timestamp = moment().format().replace(/T/, " ").replace(/\+.+/, "");
+  }
+
+  if (opts.alias) {
+    info[opts.alias] = info.timestamp;
+  }
+
+  return info;
+});
+
 const printLogFormat = {
-  file: combine(
-    timestamp({
-      format: "YYYY-MM-DD HH:mm:dd",
-    }),
-    printFormat
-  ),
+  file: combine(timestamp(), printFormat),
 
   console: combine(colorize(), simple()),
 };

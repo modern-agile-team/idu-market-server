@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Request } from "express";
 import { params } from "../../../config/types";
 import Error from "../../utils/Error";
 import WatchListStorage from "./WatchListStorage";
+import Category from "../Category/Category";
 
 interface watchlist {
   num: number;
@@ -22,7 +22,7 @@ interface watchlist {
 interface response {
   success: boolean;
   msg: string;
-  boards?: watchlist[];
+  watchLists?: watchlist[];
 }
 
 interface error {
@@ -34,19 +34,30 @@ interface error {
 class WatchList {
   body: any;
   params: params;
+
   constructor(req: Request) {
     this.params = req.params;
     this.body = req.body;
   }
 
-  async update(): Promise<response | error> {
+  async create(): Promise<response | error> {
     const studentId = this.params.studentId;
-    const board = this.body;
+    const boardNum = this.body.boardNum;
+    const categoryName = this.body.categoryName;
+    const categoryNum = Category[categoryName];
+
     try {
-      const isExist = await WatchListStorage.isExist(studentId, board);
-      if (isExist) {
-        const response = await WatchListStorage.update(studentId, board);
-        if (response)
+      const watchList = await WatchListStorage.findOneByBoardNumAndStudentId(
+        boardNum,
+        studentId
+      );
+      if (!watchList) {
+        const createdRowCount = await WatchListStorage.create(
+          boardNum,
+          categoryNum,
+          studentId
+        );
+        if (createdRowCount)
           return { success: true, msg: "관심목록에 저장되었습니다." };
       }
       return { success: false, msg: "이미 관심목록에 저장되었습니다." };
@@ -58,8 +69,12 @@ class WatchList {
   async findAllByStudentId(): Promise<response | error> {
     const studentId = this.params.studentId;
     try {
-      const boards = await WatchListStorage.findAllByStudentId(studentId);
-      return { success: true, msg: "관심목록 조회 성공하였습니다.", boards };
+      const watchLists = await WatchListStorage.findAllByStudentId(studentId);
+      return {
+        success: true,
+        msg: "관심목록 조회 성공하였습니다.",
+        watchLists,
+      };
     } catch (err) {
       return Error.ctrl("서버 개발자에게 문의해주십시오", err);
     }
@@ -70,8 +85,9 @@ class WatchList {
     const product = this.body.boardNum;
 
     try {
-      const response = await WatchListStorage.delete(studentId, product);
-      if (response) return { success: true, msg: "정상적으로 삭제되었습니다." };
+      const deletedRowCount = await WatchListStorage.delete(studentId, product);
+      if (deletedRowCount)
+        return { success: true, msg: "정상적으로 삭제되었습니다." };
       return { success: false, msg: "이미 삭제되었습니다." };
     } catch (err) {
       return Error.ctrl("서버 개발자에게 문의해주십시오", err);
