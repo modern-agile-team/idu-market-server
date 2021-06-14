@@ -4,7 +4,7 @@
 
   * <a href="#-실제-서비스-사진">실제 서비스 사진</a>
   * <a href="#-기술-스택">기술 스택</a>
-  * <a href="#회장">개발</a>
+  * <a href="#회장">개발자</a>
   * <a href="#-기능-구현-목록">기능 구현 목록</a>
   * <a href="#-git-flow">Git Flow</a>
   * <a href="#-db-erd">ERD</a>
