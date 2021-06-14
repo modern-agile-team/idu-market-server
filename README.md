@@ -4,13 +4,13 @@
 
   * <a href="#-실제-서비스-사진">실제 서비스 사진</a>
   * <a href="#-기술-스택">기술 스택</a>
-  * <a href="#-회장">개발</a>
+  * <a href="#회장">개발</a>
   * <a href="#-기능-구현-목록">기능 구현 목록</a>
   * <a href="#-git-flow">Git Flow</a>
   * <a href="#-db-erd">ERD</a>
   * <a href="#-커밋-전략"> 전략</a>
   * <a href="#-협업">협업</a>
-  * <a href="#-기술-">기술 아키텍쳐</a>
+  * <a href="#-기술-아키텍처">기술 아키텍처</a>
 
 <br/>
 <br/>
@@ -177,9 +177,6 @@
       - 스프린트로 작성된 ```Issue```에 어떻게 구현하였는지 기록함으로써 팀원이 함께 성장할 수 있었으며, 이러한 자료는 후배 기수들에게도 좋은 자료와 모범이 될 수 있었다.
 
 ![협업1](https://user-images.githubusercontent.com/64779472/120282431-0b762400-c2f5-11eb-8155-f8029bb3f02a.PNG)
-
-<br />
-
 ![협업2](https://user-images.githubusercontent.com/64779472/120282433-0dd87e00-c2f5-11eb-97b3-0c8c737c9e90.PNG)
 
 <br/>
@@ -190,4 +187,5 @@
 
 * 개발 서버도 아래와 동일하나 MariaDB가 별도로 분리되어있지 않고, 하나의 인스턴스로 운영된다는 것이 다르다.
 * Jenkins와 Docker를 사용하여 **배포 자동화**를 구현하였다.
+
 ![image](https://user-images.githubusercontent.com/75289370/120154720-1c5a6300-c22b-11eb-8639-a28a115521fc.png)
