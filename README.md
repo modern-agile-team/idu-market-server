@@ -175,6 +175,8 @@
       - 팀원이 미처 발견하지 못한 Issue가 있을 경우에는 회장 **박우림**이 최종 스프린트를 작성하였다.
    - 기술 공유: 
       - 스프린트로 작성된 ```Issue```에 어떻게 구현하였는지 기록함으로써 팀원이 함께 성장할 수 있었으며, 이러한 자료는 후배 기수들에게도 좋은 자료와 모범이 될 수 있었다.
+      - [테크톡](https://www.youtube.com/playlist?list=PLSK4WsJ8JS4fgMYTDhc1Q6dqHmuRLEGR6)을 2주에 1번씩 진행하였다.
+         - 개개인이 CS지식을 전문가가 될 정도로 공부한 뒤 강의하기 때문에 팀원 모두가 보다 효율적으로 다양한 CS 지식을 습득할 수 있었다.
 
 ![협업1](https://user-images.githubusercontent.com/64779472/120282431-0b762400-c2f5-11eb-8155-f8029bb3f02a.PNG)
 ![협업2](https://user-images.githubusercontent.com/64779472/120282433-0dd87e00-c2f5-11eb-97b3-0c8c737c9e90.PNG)
