@@ -8,8 +8,8 @@
   * <a href="#-기능-구현-목록">기능 구현 목록</a>
   * <a href="#-git-flow">Git Flow</a>
   * <a href="#-db-erd">ERD</a>
-  * <a href="#-PR-전략">PR 전략</a>
-  * <a href="#-협업(Projects-Board,-PR,-issue,-API-명세)"></a>
+  * <a href="#-커밋-전략"> 전략</a>
+  * <a href="#-협업">협업</a>
 
 <br/>
 <br/>
@@ -153,13 +153,13 @@
 <br/>
 <br/>
 
-## 📄 PR 전략
+## 📄 커밋 전략
 ![image](https://user-images.githubusercontent.com/75289370/120154537-f59c2c80-c22a-11eb-89b1-5b9ebd5f19b0.png)
 
 <br/>
 <br/>
 
-## 📄 협업(Projects Board, PR, issue, API 명세)
+## 📄 협업
 ![협업1](https://user-images.githubusercontent.com/64779472/120282431-0b762400-c2f5-11eb-8155-f8029bb3f02a.PNG)
 
 <br />
