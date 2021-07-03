@@ -9,46 +9,56 @@ const s3 = new aws.S3({
   region: "ap-northeast-2",
 });
 
+// export const upload = multer({
+//   storage: multerS3({
+//     s3: s3,
+//     bucket: "wooahan-agile/board",
+//     acl: "public-read",
+//     key: function (req: express.Request, file, cb) {
+//       cb(null, Date.now() + "." + file.originalname.split(".").pop());
+//     },
+//   }),
+//   limits: { fieldSize: 100 * 1024 * 1024 },
+// });
 export const upload = multer({
-  storage: multerS3({
-    s3: s3,
-    bucket: "wooahan-agile/board",
-    acl: "public-read",
-    key: function (req: express.Request, file, cb) {
+  storage: multer.diskStorage({
+    destination: function (req: express.Request, file, cb) {
+      cb(null, "/images");
+    },
+    filename: function (req: express.Request, file, cb) {
       cb(null, Date.now() + "." + file.originalname.split(".").pop());
     },
   }),
-  limits: { fieldSize: 100 * 1024 * 1024 },
 });
 
-export const deleteImage = async (
-  keys: string[]
-): Promise<aws.S3.DeleteObjectsOutput | aws.AWSError> => {
-  const objectKeys = [];
-  for (const key of keys) {
-    const rest = {
-      Key: key,
-    };
-    objectKeys.push(rest);
-  }
+// export const deleteImage = async (
+//   keys: string[]
+// ): Promise<aws.S3.DeleteObjectsOutput | aws.AWSError> => {
+//   const objectKeys = [];
+//   for (const key of keys) {
+//     const rest = {
+//       Key: key,
+//     };
+//     objectKeys.push(rest);
+//   }
 
-  const original = {
-    Bucket: "wooahan-agile",
-    Delete: {
-      Objects: objectKeys,
-      Quiet: false,
-    },
-  };
+//   const original = {
+//     Bucket: "wooahan-agile",
+//     Delete: {
+//       Objects: objectKeys,
+//       Quiet: false,
+//     },
+//   };
 
-  try {
-    const result = await s3
-      .deleteObjects(original, (err) => {
-        if (err) throw err;
-      })
-      .promise();
+//   try {
+//     const result = await s3
+//       .deleteObjects(original, (err) => {
+//         if (err) throw err;
+//       })
+//       .promise();
 
-    return result;
-  } catch (err) {
-    return err;
-  }
-};
+//     return result;
+//   } catch (err) {
+//     return err;
+//   }
+// };
