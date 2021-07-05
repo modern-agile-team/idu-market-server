@@ -18,6 +18,7 @@ interface response {
   comments?: comments[];
   images?: Image[];
   hit?: number;
+  fileId?: Image[];
 }
 
 interface Image {
@@ -175,6 +176,7 @@ class Board {
       const comments = await CommentStorage.findAllByBoardNum(num);
       const isWatchList = await BoardStorage.isWatchList(studentId, num);
       const images = await BoardStorage.findAllByImage(num);
+      const fileId = await BoardStorage.findAllByImageFileId(num);
 
       return {
         success: true,
@@ -184,6 +186,7 @@ class Board {
         isWatchList,
         categoryName,
         images,
+        fileId,
       };
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
