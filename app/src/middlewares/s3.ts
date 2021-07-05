@@ -20,16 +20,6 @@ const s3 = new aws.S3({
 //   }),
 //   limits: { fieldSize: 100 * 1024 * 1024 },
 // });
-export const upload = multer({
-  storage: multer.diskStorage({
-    destination: function (req: express.Request, file, cb) {
-      cb(null, "/images");
-    },
-    filename: function (req: express.Request, file, cb) {
-      cb(null, Date.now() + "." + file.originalname.split(".").pop());
-    },
-  }),
-});
 
 // export const deleteImage = async (
 //   keys: string[]
@@ -62,3 +52,16 @@ export const upload = multer({
 //     return err;
 //   }
 // };
+
+// disk에 업로드할 때
+
+// export const upload = multer({
+//   storage: multer.diskStorage({
+//     destination: function (req: express.Request, file, cb) {
+//       cb(null, "/images");
+//     },
+//     filename: function (req: express.Request, file, cb) {
+//       cb(null, Date.now() + "." + file.originalname.split(".").pop());
+//     },
+//   }),
+// });
