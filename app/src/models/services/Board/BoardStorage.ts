@@ -74,11 +74,11 @@ class BoardStroage {
     try {
       conn = await mariadb.getConnection();
 
-      for (let image of board.images) {
-        await conn.query("INSERT INTO images (board_no, url) VALUES (?,?);", [
-          num,
-          image,
-        ]);
+      for (let i in board.images) {
+        await conn.query(
+          "INSERT INTO images (board_no, url, file_id) VALUES (?, ?, ?);",
+          [num, board.images[i], board.fileId[i]]
+        );
       }
 
       return true;
@@ -100,6 +100,27 @@ class BoardStroage {
       const board: Image[] = Object.values(JSON.parse(JSON.stringify(boards)));
       for (const obj of board) {
         images.push(obj["url"]);
+      }
+
+      return images;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
+  }
+
+  static async findAllByImageFileId(num: number): Promise<Image[]> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const images = [];
+      const query = "SELECT file_id FROM images WHERE board_no = ?";
+      const boards = await conn.query(query, [num]);
+
+      const board: Image[] = Object.values(JSON.parse(JSON.stringify(boards)));
+      for (const obj of board) {
+        images.push(obj["file_id"]);
       }
 
       return images;

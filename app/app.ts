@@ -40,7 +40,6 @@ app.use(
   })
 );
 
-import view from "./src/apis/view";
 import root from "./src/apis/root";
 import search from "./src/apis/search";
 import boards from "./src/apis/boards";
@@ -49,10 +48,9 @@ import sale from "./src/apis/sale-list";
 import purchase from "./src/apis/purchase-list";
 import watchlist from "./src/apis/watch-list";
 import profile from "./src/apis/profile";
-import image from "./src/apis/image";
+// import image from "./src/apis/image";
 import inquiry from "./src/apis/inquiry";
 
-app.use("/", view);
 app.use("/api/", root);
 app.use("/api/search", search);
 app.use("/api/boards", boards);
@@ -61,7 +59,7 @@ app.use("/api/sale-list", sale);
 app.use("/api/purchase-list", purchase);
 app.use("/api/watchlist", watchlist);
 app.use("/api/students", profile);
-app.use("/api/image", image);
+// app.use("/api/image", image);
 app.use("/api/inquiry", inquiry);
 
 export default app;
