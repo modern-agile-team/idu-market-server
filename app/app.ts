@@ -40,7 +40,6 @@ app.use(
   })
 );
 
-import view from "./src/apis/view";
 import root from "./src/apis/root";
 import search from "./src/apis/search";
 import boards from "./src/apis/boards";
@@ -52,7 +51,6 @@ import profile from "./src/apis/profile";
 // import image from "./src/apis/image";
 import inquiry from "./src/apis/inquiry";
 
-app.use("/", view);
 app.use("/api/", root);
 app.use("/api/search", search);
 app.use("/api/boards", boards);
