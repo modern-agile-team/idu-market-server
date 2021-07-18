@@ -174,6 +174,37 @@ class BoardStroage {
     }
   }
 
+  static async findAllByCategoryNumForMobile(
+    categoryNum: number
+  ): Promise<boards[]> {
+    let conn;
+    try {
+      conn = await mariadb.getConnection();
+      const query = `SELECT bo.no AS boardNum, bo.title, st.nickname, bo.hit,
+        COUNT(cmt.no) AS commentCount, bo.thumbnail, st.admin_flag as isAdmin,
+        date_format(bo.in_date, '%Y-%m-%d %H:%i:%s') AS inDate
+        FROM boards AS bo
+        JOIN students AS st
+        ON bo.student_id = st.id
+        LEFT JOIN comments AS cmt
+        ON bo.no = cmt.board_no
+        WHERE bo.category_no = ?
+        GROUP BY bo.no
+        ORDER BY bo.no DESC
+        LIMIT 10;
+      `;
+
+      const boards = await conn.query(query, [categoryNum]);
+
+      const board: boards[] = Object.values(JSON.parse(JSON.stringify(boards)));
+      return board;
+    } catch (err) {
+      throw err;
+    } finally {
+      conn?.release();
+    }
+  }
+
   static async findOneByNum(num: number): Promise<board> {
     let conn;
     try {

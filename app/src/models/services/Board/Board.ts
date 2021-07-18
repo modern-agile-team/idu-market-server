@@ -21,6 +21,16 @@ interface response {
   fileId?: Image[];
 }
 
+interface iMobileResponse {
+  success: boolean;
+  msg: string;
+  notices: boards[];
+  books: boards[];
+  devices: boards[];
+  clothes: boards[];
+  etcs: boards[];
+}
+
 interface Image {
   upload?: boolean;
   boardNum?: number;
@@ -156,6 +166,38 @@ class Board {
       }
     } catch (err) {
       return Error.ctrl("서버 에러입니다. 서버 개발자에게 문의해주세요.", err);
+    }
+  }
+
+  async findAllForMobile(): Promise<iMobileResponse | error> {
+    try {
+      const notices: boards[] =
+        await BoardStorage.findAllByCategoryNumForMobile(Category.notice);
+      const books: boards[] = await BoardStorage.findAllByCategoryNumForMobile(
+        Category.book
+      );
+      const devices: boards[] =
+        await BoardStorage.findAllByCategoryNumForMobile(Category.device);
+      const clothes: boards[] =
+        await BoardStorage.findAllByCategoryNumForMobile(Category.clothes);
+      const etcs: boards[] = await BoardStorage.findAllByCategoryNumForMobile(
+        Category.etc
+      );
+
+      return {
+        success: true,
+        msg: "모바일용 메인화면 응답에 성공하셨습니다.",
+        notices,
+        books,
+        devices,
+        clothes,
+        etcs,
+      };
+    } catch (err) {
+      return Error.ctrl(
+        "모바일용 메인화면 데이터 응답이 거절되었습니다. 서버 개발자에게 문의해주십시오.",
+        err
+      );
     }
   }
 
