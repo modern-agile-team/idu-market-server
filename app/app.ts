@@ -48,7 +48,6 @@ import sale from "./src/apis/sale-list";
 import purchase from "./src/apis/purchase-list";
 import watchlist from "./src/apis/watch-list";
 import profile from "./src/apis/profile";
-// import image from "./src/apis/image";
 import inquiry from "./src/apis/inquiry";
 
 app.use("/api/", root);
@@ -59,7 +58,11 @@ app.use("/api/sale-list", sale);
 app.use("/api/purchase-list", purchase);
 app.use("/api/watchlist", watchlist);
 app.use("/api/students", profile);
-// app.use("/api/image", image);
 app.use("/api/inquiry", inquiry);
+
+// Mobile
+import mobile from "./src/apis/mobile";
+
+app.use("/api/mobile", mobile);
 
 export default app;
