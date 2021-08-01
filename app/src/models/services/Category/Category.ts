@@ -5,4 +5,5 @@ export default {
   device: 3,
   free: 4,
   etc: 5,
+  freemarket: 6,
 };
