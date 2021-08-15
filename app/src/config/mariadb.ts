@@ -6,7 +6,7 @@ const mariadb = db.createPool({
   password: process.env.DB_PSWORD,
   database: process.env.DB_DATABASE,
   port: 3306,
-  connectionLimit: 5,
+  connectionLimit: 150,
 });
 
 export default mariadb;
